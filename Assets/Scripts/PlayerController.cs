@@ -28,12 +28,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool canJump = true;
     [SerializeField] private bool isGrounded = true;
 
+    [SerializeField] private bool canWallJumpRight = false;
+    [SerializeField] private bool canWallJumpLeft = false;
+
+
     [Header("Wall Attatch")]
     public LayerMask whatIsWalls;
 
     [SerializeField] private bool canAttatch = false;
     [SerializeField] private bool isWalledRight = false;
     [SerializeField] private bool isWalledLeft = false;
+
+    [Header("Gravity Modifier")]
+    [SerializeField] private float wallGrav = -1f;
+    [SerializeField] private float normalGrav = -10f;
 
 
     void Start()
@@ -60,10 +68,34 @@ public class PlayerController : MonoBehaviour
             {
                 playerRB.drag = groundDrag;
                 canAttatch = true;
+                canWallJumpRight = false;
+                canWallJumpLeft = false;
             }
             else
             {
                 playerRB.drag = 1f;
+                Physics.gravity = new Vector3(0, normalGrav, 0);
+            }
+
+            if (isWalledRight || isWalledLeft)
+            {
+                Physics.gravity = new Vector3(0, wallGrav, 0);
+            }
+            else if (!isGrounded)
+            {
+                Physics.gravity = new Vector3(0, normalGrav, 0);
+            }
+
+            if (isWalledRight && !canWallJumpRight)
+            {
+                canWallJumpRight = true;
+                canWallJumpLeft = false;
+            }
+            
+            if (isWalledLeft && !canWallJumpLeft)
+            {
+                canWallJumpLeft = true;
+                canWallJumpRight = false;
             }
         }
     }
@@ -87,81 +119,66 @@ public class PlayerController : MonoBehaviour
             Invoke(nameof(JumpReset), jumpCooldown);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (canAttatch)
         {
-            if (canJump)
+            if (Input.GetKey(KeyCode.Space))
             {
-                if(isWalledRight || isWalledLeft)
+                AttatchWallRight();
+                AttatchWallLeft();
+            }
+            else
+            {
+                isWalledRight = false;
+                isWalledLeft = false;
+                Invoke(nameof(WallJumpReset), jumpCooldown);
+            }
+        }
+        else
+        {
+            Physics.gravity = new Vector3(0, normalGrav, 0);
+            isWalledRight = false;
+            isWalledLeft = false;
+            canWallJumpLeft = false;
+            canWallJumpRight = false;
+        }
+        
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (canJump && canAttatch)
+            {
+                if (canWallJumpRight)
                 {
                     canJump = false;
                     canAttatch = false;
+                    canWallJumpRight = false;
 
-                    JumpMechanic();
+                    WallJumpMechanic(-transform.right);
+
+                    Invoke(nameof(JumpReset), jumpCooldown);
+                }
+                
+                if (canWallJumpLeft)
+                {
+                    canJump = false;
+                    canAttatch = false;
+                    canWallJumpLeft = false;
+
+                    WallJumpMechanic(transform.right);
 
                     Invoke(nameof(JumpReset), jumpCooldown);
                 }
             }
-            if (canAttatch)
-            {
-                canAttatch = false;
-            }
-        }
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            AttatchWallRight();
-            AttatchWallLeft();
         }
     }
 
     void AttatchWallLeft()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, -transform.right, out hit, playerHight * 0.25f + 0.2f, whatIsWalls))
-        {
-            if (canAttatch)
-            {
-                isWalledLeft = true;
-
-                //transform.position = new Vector3(transform.position.x, hit.transform.position.y, transform.position.z);
-                playerRB.useGravity = false;
-            }
-            else
-            {
-                isWalledLeft = false;
-                playerRB.useGravity = true;
-            }
-        }
-        else
-        {
-            isWalledLeft = false;
-            playerRB.useGravity = true;
-        }
+        isWalledLeft = Physics.Raycast(transform.position, -transform.right, playerHight * 0.25f + 0.2f, whatIsWalls);
     }
 
     void AttatchWallRight()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.right, out hit, playerHight * 0.25f + 0.2f, whatIsWalls))
-        {
-            if (canAttatch)
-            {
-                isWalledRight = true;
-
-                //transform.position = new Vector3(transform.position.x, hit.transform.position.y, transform.position.z);
-                playerRB.useGravity = false;
-            }
-            else
-            {
-                isWalledRight = false;
-                playerRB.useGravity = true;
-            }
-        }
-        else
-        {
-            isWalledRight = false;
-            playerRB.useGravity = true;
-        }
+        isWalledRight = Physics.Raycast(transform.position, transform.right, playerHight * 0.25f + 0.2f, whatIsWalls);
     }
 
     void MovePlayer()
@@ -174,11 +191,11 @@ public class PlayerController : MonoBehaviour
         }
         else if (isWalledRight || isWalledLeft)
         {
-            playerRB.AddForce(moveDirection.normalized * force * 6f, ForceMode.Force);
+            playerRB.AddForce(moveDirection.normalized * force * 3f, ForceMode.Force);
         }
         else
         {
-            playerRB.AddForce(moveDirection.normalized * force * 10f * airMultiplyer, ForceMode.Force);
+            playerRB.AddForce(moveDirection.normalized * force * 8f * airMultiplyer, ForceMode.Force);
         }
     }
 
@@ -201,9 +218,25 @@ public class PlayerController : MonoBehaviour
         playerRB.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
+    void WallJumpMechanic(Vector3 direction)
+    {
+        playerRB.velocity = new Vector3(playerRB.velocity.x, 0f, playerRB.velocity.z);
+
+        playerRB.AddForce(Vector3.up * jumpForce * 0.7f, ForceMode.Impulse);
+        playerRB.AddForce(direction * jumpForce * 0.8f, ForceMode.Impulse);
+    }
+
     void JumpReset()
     {
         canJump = true;
         canAttatch = true;
+    }
+
+    void WallJumpReset()
+    {
+        canJump = true;
+        canAttatch = true;
+        canWallJumpRight = false;
+        canWallJumpLeft = false;
     }
 }
