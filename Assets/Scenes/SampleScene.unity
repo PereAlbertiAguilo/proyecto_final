@@ -955,7 +955,7 @@ MonoBehaviour:
   airMultiplyer: 0.2
   canMove: 1
   jumpForce: 16
-  jumpCooldown: 0.15
+  jumpCooldown: 0.4
   playerHight: 2
   whatIsGorund:
     serializedVersion: 2
@@ -1659,7 +1659,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2146279806}
   m_LocalRotation: {x: 0.24899612, y: -0, z: -0, w: 0.9685045}
-  m_LocalPosition: {x: 3.64, y: 0.116, z: -4.394}
+  m_LocalPosition: {x: 3.64, y: 0.126, z: -4.394}
   m_LocalScale: {x: 2.868739, y: 1.9983453, z: 3.9907827}
   m_ConstrainProportionsScale: 0
   m_Children: []

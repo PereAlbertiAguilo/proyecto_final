@@ -66,26 +66,6 @@ public class PlayerController : MonoBehaviour
                 playerRB.drag = 1f;
             }
         }
-        
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.right, out hit, playerHight * 0.25f + 0.2f, whatIsWalls))
-        {
-            if (canAttatch)
-            {
-                isWalledRight = true;
-
-                transform.position = new Vector3(transform.position.x, hit.transform.position.y, transform.position.z);
-            }
-            else
-            {
-                isWalledRight = false;
-            }
-        }
-        else
-        {
-            isWalledRight = false;
-        }
-
     }
 
     void FixedUpdate()
@@ -126,6 +106,62 @@ public class PlayerController : MonoBehaviour
                 canAttatch = false;
             }
         }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            AttatchWallRight();
+            AttatchWallLeft();
+        }
+    }
+
+    void AttatchWallLeft()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -transform.right, out hit, playerHight * 0.25f + 0.2f, whatIsWalls))
+        {
+            if (canAttatch)
+            {
+                isWalledLeft = true;
+
+                //transform.position = new Vector3(transform.position.x, hit.transform.position.y, transform.position.z);
+                playerRB.useGravity = false;
+            }
+            else
+            {
+                isWalledLeft = false;
+                playerRB.useGravity = true;
+            }
+        }
+        else
+        {
+            isWalledLeft = false;
+            playerRB.useGravity = true;
+        }
+    }
+
+    void AttatchWallRight()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.right, out hit, playerHight * 0.25f + 0.2f, whatIsWalls))
+        {
+            if (canAttatch)
+            {
+                isWalledRight = true;
+
+                //transform.position = new Vector3(transform.position.x, hit.transform.position.y, transform.position.z);
+                playerRB.useGravity = false;
+            }
+            else
+            {
+                isWalledRight = false;
+                playerRB.useGravity = true;
+            }
+        }
+        else
+        {
+            isWalledRight = false;
+            playerRB.useGravity = true;
+        }
     }
 
     void MovePlayer()
@@ -138,7 +174,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (isWalledRight || isWalledLeft)
         {
-            playerRB.AddForce(moveDirection.normalized * force * 5f, ForceMode.Force);
+            playerRB.AddForce(moveDirection.normalized * force * 6f, ForceMode.Force);
         }
         else
         {
