@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    Rigidbody playerRB;
+    Rigidbody _playerRigidbody;
+
+    private GrapplingController grapplingController;
 
     [Header("Speed Parametres")]
     public float force = 30f;
@@ -28,18 +30,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool canJump = true;
     [SerializeField] private bool isGrounded = true;
 
-    [SerializeField] private bool canWallJumpRight = false;
-    [SerializeField] private bool canWallJumpLeft = false;
-
+    [SerializeField] private bool canWallJumpRight;
+    [SerializeField] private bool canWallJumpLeft;
+    [SerializeField] private bool canWallJumpFront;
+    [SerializeField] private bool canWallJumpBack;
 
     [Header("Wall Attatch")]
     public LayerMask whatIsWalls;
 
-    [SerializeField] private bool canAttatch = false;
-    [SerializeField] private bool isWalledRight = false;
-    [SerializeField] private bool isWalledLeft = false;
-    [SerializeField] private bool isWalledFront = false;
-    [SerializeField] private bool isWalledBack = false;
+    [SerializeField] private bool canAttatch;
+    [SerializeField] private bool isWalledRight;
+    [SerializeField] private bool isWalledLeft;
+    [SerializeField] private bool isWalledFront;
+    [SerializeField] private bool isWalledBack;
 
     [Header("Gravity Modifier")]
     [SerializeField] private float wallGrav = -1f;
@@ -48,7 +51,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        playerRB = GetComponent<Rigidbody>();
+        _playerRigidbody = GetComponent<Rigidbody>();
+        grapplingController = FindObjectOfType<GrapplingController>();
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -70,18 +74,17 @@ public class PlayerController : MonoBehaviour
 
             if (isGrounded)
             {
-                playerRB.drag = groundDrag;
+                _playerRigidbody.drag = groundDrag;
                 canAttatch = true;
-                canWallJumpRight = false;
-                canWallJumpLeft = false;
+                CantWallJump();
                 Physics.gravity = new Vector3(0, normalGrav, 0);
             }
             else
             {
-                playerRB.drag = 1f;
+                _playerRigidbody.drag = 1f;
             }
 
-            if (isWalledRight || isWalledLeft)
+            if (isWalledRight || isWalledLeft || isWalledBack || isWalledFront)
             {
                 Physics.gravity = new Vector3(0, wallGrav, 0);
             }
@@ -90,16 +93,25 @@ public class PlayerController : MonoBehaviour
                 Physics.gravity = new Vector3(0, normalGrav, 0);
             }
 
-            if (isWalledRight && !canWallJumpRight)
+            if (isWalledRight)
             {
                 canWallJumpRight = true;
-                canWallJumpLeft = false;
+                ResetOtherJumps(isWalledBack, isWalledFront, isWalledLeft);
             }
-            
-            if (isWalledLeft && !canWallJumpLeft)
+            else if (isWalledLeft)
             {
                 canWallJumpLeft = true;
-                canWallJumpRight = false;
+                ResetOtherJumps(isWalledBack, isWalledFront, isWalledRight);
+            }
+            else if (isWalledFront)
+            {
+                canWallJumpFront = true;
+                ResetOtherJumps(isWalledBack, isWalledLeft, isWalledRight);
+            }
+            else if (isWalledBack)
+            {
+                canWallJumpBack = true;
+                ResetOtherJumps(isWalledLeft, isWalledFront, isWalledRight);
             }
         }
     }
@@ -131,11 +143,16 @@ public class PlayerController : MonoBehaviour
                 AttatchWallLeft();
                 AttatchWallFront();
                 AttatchWallBack();
+
+                if (!isWalledRight || !isWalledLeft || !isWalledBack || !isWalledFront)
+                {
+                    Physics.gravity = new Vector3(0, normalGrav, 0);
+                    CantWallJump();
+                }
             }
             else
             {
                 NotWalled();
-
                 Invoke(nameof(WallJumpReset), jumpCooldown);
             }
         }
@@ -144,9 +161,7 @@ public class PlayerController : MonoBehaviour
             Physics.gravity = new Vector3(0, normalGrav, 0);
 
             NotWalled();
-
-            canWallJumpLeft = false;
-            canWallJumpRight = false;
+            CantWallJump();
         }
         
         if (Input.GetKeyUp(KeyCode.Space))
@@ -161,7 +176,7 @@ public class PlayerController : MonoBehaviour
 
                     WallJumpMechanic(-transform.right);
 
-                    Invoke(nameof(JumpReset), jumpCooldown);
+                    Invoke(nameof(WallJumpReset), jumpCooldown);
                 }
                 
                 if (canWallJumpLeft)
@@ -172,7 +187,29 @@ public class PlayerController : MonoBehaviour
 
                     WallJumpMechanic(transform.right);
 
-                    Invoke(nameof(JumpReset), jumpCooldown);
+                    Invoke(nameof(WallJumpReset), jumpCooldown);
+                }
+
+                if (canWallJumpFront)
+                {
+                    canJump = false;
+                    canAttatch = false;
+                    canWallJumpFront = false;
+
+                    WallJumpMechanic(-transform.forward);
+
+                    Invoke(nameof(WallJumpReset), jumpCooldown);
+                }
+
+                if (canWallJumpBack)
+                {
+                    canJump = false;
+                    canAttatch = false;
+                    canWallJumpBack = false;
+
+                    WallJumpMechanic(transform.forward);
+
+                    Invoke(nameof(WallJumpReset), jumpCooldown);
                 }
             }
         }
@@ -204,43 +241,47 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded)
         {
-            playerRB.AddForce(moveDirection.normalized * force * 10f, ForceMode.Force);
+            _playerRigidbody.AddForce(moveDirection.normalized * force * 10f, ForceMode.Force);
         }
-        else if (isWalledRight || isWalledLeft)
+        else if (isWalledRight || isWalledLeft || isWalledBack || isWalledFront)
         {
-            playerRB.AddForce(moveDirection.normalized * force * 2f, ForceMode.Force);
+            _playerRigidbody.AddForce(moveDirection.normalized * force * 2f, ForceMode.Force);
+        }
+        else if (grapplingController.isGrappled)
+        {
+            _playerRigidbody.AddForce(moveDirection.normalized * force * 6f * airMultiplyer, ForceMode.Force);
         }
         else
         {
-            playerRB.AddForce(moveDirection.normalized * force * 8f * airMultiplyer, ForceMode.Force);
+            _playerRigidbody.AddForce(moveDirection.normalized * force * 8f * airMultiplyer, ForceMode.Force);
         }
     }
 
     void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(playerRB.velocity.x, 0, playerRB.velocity.z);
+        Vector3 flatVel = new Vector3(_playerRigidbody.velocity.x, 0, _playerRigidbody.velocity.z);
         float newForce = force / 2;
 
         if(flatVel.magnitude > newForce)
         {
             Vector3 limitedVel = flatVel.normalized * newForce;
-            playerRB.velocity = new Vector3(limitedVel.x, playerRB.velocity.y, limitedVel.z);
+            _playerRigidbody.velocity = new Vector3(limitedVel.x, _playerRigidbody.velocity.y, limitedVel.z);
         }
     }
 
     void JumpMechanic()
     {
-        playerRB.velocity = new Vector3(playerRB.velocity.x, 0f, playerRB.velocity.z);
+        _playerRigidbody.velocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
 
-        playerRB.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        _playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     void WallJumpMechanic(Vector3 direction)
     {
-        playerRB.velocity = new Vector3(playerRB.velocity.x, 0f, playerRB.velocity.z);
+        _playerRigidbody.velocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
 
-        playerRB.AddForce(Vector3.up * jumpForce * 0.7f, ForceMode.Impulse);
-        playerRB.AddForce(direction * jumpForce * 0.8f, ForceMode.Impulse);
+        _playerRigidbody.AddForce(Vector3.up * jumpForce * 0.7f, ForceMode.Impulse);
+        _playerRigidbody.AddForce(direction * jumpForce * 0.8f, ForceMode.Impulse);
     }
 
     void JumpReset()
@@ -253,8 +294,7 @@ public class PlayerController : MonoBehaviour
     {
         canJump = true;
         canAttatch = true;
-        canWallJumpRight = false;
-        canWallJumpLeft = false;
+        CantWallJump();
     }
 
     void NotWalled()
@@ -263,5 +303,20 @@ public class PlayerController : MonoBehaviour
         isWalledFront = false;
         isWalledLeft = false;
         isWalledRight = false;
+    }
+
+    void CantWallJump()
+    {
+        canWallJumpBack = false;
+        canWallJumpFront = false;
+        canWallJumpLeft = false;
+        canWallJumpRight = false;
+    }
+
+    void ResetOtherJumps(bool b1, bool b2, bool b3)
+    {
+        b1 = false;
+        b2 = false;
+        b3 = false;
     }
 }
