@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool canAttatch = false;
     [SerializeField] private bool isWalledRight = false;
     [SerializeField] private bool isWalledLeft = false;
+    [SerializeField] private bool isWalledFront = false;
+    [SerializeField] private bool isWalledBack = false;
 
     [Header("Gravity Modifier")]
     [SerializeField] private float wallGrav = -1f;
@@ -70,14 +72,13 @@ public class PlayerController : MonoBehaviour
             {
                 playerRB.drag = groundDrag;
                 canAttatch = true;
-                canJump = true;
                 canWallJumpRight = false;
                 canWallJumpLeft = false;
+                Physics.gravity = new Vector3(0, normalGrav, 0);
             }
             else
             {
                 playerRB.drag = 1f;
-                Physics.gravity = new Vector3(0, normalGrav, 0);
             }
 
             if (isWalledRight || isWalledLeft)
@@ -128,19 +129,22 @@ public class PlayerController : MonoBehaviour
             {
                 AttatchWallRight();
                 AttatchWallLeft();
+                AttatchWallFront();
+                AttatchWallBack();
             }
             else
             {
-                isWalledRight = false;
-                isWalledLeft = false;
+                NotWalled();
+
                 Invoke(nameof(WallJumpReset), jumpCooldown);
             }
         }
         else
         {
             Physics.gravity = new Vector3(0, normalGrav, 0);
-            isWalledRight = false;
-            isWalledLeft = false;
+
+            NotWalled();
+
             canWallJumpLeft = false;
             canWallJumpRight = false;
         }
@@ -176,12 +180,22 @@ public class PlayerController : MonoBehaviour
 
     void AttatchWallLeft()
     {
-        isWalledLeft = Physics.Raycast(transform.position, -transform.right, playerHight * 0.25f + 0.2f, whatIsWalls);
+        isWalledLeft = Physics.Raycast(transform.position, -transform.right, playerHight * 0.25f + 0.25f, whatIsWalls);
     }
 
     void AttatchWallRight()
     {
-        isWalledRight = Physics.Raycast(transform.position, transform.right, playerHight * 0.25f + 0.2f, whatIsWalls);
+        isWalledRight = Physics.Raycast(transform.position, transform.right, playerHight * 0.25f + 0.25f, whatIsWalls);
+    }
+
+    void AttatchWallFront()
+    {
+        isWalledFront = Physics.Raycast(transform.position, transform.forward, playerHight * 0.25f + 0.25f, whatIsWalls);
+    }
+
+    void AttatchWallBack()
+    {
+        isWalledBack = Physics.Raycast(transform.position, -transform.forward, playerHight * 0.25f + 0.25f, whatIsWalls);
     }
 
     void MovePlayer()
@@ -194,7 +208,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (isWalledRight || isWalledLeft)
         {
-            playerRB.AddForce(moveDirection.normalized * force * 3f, ForceMode.Force);
+            playerRB.AddForce(moveDirection.normalized * force * 2f, ForceMode.Force);
         }
         else
         {
@@ -241,5 +255,13 @@ public class PlayerController : MonoBehaviour
         canAttatch = true;
         canWallJumpRight = false;
         canWallJumpLeft = false;
+    }
+
+    void NotWalled()
+    {
+        isWalledBack = false;
+        isWalledFront = false;
+        isWalledLeft = false;
+        isWalledRight = false;
     }
 }
