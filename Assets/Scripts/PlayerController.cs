@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
         playerRB = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
+
+        transform.rotation = new Quaternion(0, -180, 0, 0);
     }
 
     private void Update()
@@ -68,6 +70,7 @@ public class PlayerController : MonoBehaviour
             {
                 playerRB.drag = groundDrag;
                 canAttatch = true;
+                canJump = true;
                 canWallJumpRight = false;
                 canWallJumpLeft = false;
             }
