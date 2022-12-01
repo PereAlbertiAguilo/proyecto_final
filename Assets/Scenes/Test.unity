@@ -176,7 +176,7 @@ Transform:
   m_GameObject: {fileID: 45495078}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.6, y: -11.45, z: -1.7}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.4319, y: 2.4319, z: 2.4319}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -309,6 +309,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1206444950}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &118262119
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 118262121}
+  - component: {fileID: 118262120}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &118262120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118262119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: f7c5dce7aa657bc45beeed2a798e0120, type: 2}
+--- !u!4 &118262121
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118262119}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &119933546
 GameObject:
@@ -1920,7 +1969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9f54de97b7180845a07b6b33f102f3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: 22
+  force: 21
   delay: 0.09
 --- !u!65 &1025677864
 BoxCollider:
@@ -2626,29 +2675,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 18
+  forceMultiplyer: 1.3
   groundDrag: 8
   airMultiplyer: 0.2
   canMove: 1
-  jumpForce: 16
+  jumpForce: 14
   jumpCooldown: 0.4
   playerHight: 2
   whatIsGorund:
     serializedVersion: 2
     m_Bits: 1024
-  canJump: 1
-  isGrounded: 1
-  canWallJumpRight: 0
-  canWallJumpLeft: 0
-  canWallJumpFront: 0
-  canWallJumpBack: 0
   whatIsWalls:
     serializedVersion: 2
     m_Bits: 2048
-  canAttatch: 0
-  isWalledRight: 0
-  isWalledLeft: 0
-  isWalledFront: 0
-  isWalledBack: 0
   wallGrav: -1
   normalGrav: -11
 --- !u!54 &1206444952
@@ -3221,7 +3260,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589103611}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &1589103616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3240,12 +3279,15 @@ MonoBehaviour:
   camera: {fileID: 2068198534}
   gunTip: {fileID: 1840324808}
   player: {fileID: 1206444950}
-  spring: 25
+  isGrappled: 0
+  isAvalible: 1
+  CooldownDuration: 1.4
+  spring: 35
   damper: 7
   massScale: 4.5
-  maxStrech: 0.8
+  maxStrech: 0.7
   minStrech: 0.5
-  isGrappled: 0
+  maxDistance: 28
 --- !u!120 &1589103617
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -4272,7 +4314,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -4313,7 +4355,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.2
+  near clip plane: 0.1
   far clip plane: 5000
   field of view: 70
   orthographic: 0
@@ -4374,8 +4416,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbbbf7cb9ef8b444f82dc0efb166b370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensX: 400
-  sensY: 400
+  sensX: 450
+  sensY: 450
   orientation: {fileID: 1206444950}
 --- !u!1 &2068414024
 GameObject:

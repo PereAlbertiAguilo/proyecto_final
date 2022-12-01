@@ -9,12 +9,17 @@ public class GrapplingController : MonoBehaviour
     private Vector3 grapplePoint;
     private Vector3 currentGrapplePosition;
 
+    private SpringJoint joint;
+
     public LayerMask whatIsGrappleable;
 
     public new Transform camera;
     public Transform gunTip, player;
 
-    private float maxDistance = 10f;
+    public bool isGrappled;
+    public bool isAvalible = true;
+
+    [SerializeField] private float CooldownDuration = 1.0f;
 
     [Header("Rope Physics")]
     [SerializeField] private float spring = 4.5f;
@@ -24,11 +29,7 @@ public class GrapplingController : MonoBehaviour
     [Header("Rope Distances")]
     [SerializeField] private float maxStrech = 4.5f;
     [SerializeField] private float minStrech = 4.5f;
-
-    private SpringJoint joint;
-
-    public bool isGrappled;
-
+    [SerializeField] private float maxDistance = 10f;
 
     void Awake()
     {
@@ -37,7 +38,7 @@ public class GrapplingController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && isAvalible)
         {
             StartGrapple();
         }
@@ -75,6 +76,8 @@ public class GrapplingController : MonoBehaviour
             currentGrapplePosition = gunTip.position;
 
             isGrappled = true;
+
+            StartCoroutine(StartCooldown());
         }
     }
 
@@ -106,4 +109,12 @@ public class GrapplingController : MonoBehaviour
     {
         return grapplePoint;
     }
+
+    public IEnumerator StartCooldown()
+    {
+        isAvalible = false;
+        yield return new WaitForSeconds(CooldownDuration);
+        isAvalible = true;
+    }
+
 }

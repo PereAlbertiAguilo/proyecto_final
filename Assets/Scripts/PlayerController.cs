@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Speed Parametres")]
     public float force = 30f;
+    private float defaultForce;
+    public float forceMultiplyer = 2f;
     public float groundDrag = 10f;
     public float airMultiplyer;
 
@@ -27,22 +29,22 @@ public class PlayerController : MonoBehaviour
 
     public LayerMask whatIsGorund;
 
-    [SerializeField] private bool canJump = true;
-    [SerializeField] private bool isGrounded = true;
+    private bool canJump = true;
+    private bool isGrounded = true;
 
-    [SerializeField] private bool canWallJumpRight;
-    [SerializeField] private bool canWallJumpLeft;
-    [SerializeField] private bool canWallJumpFront;
-    [SerializeField] private bool canWallJumpBack;
+    private bool canWallJumpRight;
+    private bool canWallJumpLeft;
+    private bool canWallJumpFront;
+    private bool canWallJumpBack;
 
     [Header("Wall Attatch")]
     public LayerMask whatIsWalls;
 
-    [SerializeField] private bool canAttatch;
-    [SerializeField] private bool isWalledRight;
-    [SerializeField] private bool isWalledLeft;
-    [SerializeField] private bool isWalledFront;
-    [SerializeField] private bool isWalledBack;
+    private bool canAttatch;
+    private bool isWalledRight;
+    private bool isWalledLeft;
+    private bool isWalledFront;
+    private bool isWalledBack;
 
     [Header("Gravity Modifier")]
     [SerializeField] private float wallGrav = -1f;
@@ -51,6 +53,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        defaultForce = force;
         _playerRigidbody = GetComponent<Rigidbody>();
         grapplingController = FindObjectOfType<GrapplingController>();
 
@@ -212,6 +215,17 @@ public class PlayerController : MonoBehaviour
                     Invoke(nameof(WallJumpReset), jumpCooldown);
                 }
             }
+        }
+
+        force = defaultForce;
+
+        if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
+        {
+            float newForce;
+
+            newForce = force * forceMultiplyer;
+
+            force = newForce;
         }
     }
 
