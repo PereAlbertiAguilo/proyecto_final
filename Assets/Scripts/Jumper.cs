@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Jumper : MonoBehaviour
 {
+    [Header("Jumper Parameters\n")]
     public float force = 10f;
     public float delay = 0.2f;
 

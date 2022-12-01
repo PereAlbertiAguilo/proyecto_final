@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 
     private GrapplingController grapplingController;
 
-    [Header("Speed Parametres")]
+    [Header("Speed Parametres\n")]
     public float force = 30f;
     private float defaultForce;
     public float forceMultiplyer = 2f;
@@ -16,13 +16,15 @@ public class PlayerController : MonoBehaviour
     public float airMultiplyer;
 
     [HideInInspector] public bool canMove = true;
+    private bool canSlide = true;
+    private bool isSliding;
 
     private float horizontalInput;
     private float verticalInput;
 
     private Vector3 moveDirection;
 
-    [Header("Jump Parametres")]
+    [Header("Jump Parametres\n")]
     public float jumpForce = 10f;
     public float jumpCooldown;
     public float playerHight;
@@ -30,6 +32,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask whatIsGorund;
 
     private bool canJump = true;
+    private bool canSecondJump;
     private bool isGrounded = true;
 
     private bool canWallJumpRight;
@@ -37,7 +40,7 @@ public class PlayerController : MonoBehaviour
     private bool canWallJumpFront;
     private bool canWallJumpBack;
 
-    [Header("Wall Attatch")]
+    [Header("Wall Attatch\n")]
     public LayerMask whatIsWalls;
 
     private bool canAttatch;
@@ -46,7 +49,7 @@ public class PlayerController : MonoBehaviour
     private bool isWalledFront;
     private bool isWalledBack;
 
-    [Header("Gravity Modifier")]
+    [Header("Gravity Modifier\n")]
     [SerializeField] private float wallGrav = -1f;
     [SerializeField] private float normalGrav = -10f;
 
@@ -129,13 +132,22 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKey(KeyCode.Space) && canJump && isGrounded)
+        if (Input.GetKey(KeyCode.Space) && isGrounded)
         {
-            canJump = false;
+            if (canJump)
+            {
+                canJump = false;
+
+                JumpMechanic();
+
+                Invoke(nameof(JumpReset), jumpCooldown);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Space) && canSecondJump)
+        {
+            canSecondJump = false;
 
             JumpMechanic();
-
-            Invoke(nameof(JumpReset), jumpCooldown);
         }
 
         if (canAttatch)
@@ -219,13 +231,27 @@ public class PlayerController : MonoBehaviour
 
         force = defaultForce;
 
-        if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
+        if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
             float newForce;
 
             newForce = force * forceMultiplyer;
 
             force = newForce;
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift) && isGrounded && canSlide)
+        {
+            canSlide = false;
+            isSliding = true;
+            GetComponent<CapsuleCollider>().height = 1f;
+            _playerRigidbody.AddForce(Vector3.down * force, ForceMode.Impulse);
+        }
+        else if(Input.GetKeyUp(KeyCode.LeftShift) || !isGrounded)
+        {
+            GetComponent<CapsuleCollider>().height = 2f;
+            canSlide = true;
+            isSliding = false;
         }
     }
 
@@ -255,7 +281,14 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded)
         {
-            _playerRigidbody.AddForce(moveDirection.normalized * force * 10f, ForceMode.Force);
+            if (isSliding)
+            {
+                _playerRigidbody.AddForce(moveDirection.normalized * force * 2f, ForceMode.Force);
+            }
+            else
+            {
+                _playerRigidbody.AddForce(moveDirection.normalized * force * 10f, ForceMode.Force);
+            }
         }
         else if (isWalledRight || isWalledLeft || isWalledBack || isWalledFront)
         {
@@ -269,6 +302,8 @@ public class PlayerController : MonoBehaviour
         {
             _playerRigidbody.AddForce(moveDirection.normalized * force * 8f * airMultiplyer, ForceMode.Force);
         }
+
+        
     }
 
     void SpeedControl()
@@ -297,6 +332,16 @@ public class PlayerController : MonoBehaviour
         _playerRigidbody.AddForce(Vector3.up * jumpForce * 0.7f, ForceMode.Impulse);
         _playerRigidbody.AddForce(direction * jumpForce * 0.8f, ForceMode.Impulse);
     }
+
+    /*
+    void WallRotation(bool b, float f)
+    {
+        if (b)
+        {
+            transform.rotation = new Quaternion()
+        }
+    }
+    */
 
     void JumpReset()
     {
@@ -332,5 +377,14 @@ public class PlayerController : MonoBehaviour
         b1 = false;
         b2 = false;
         b3 = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("SecondJump"))
+        {
+            canSecondJump = true;
+            Destroy(other.gameObject);
+        }
     }
 }

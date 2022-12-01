@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class CameraRotation : MonoBehaviour
 {
+    public Transform orientation;
+
+    [Header("Sensibility\n")]
+
     public float sensX;
     public float sensY;
-
-    public Transform orientation;
 
     float xRotation;
     float yRotation;
@@ -22,8 +24,8 @@ public class CameraRotation : MonoBehaviour
     {
         if(PCScript.canMove)
         {
-            float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+            float mouseX = Input.GetAxisRaw("Mouse X") * Time.smoothDeltaTime * sensX;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * Time.smoothDeltaTime * sensY;
 
             yRotation += mouseX;
 

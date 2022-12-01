@@ -17,16 +17,16 @@ public class GrapplingController : MonoBehaviour
     public Transform gunTip, player;
 
     public bool isGrappled;
-    public bool isAvalible = true;
+    public bool isGrappleAvalible = true;
 
     [SerializeField] private float CooldownDuration = 1.0f;
 
-    [Header("Rope Physics")]
+    [Header("Rope Physics\n")]
     [SerializeField] private float spring = 4.5f;
     [SerializeField] private float damper = 7f;
     [SerializeField] private float massScale = 4.5f;
 
-    [Header("Rope Distances")]
+    [Header("Rope Distances\n")]
     [SerializeField] private float maxStrech = 4.5f;
     [SerializeField] private float minStrech = 4.5f;
     [SerializeField] private float maxDistance = 10f;
@@ -38,7 +38,7 @@ public class GrapplingController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && isAvalible)
+        if (Input.GetMouseButtonDown(0) && isGrappleAvalible)
         {
             StartGrapple();
         }
@@ -112,9 +112,9 @@ public class GrapplingController : MonoBehaviour
 
     public IEnumerator StartCooldown()
     {
-        isAvalible = false;
+        isGrappleAvalible = false;
         yield return new WaitForSeconds(CooldownDuration);
-        isAvalible = true;
+        isGrappleAvalible = true;
     }
 
 }
