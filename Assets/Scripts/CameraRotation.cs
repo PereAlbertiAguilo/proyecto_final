@@ -24,16 +24,21 @@ public class CameraRotation : MonoBehaviour
     {
         if(PCScript.canMove)
         {
-            float mouseX = Input.GetAxisRaw("Mouse X") * Time.smoothDeltaTime * sensX;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * Time.smoothDeltaTime * sensY;
+            float mouseX = Input.GetAxisRaw("Mouse X") * sensX;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * sensY;
 
+            orientation.rotation *= Quaternion.Euler(0f, mouseX, 0f);
+            transform.rotation *= Quaternion.Euler(-mouseY, 0f, 0f);
+
+            /*
             yRotation += mouseX;
 
             xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -80f, 80f);
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
             transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+            */
         }
     }
 }
