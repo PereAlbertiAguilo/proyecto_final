@@ -81,7 +81,7 @@ public class GrapplingController : MonoBehaviour
         }
     }
 
-    void StopGrapple()
+    public void StopGrapple()
     {
         lr.positionCount = 0;
         Destroy(joint);

@@ -7,10 +7,10 @@ public class PlayerController : MonoBehaviour
     Rigidbody _playerRigidbody;
 
     private GrapplingController grapplingController;
+    [SerializeField] private Transform cam;
 
     [Header("Speed Parametres\n")]
     public float force = 30f;
-    private float defaultForce;
     public float forceMultiplyer = 2f;
     public float groundDrag = 10f;
     public float airMultiplyer;
@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool canMove = true;
     private bool canSlide = true;
     private bool isSliding;
+    [SerializeField]private bool isRunning;
 
     private float horizontalInput;
     private float verticalInput;
@@ -44,10 +45,10 @@ public class PlayerController : MonoBehaviour
     public LayerMask whatIsWalls;
 
     private bool canAttatch;
-    private bool isWalledRight;
-    private bool isWalledLeft;
-    private bool isWalledFront;
-    private bool isWalledBack;
+    public bool isWalledRight;
+    public bool isWalledLeft;
+    public bool isWalledFront;
+    public bool isWalledBack;
 
     [Header("Gravity Modifier\n")]
     [SerializeField] private float wallGrav = -1f;
@@ -56,7 +57,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        defaultForce = force;
         _playerRigidbody = GetComponent<Rigidbody>();
         grapplingController = FindObjectOfType<GrapplingController>();
 
@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
             {
                 _playerRigidbody.drag = groundDrag;
                 canAttatch = true;
+                canSecondJump = false;
                 CantWallJump();
                 Physics.gravity = new Vector3(0, normalGrav, 0);
             }
@@ -93,6 +94,7 @@ public class PlayerController : MonoBehaviour
             if (isWalledRight || isWalledLeft || isWalledBack || isWalledFront)
             {
                 Physics.gravity = new Vector3(0, wallGrav, 0);
+                canSecondJump = false;
             }
             else if (!isGrounded)
             {
@@ -143,7 +145,7 @@ public class PlayerController : MonoBehaviour
                 Invoke(nameof(JumpReset), jumpCooldown);
             }
         }
-        else if (Input.GetKey(KeyCode.Space) && canSecondJump)
+        else if (Input.GetKey(KeyCode.Space) && canSecondJump && !grapplingController.isGrappled)
         {
             canSecondJump = false;
 
@@ -229,15 +231,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        force = defaultForce;
 
-        if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            float newForce;
-
-            newForce = force * forceMultiplyer;
-
-            force = newForce;
+            isRunning = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            isRunning = false;
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && isGrounded && canSlide)
@@ -285,6 +286,10 @@ public class PlayerController : MonoBehaviour
             {
                 _playerRigidbody.AddForce(moveDirection.normalized * force * 2f, ForceMode.Force);
             }
+            else if (isRunning)
+            {
+                _playerRigidbody.AddForce(moveDirection.normalized * force * 12f, ForceMode.Force);
+            }
             else
             {
                 _playerRigidbody.AddForce(moveDirection.normalized * force * 10f, ForceMode.Force);
@@ -301,17 +306,15 @@ public class PlayerController : MonoBehaviour
         else
         {
             _playerRigidbody.AddForce(moveDirection.normalized * force * 8f * airMultiplyer, ForceMode.Force);
-        }
-
-        
+        }   
     }
 
     void SpeedControl()
     {
         Vector3 flatVel = new Vector3(_playerRigidbody.velocity.x, 0, _playerRigidbody.velocity.z);
-        float newForce = force / 2;
+        float newForce = force / 2f;
 
-        if(flatVel.magnitude > newForce)
+        if(flatVel.magnitude > newForce && !isRunning)
         {
             Vector3 limitedVel = flatVel.normalized * newForce;
             _playerRigidbody.velocity = new Vector3(limitedVel.x, _playerRigidbody.velocity.y, limitedVel.z);
@@ -332,17 +335,7 @@ public class PlayerController : MonoBehaviour
         _playerRigidbody.AddForce(Vector3.up * jumpForce * 0.7f, ForceMode.Impulse);
         _playerRigidbody.AddForce(direction * jumpForce * 0.8f, ForceMode.Impulse);
     }
-
-    /*
-    void WallRotation(bool b, float f)
-    {
-        if (b)
-        {
-            transform.rotation = new Quaternion()
-        }
-    }
-    */
-
+    
     void JumpReset()
     {
         canJump = true;

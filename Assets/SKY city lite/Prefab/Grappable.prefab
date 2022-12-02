@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1529539278438813558}
   - component: {fileID: 1529539278440128576}
   - component: {fileID: 1529539278440829790}
+  - component: {fileID: 2307878398008691227}
   m_Layer: 12
   m_Name: Grappable
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1529539278438972796}
   m_LocalRotation: {x: 0.50008726, y: 0.49991274, z: -0.49991274, w: 0.50008726}
   m_LocalPosition: {x: -7.59, y: -3.99, z: 0.23}
-  m_LocalScale: {x: 0.22988975, y: 0.22988972, z: 0.22988975}
+  m_LocalScale: {x: 0.18112324, y: 0.18112321, z: 0.35535645}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1529539278438795914}
@@ -86,6 +87,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2307878398008691227
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529539278438972796}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 9.931974, y: 9.9319515, z: 0.3037653}
+  m_Center: {x: 0.00001464421, y: -0.02870496, z: 2.5449584}
 --- !u!1 &1529539278439147666
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,14 +127,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1529539278439147666}
-  m_LocalRotation: {x: 0, y: 0, z: -0.68835455, w: -0.72537446}
+  m_LocalRotation: {x: 0.7071068, y: 0.7071068, z: 0, w: 0}
   m_LocalPosition: {x: 0.018, y: 0.046, z: -1.898}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1529539278438813558}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 90}
 --- !u!33 &1529539278440210928
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -217,7 +231,7 @@ GameObject:
   - component: {fileID: 1529539278440139916}
   - component: {fileID: 1529539278441188084}
   - component: {fileID: 1529539278436861326}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: sky_platform_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

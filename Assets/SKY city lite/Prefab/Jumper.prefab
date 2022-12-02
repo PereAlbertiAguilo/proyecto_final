@@ -125,7 +125,6 @@ GameObject:
   - component: {fileID: 2552778701914873912}
   - component: {fileID: 2552778701916102616}
   - component: {fileID: 2552778701917224786}
-  - component: {fileID: 2552778701913130814}
   - component: {fileID: 2552778701905656528}
   m_Layer: 10
   m_Name: rotor_blade big (3)
@@ -199,20 +198,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2552778701913130814
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2552778701915068090}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bdfb95b0813e88a4480516b45a3ddaa8, type: 3}
 --- !u!95 &2552778701905656528
 Animator:
   serializedVersion: 4
@@ -260,7 +245,7 @@ Transform:
   m_GameObject: {fileID: 2552778701915243348}
   m_LocalRotation: {x: -0.49991354, y: -0.5000864, z: -0.49991363, w: 0.50008637}
   m_LocalPosition: {x: -0.28, y: -3.99, z: 15.2}
-  m_LocalScale: {x: 0.40093705, y: 0.40093705, z: 0.40093705}
+  m_LocalScale: {x: 0.40093705, y: 0.40093705, z: 0.64290255}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2552778701914895522}
