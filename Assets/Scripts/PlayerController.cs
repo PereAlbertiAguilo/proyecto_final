@@ -10,10 +10,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform cam;
 
     [Header("Speed Parametres\n")]
-    public float force = 30f;
-    public float forceMultiplyer = 2f;
-    public float groundDrag = 10f;
-    public float airMultiplyer;
+    [SerializeField] private float force = 30f;
+    [SerializeField] private float groundDrag = 10f;
+    [SerializeField] private float airMultiplyer;
 
     [HideInInspector] public bool canMove = true;
     private bool canSlide = true;
@@ -26,15 +25,15 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection;
 
     [Header("Jump Parametres\n")]
-    public float jumpForce = 10f;
-    public float jumpCooldown;
-    public float playerHight;
+    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float jumpCooldown;
+    [SerializeField] private float playerHight;
 
     public LayerMask whatIsGorund;
 
     private bool canJump = true;
     private bool canSecondJump;
-    private bool isGrounded = true;
+    [HideInInspector] public bool isGrounded = true;
 
     private bool canWallJumpRight;
     private bool canWallJumpLeft;
@@ -45,10 +44,10 @@ public class PlayerController : MonoBehaviour
     public LayerMask whatIsWalls;
 
     private bool canAttatch;
-    public bool isWalledRight;
-    public bool isWalledLeft;
-    public bool isWalledFront;
-    public bool isWalledBack;
+    private bool isWalledRight;
+    private bool isWalledLeft;
+    private bool isWalledFront;
+    private bool isWalledBack;
 
     [Header("Gravity Modifier\n")]
     [SerializeField] private float wallGrav = -1f;

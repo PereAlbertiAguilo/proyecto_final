@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2552778701917222108}
   - component: {fileID: 2552778701913160614}
   - component: {fileID: 1846491426623112662}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: sky_platform_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,8 +112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9f54de97b7180845a07b6b33f102f3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: 21
-  delay: 0.09
+  force: 35
+  delay: 0.08
 --- !u!1 &2552778701915068090
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 2552778701916102616}
   - component: {fileID: 2552778701917224786}
   - component: {fileID: 2552778701905656528}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: rotor_blade big (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -229,7 +229,7 @@ GameObject:
   - component: {fileID: 2552778701914878302}
   - component: {fileID: 2552778701916184168}
   - component: {fileID: 2552778701917056374}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Jumper
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -16,8 +16,8 @@ public class GrapplingController : MonoBehaviour
     public new Transform camera;
     public Transform gunTip, player;
 
-    public bool isGrappled;
-    public bool isGrappleAvalible = true;
+    [HideInInspector] public bool isGrappled;
+    [HideInInspector] public bool isGrappleAvalible = true;
 
     [SerializeField] private float CooldownDuration = 1.0f;
 
