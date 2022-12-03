@@ -6,7 +6,7 @@ public class ForceFieldShooter : MonoBehaviour
 {
 
     private bool canShoot = true;
-    private bool isShooting;
+    private bool isGrappleInstatiated;
 
     [Header("Instance Parameters\n")]
     [SerializeField] private float speed;
@@ -90,10 +90,19 @@ public class ForceFieldShooter : MonoBehaviour
             {
                 instance[mode] = Instantiate(dobleJump, shootPoint.position, cam.transform.rotation);
             }
-            else if(mode == 1)
+            else if(mode == 1 && !isGrappleInstatiated)
             {
                 instance[mode] = Instantiate(forceField, shootPoint.position, cam.transform.rotation);
-                StartCoroutine(DestroyOverLifeTime(mode));
+
+                if (instance[1] != null)
+                {
+                    Destroy(instance[1], lifeTime);
+                }
+            }
+            else
+            {
+                mode = 0;
+                instance[mode] = Instantiate(dobleJump, shootPoint.position, cam.transform.rotation);
             }
 
             _rigidbody = instance[mode].GetComponentInChildren<Rigidbody>();
@@ -112,6 +121,12 @@ public class ForceFieldShooter : MonoBehaviour
         {
             _rigidbody.velocity = Vector3.zero;
             _sphereCollider.enabled = true;
+
+            if (instance[1] != null)
+            {
+                isGrappleInstatiated = true;
+                mode = 0;
+            }
         }
     }
 
@@ -149,19 +164,9 @@ public class ForceFieldShooter : MonoBehaviour
                     _animator.Play("arm_reload");
                     yield return new WaitForSeconds(0.4f);
                     canShoot = true;
+                    isGrappleInstatiated = false;
                 }
             }
-        }
-    }
-
-    IEnumerator DestroyOverLifeTime(int i)
-    {
-        yield return new WaitForSeconds(lifeTime);
-        if(instance[i] != null)
-        {
-            Destroy(instance[i]);
-            Instantiate(destroyParticle, instance[i].transform.position, Quaternion.identity);
-            currentInstance++;
         }
     }
 
