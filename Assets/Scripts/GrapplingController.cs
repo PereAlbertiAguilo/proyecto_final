@@ -9,6 +9,8 @@ public class GrapplingController : MonoBehaviour
     private Vector3 grapplePoint;
     private Vector3 currentGrapplePosition;
 
+    private GameObject target;
+
     private SpringJoint joint;
 
     public LayerMask whatIsGrappleable;
@@ -46,6 +48,18 @@ public class GrapplingController : MonoBehaviour
         {
             StopGrapple();
         }
+
+        if (isGrappled)
+        {
+            if(target != null)
+            {
+                joint.connectedAnchor = target.transform.position;
+            }
+            else
+            {
+                StopGrapple();
+            }
+        }
     }
 
     void LateUpdate()
@@ -58,7 +72,8 @@ public class GrapplingController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
         {
-            grapplePoint = hit.point;
+            target = hit.collider.gameObject;
+            grapplePoint = hit.transform.position;
             joint = player.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor = grapplePoint;
@@ -92,12 +107,17 @@ public class GrapplingController : MonoBehaviour
 
     void DrawRope()
     {
-        if (!joint) return;
+        if(target != null)
+        {
+            if (!joint)
+            {
+                return;
+            }
+            currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, target.transform.position, Time.deltaTime * 8f);
 
-        currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, grapplePoint, Time.deltaTime * 8f);
-
-        lr.SetPosition(0, gunTip.position);
-        lr.SetPosition(1, currentGrapplePosition);
+            lr.SetPosition(0, gunTip.position);
+            lr.SetPosition(1, currentGrapplePosition);
+        }
     }
 
     public bool IsGrappling()

@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody _playerRigidbody;
 
     private GrapplingController grapplingController;
+    private ForceFieldShooter forceFieldShooter;
+
     [SerializeField] private Transform cam;
 
     [Header("Speed Parametres\n")]
@@ -58,6 +60,7 @@ public class PlayerController : MonoBehaviour
     {
         _playerRigidbody = GetComponent<Rigidbody>();
         grapplingController = FindObjectOfType<GrapplingController>();
+        forceFieldShooter = FindObjectOfType<ForceFieldShooter>();
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -377,6 +380,7 @@ public class PlayerController : MonoBehaviour
         {
             canSecondJump = true;
             Destroy(other.gameObject);
+            //forceFieldShooter.currentInstance--;
         }
     }
 }

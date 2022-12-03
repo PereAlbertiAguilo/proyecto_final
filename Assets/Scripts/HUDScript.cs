@@ -12,12 +12,14 @@ public class HUDScript : MonoBehaviour
     private void Start()
     {
         forceFieldShooter = FindObjectOfType<ForceFieldShooter>();
+
+        slider.maxValue = forceFieldShooter.maxInstances;
     }
 
     private void Update()
     {
         GameObject[] g = GameObject.FindGameObjectsWithTag("SecondJump");
 
-        slider.value = 5 - forceFieldShooter.currentInstance;
+        slider.value = slider.maxValue - forceFieldShooter.currentInstance;
     }
 }

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3300120}
   - component: {fileID: 2334294}
   - component: {fileID: 6433248}
-  - component: {fileID: 20572546}
   m_Layer: 0
   m_Name: lampost_lod1 (9)
   m_TagString: Untagged
@@ -27,15 +26,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 137404}
-  m_LocalRotation: {x: -0.7069846, y: 0, z: 0, w: 0.70722896}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -44, y: 3.9699993, z: 35}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.64645, y: 0.6464499, z: 0.6464499}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 486600}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &3300120
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -100,29 +99,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: f2ce1d49969bf3a48b3f6069bda5fb29, type: 3}
---- !u!205 &20572546
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 137404}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 1.1659069, y: -0.028298616, z: 2.8359792}
-  m_Size: 5.684649
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.29666877
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2334294}
-  - screenRelativeHeight: 0.047415063
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2303670}
-  m_Enabled: 1
 --- !u!1 &198674
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,9 @@ public class ForceFieldShooter : MonoBehaviour
     [Header("Instance Parameters\n")]
     [SerializeField] private float speed;
     [SerializeField] private float cooldown = 2f;
-    [SerializeField] private int maxInstances;
+    [SerializeField] private float lifeTime = 10f;
+
+    public int maxInstances;
     [HideInInspector] public int currentInstance;
 
     private int mode;
@@ -21,8 +23,8 @@ public class ForceFieldShooter : MonoBehaviour
     [Header("Instances\n")]
     [SerializeField] GameObject forceField;
     [SerializeField] GameObject dobleJump;
-    [SerializeField] GameObject particle;
-    private GameObject instance;
+    [SerializeField] GameObject destroyParticle;
+    [SerializeField] private GameObject[] instance;
 
     private Rigidbody _rigidbody;
 
@@ -30,15 +32,17 @@ public class ForceFieldShooter : MonoBehaviour
 
     private PlayerController playerController;
 
-    [Header("\n")]
+    [Header("Others\n")]
+    [SerializeField] private float clickDist;
     [SerializeField] private Animator _animator;
+    [SerializeField] private new Transform camera;
 
     private List<GameObject> forceFields = new List<GameObject>();
 
     private void Start()
     {
         playerController = FindObjectOfType<PlayerController>();
-        mode = 1;
+        mode = 0;
         currentInstance = 0;
     }
 
@@ -46,71 +50,60 @@ public class ForceFieldShooter : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            mode = 1;
+            mode = 0;
         }
         else if(Input.GetKeyDown(KeyCode.Alpha2))
         {
-            mode = 2;
-        } 
-
+            mode = 1;
+        }
+        if(instance[1] == null && currentInstance > 0)
+        {
+            currentInstance = forceFields.Count;
+        }
 
         if (Input.GetMouseButtonDown(1))
         {
             Shoot();
-            _animator.Play("arm_shoot");
         }
         else if (Input.GetMouseButtonUp(1))
         {
             StopForceField();
-            _animator.Play("arm_reload");
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if(forceFields.Count > 0 && playerController.isGrounded)
-            {
-                foreach (GameObject g in forceFields)
-                {
-                    Destroy(g);
-                    currentInstance = 0;
-                }
-            }
+            StartCoroutine(Fill());
         }
     }
 
     void Shoot()
     {
-        /*
-        if (forceFields.Count >= maxInstances)
-        {
-            Destroy(forceFields[0]);
-            forceFields.Remove(forceFields[0]);
-        }
-        */
         if (canShoot && currentInstance < maxInstances)
         {
+            _animator.Play("arm_shoot");
+
             canShoot = false;
 
             currentInstance++;
 
-            if(mode == 1)
+            if(mode == 0)
             {
-                instance = Instantiate(forceField, shootPoint.position, cam.transform.rotation);
+                instance[mode] = Instantiate(dobleJump, shootPoint.position, cam.transform.rotation);
             }
-            else if(mode == 2)
+            else if(mode == 1)
             {
-                instance = Instantiate(dobleJump, shootPoint.position, cam.transform.rotation);
+                instance[mode] = Instantiate(forceField, shootPoint.position, cam.transform.rotation);
+                StartCoroutine(DestroyOverLifeTime(mode));
             }
 
-            Instantiate(particle, shootPoint.position, cam.transform.rotation);
-            _rigidbody = instance.GetComponentInChildren<Rigidbody>();
-            _sphereCollider = instance.GetComponentInChildren<SphereCollider>();
+            _rigidbody = instance[mode].GetComponentInChildren<Rigidbody>();
+            _sphereCollider = instance[mode].GetComponentInChildren<SphereCollider>();
+
             _sphereCollider.enabled = false;
-            _rigidbody.AddForce(instance.transform.forward * speed * 10, ForceMode.Force);
-            forceFields.Add(instance);
+            _rigidbody.AddForce(instance[mode].transform.forward * speed * 10, ForceMode.Force);
+            forceFields.Add(instance[mode]);
 
             StartCoroutine(Cooldown());
-            StartCoroutine(MaxDisplacement());
         }
     }
     void StopForceField()
@@ -119,26 +112,68 @@ public class ForceFieldShooter : MonoBehaviour
         {
             _rigidbody.velocity = Vector3.zero;
             _sphereCollider.enabled = true;
-
-            /*
-            if (forceFields.Count > maxInstances)
-            {
-                Destroy(forceFields[0]);
-                forceFields.Remove(forceFields[0]);
-            }
-            */
         }
     }
 
-    IEnumerator MaxDisplacement()
+    IEnumerator Fill()
     {
-        yield return new WaitForSeconds(cooldown);
-        StopForceField();
+        RaycastHit hit;
+        if (Physics.Raycast(camera.position, camera.forward, out hit, clickDist))
+        {
+            if (hit.transform.CompareTag("Reset"))
+            {
+                if (playerController.isGrounded && forceFields.Count > 0)
+                {
+                    _animator.Play("arm_shoot");
+
+                    for (int i = 0; i <= currentInstance + 1; i++)
+                    {
+                        if (forceFields.Count > 0)
+                        {
+                            canShoot = false;
+
+                            currentInstance--;
+
+                            if (forceFields[currentInstance] != null)
+                            {
+                                Instantiate(destroyParticle, forceFields[currentInstance].transform.position, Quaternion.identity);
+                            }
+
+                            Destroy(forceFields[currentInstance]);
+                            forceFields.Remove(forceFields[currentInstance]);
+
+                            yield return new WaitForSeconds(0.1f);
+                        }
+                    }
+
+                    _animator.Play("arm_reload");
+                    yield return new WaitForSeconds(0.4f);
+                    canShoot = true;
+                }
+            }
+        }
+    }
+
+    IEnumerator DestroyOverLifeTime(int i)
+    {
+        yield return new WaitForSeconds(lifeTime);
+        if(instance[i] != null)
+        {
+            Destroy(instance[i]);
+            Instantiate(destroyParticle, instance[i].transform.position, Quaternion.identity);
+            currentInstance++;
+        }
     }
 
     IEnumerator Cooldown()
     {
         yield return new WaitForSeconds(cooldown);
-        canShoot = true;
+
+        StopForceField();
+
+        if (currentInstance <= maxInstances)
+        {
+            canShoot = true;
+        }
     }
 }

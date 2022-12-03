@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(BoxCollider))]
 public class ResetLevel : MonoBehaviour
@@ -11,7 +12,7 @@ public class ResetLevel : MonoBehaviour
     {
         if (other.gameObject.name.Equals("Player"))
         {
-            other.transform.position = levelStart.position;
+            SceneManager.LoadScene("Test");
         }
     }
 }

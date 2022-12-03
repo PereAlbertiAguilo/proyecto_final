@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 3289455456557514548}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5723139, y: 0.5723139, z: 0.5723139}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5395613195212718180}
@@ -40,6 +40,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2946008945266696759}
     m_Modifications:
+    - target: {fileID: 2804262938100215440, guid: 01863298fd8269d4db06f94ca8732d1b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0004
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804262938100215440, guid: 01863298fd8269d4db06f94ca8732d1b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0006
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804262938100215440, guid: 01863298fd8269d4db06f94ca8732d1b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 14.885
+      objectReference: {fileID: 0}
     - target: {fileID: 2804262938100511408, guid: 01863298fd8269d4db06f94ca8732d1b,
         type: 3}
       propertyPath: m_Layer
@@ -135,6 +150,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2946008945266696759}
     m_Modifications:
+    - target: {fileID: 2804262938100215440, guid: 01863298fd8269d4db06f94ca8732d1b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0016
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804262938100215440, guid: 01863298fd8269d4db06f94ca8732d1b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0006
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804262938100215440, guid: 01863298fd8269d4db06f94ca8732d1b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 14.821
+      objectReference: {fileID: 0}
     - target: {fileID: 2804262938100511408, guid: 01863298fd8269d4db06f94ca8732d1b,
         type: 3}
       propertyPath: m_Layer

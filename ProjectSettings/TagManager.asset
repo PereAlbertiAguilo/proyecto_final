@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - SecondJump
+  - Reset
   layers:
   - Default
   - TransparentFX
