@@ -21,9 +21,9 @@ public class ForceFieldShooter : MonoBehaviour
     [SerializeField] public Transform shootPoint, cam;
 
     [Header("Instances\n")]
-    [SerializeField] GameObject forceField;
-    [SerializeField] GameObject dobleJump;
-    [SerializeField] GameObject destroyParticle;
+    [SerializeField] private GameObject forceField;
+    [SerializeField] private GameObject dobleJump;
+    [SerializeField] public GameObject destroyParticle;
     [SerializeField] private GameObject[] instance;
 
     private Rigidbody _rigidbody;

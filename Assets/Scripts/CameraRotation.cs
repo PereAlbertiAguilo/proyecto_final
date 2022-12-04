@@ -22,17 +22,17 @@ public class CameraRotation : MonoBehaviour
     }
     private void Update()
     {
-        if(PCScript.canMove)
+        if (PCScript.canMove)
         {
-            float mouseX = Input.GetAxisRaw("Mouse X") * sensX * Time.smoothDeltaTime;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * sensY * Time.smoothDeltaTime;
-
-            /*
-            print(mouseY);
+            float mouseX = Input.GetAxisRaw("Mouse X") * sensX;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * sensY;
 
             orientation.rotation *= Quaternion.Euler(0f, mouseX, 0f);
             transform.rotation *= Quaternion.Euler(-mouseY, 0f, 0f);
+            /*
+            
             */
+            /*
             yRotation += mouseX;
 
             xRotation -= mouseY;
@@ -41,7 +41,6 @@ public class CameraRotation : MonoBehaviour
             transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
             /*
-            
             */
         }
     }

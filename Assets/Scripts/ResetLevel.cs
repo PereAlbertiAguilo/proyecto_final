@@ -8,6 +8,11 @@ public class ResetLevel : MonoBehaviour
 {
     public Transform levelStart;
 
+    private void Start()
+    {
+        GameObject.Find("Player").transform.position = levelStart.transform.position;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name.Equals("Player"))

@@ -15,11 +15,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float force = 30f;
     [SerializeField] private float groundDrag = 10f;
     [SerializeField] private float airMultiplyer;
+    [SerializeField] private float fieldOfView;
 
     [HideInInspector] public bool canMove = true;
     private bool canSlide = true;
     private bool isSliding;
-    [SerializeField]private bool isRunning;
+    private bool isRunning;
 
     private float horizontalInput;
     private float verticalInput;
@@ -79,6 +80,7 @@ public class PlayerController : MonoBehaviour
         {
             PlayerInput();
             SpeedControl();
+            Running(isRunning);
 
             if (isGrounded)
             {
@@ -311,6 +313,31 @@ public class PlayerController : MonoBehaviour
         }   
     }
 
+    void Running(bool b)
+    {
+
+        float fov;
+        fov = cam.GetComponentInChildren<Camera>().fieldOfView;
+
+        if (isGrounded)
+        {
+            if (b)
+            {
+                fov = Mathf.Lerp(fov, fieldOfView + 5, 0.1f);
+            }
+            else
+            {
+                fov = Mathf.Lerp(fov, fieldOfView, 0.1f);
+            }
+        }
+        else
+        {
+            fov = Mathf.Lerp(fov, fieldOfView, 0.1f);
+        }
+
+        cam.GetComponentInChildren<Camera>().fieldOfView = fov;
+    }
+
     void SpeedControl()
     {
         Vector3 flatVel = new Vector3(_playerRigidbody.velocity.x, 0, _playerRigidbody.velocity.z);
@@ -380,7 +407,7 @@ public class PlayerController : MonoBehaviour
         {
             canSecondJump = true;
             Destroy(other.gameObject);
-            //forceFieldShooter.currentInstance--;
+            Instantiate(forceFieldShooter.destroyParticle, other.transform.position, Quaternion.identity);
         }
     }
 }
