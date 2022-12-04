@@ -96,7 +96,7 @@ public class ForceFieldShooter : MonoBehaviour
 
                 if (instance[1] != null)
                 {
-                    Destroy(instance[1], lifeTime);
+                    StartCoroutine(DelayDestory());
                 }
             }
             else
@@ -154,7 +154,7 @@ public class ForceFieldShooter : MonoBehaviour
                                 Instantiate(destroyParticle, forceFields[currentInstance].transform.position, Quaternion.identity);
                             }
 
-                            Destroy(forceFields[currentInstance]);
+                            Destroy(forceFields[currentInstance] != null ? forceFields[currentInstance] : null);
                             forceFields.Remove(forceFields[currentInstance]);
 
                             yield return new WaitForSeconds(0.1f);
@@ -167,6 +167,25 @@ public class ForceFieldShooter : MonoBehaviour
                     isGrappleInstatiated = false;
                 }
             }
+        }
+    }
+
+    IEnumerator DelayDestory()
+    {
+        yield return new WaitForSeconds(lifeTime - 0.45f);
+        if (instance[1] != null)
+        {
+            instance[1].GetComponent<Animator>().Play("forcefield_destroy");
+        }
+        yield return new WaitForSeconds(0.35f);
+        if (instance[1] != null)
+        {
+            Instantiate(destroyParticle, instance[1].transform.position, Quaternion.identity);
+        }
+        yield return new WaitForSeconds(0.15f);
+        if (instance[1] != null)
+        {
+            Destroy(instance[1]);
         }
     }
 

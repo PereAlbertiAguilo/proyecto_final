@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 367257852604053357}
   - component: {fileID: 367257852604053358}
   - component: {fileID: 6219821236471458821}
+  - component: {fileID: 9178620366998589777}
   m_Layer: 12
   m_Name: Grappable
   m_TagString: Untagged
@@ -97,7 +98,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.65
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6219821236471458821
 Rigidbody:
@@ -115,6 +116,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &9178620366998589777
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367257852604053359}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d62a00c52518217469e3b5d95a537964, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7863541690818811076
 GameObject:
   m_ObjectHideFlags: 0

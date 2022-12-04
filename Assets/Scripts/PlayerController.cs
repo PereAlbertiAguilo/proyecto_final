@@ -406,8 +406,15 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("SecondJump"))
         {
             canSecondJump = true;
-            Destroy(other.gameObject);
-            Instantiate(forceFieldShooter.destroyParticle, other.transform.position, Quaternion.identity);
+            StartCoroutine(Delay(other));
+            Destroy(other.gameObject, 0.45f);
+            other.GetComponent<Animator>().Play("forcefield_destroy");
         }
+    }
+
+    IEnumerator Delay(Collider other)
+    {
+        yield return new WaitForSeconds(0.40f);
+        Instantiate(forceFieldShooter.destroyParticle, other.transform.position, Quaternion.identity);
     }
 }
