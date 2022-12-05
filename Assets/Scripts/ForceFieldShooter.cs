@@ -5,15 +5,19 @@ using UnityEngine;
 public class ForceFieldShooter : MonoBehaviour
 {
 
-    private bool canShoot = true;
+    [HideInInspector] public bool canShoot = true;
     private bool isGrappleInstatiated;
+    [HideInInspector] public bool isTimerOn;
+    private bool canReload;
 
     [Header("Instance Parameters\n")]
     [SerializeField] private float speed;
-    [SerializeField] private float cooldown = 2f;
-    [SerializeField] private float lifeTime = 10f;
+    public float cooldown = 2f;
+    public float lifeTime = 10f;
+    [HideInInspector] public float currentLife;
 
-    public int maxInstances;
+
+    [HideInInspector] public int maxInstances;
     [HideInInspector] public int currentInstance;
 
     private int mode;
@@ -37,30 +41,63 @@ public class ForceFieldShooter : MonoBehaviour
     [SerializeField] private Animator _animator;
     [SerializeField] private new Transform camera;
 
-    private List<GameObject> forceFields = new List<GameObject>();
+
+    [Header("Hand Color\n")]
+    [SerializeField] private Material handMat;
+
+    [ColorUsage(true, true)]
+    [SerializeField] private Color matColorBlue;
+    [ColorUsage(true, true)]
+    [SerializeField] private Color matColorPurple;
+
+    public List<GameObject> forceFields = new List<GameObject>();
 
     private void Start()
     {
         playerController = FindObjectOfType<PlayerController>();
         mode = 0;
         currentInstance = 0;
+        currentLife = lifeTime;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        PlayerInput();
+
+        Timer(lifeTime);
+
+        if (mode == 1)
         {
+            handMat.SetColor("_EmissionColor", matColorPurple);
+        }
+        else
+        {
+            handMat.SetColor("_EmissionColor", matColorBlue);
+        }
+
+        if (instance[1] != null)
+        {
+            isGrappleInstatiated = true;
             mode = 0;
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        else
         {
-            mode = 1;
+            isGrappleInstatiated = false;
         }
-        if(instance[1] == null && currentInstance > 0)
+
+        if (instance[1] == null && currentInstance > 0)
         {
             currentInstance = forceFields.Count;
         }
 
+        if(forceFields.Count > 0)
+        {
+            canReload = true;
+        }
+    }
+
+    void PlayerInput()
+    {
         if (Input.GetMouseButtonDown(1))
         {
             Shoot();
@@ -73,6 +110,37 @@ public class ForceFieldShooter : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(Fill());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            mode = 0;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            mode = 1;
+        }
+    }
+
+    void Timer(float t)
+    {
+        if (instance[1] != null && isTimerOn)
+        {
+            currentLife -= Time.deltaTime;
+
+            if (currentLife <= 0.0f)
+            {
+                isTimerOn = false;
+
+                instance[1].GetComponent<Animator>().Play("forcefield_destroy");
+                Instantiate(destroyParticle, instance[1].transform.position, Quaternion.identity);
+
+                Destroy(instance[1], 0.5f);
+            }
+        }
+        else
+        {
+            currentLife = t;
         }
     }
 
@@ -94,10 +162,7 @@ public class ForceFieldShooter : MonoBehaviour
             {
                 instance[mode] = Instantiate(forceField, shootPoint.position, cam.transform.rotation);
 
-                if (instance[1] != null)
-                {
-                    StartCoroutine(DelayDestory());
-                }
+                isTimerOn = true;
             }
             else
             {
@@ -119,14 +184,13 @@ public class ForceFieldShooter : MonoBehaviour
     {
         if(_rigidbody != null)
         {
+            if (!canShoot && _rigidbody.velocity != Vector3.zero)
+            {
+                _animator.Play("arm_reload");
+            }
+
             _rigidbody.velocity = Vector3.zero;
             _sphereCollider.enabled = true;
-
-            if (instance[1] != null)
-            {
-                isGrappleInstatiated = true;
-                mode = 0;
-            }
         }
     }
 
@@ -137,55 +201,43 @@ public class ForceFieldShooter : MonoBehaviour
         {
             if (hit.transform.CompareTag("Reset"))
             {
-                if (playerController.isGrounded && forceFields.Count > 0)
+                if (playerController.isGrounded && forceFields.Count > 0 && canReload)
                 {
                     _animator.Play("arm_shoot");
 
-                    for (int i = 0; i <= currentInstance + 1; i++)
+                    canShoot = false;
+                    canReload = false;
+
+                    foreach (GameObject g in forceFields)
                     {
-                        if (forceFields.Count > 0)
+                        if (g != null)
                         {
-                            canShoot = false;
+                            Instantiate(destroyParticle, g.transform.position, Quaternion.identity);
+                            g.GetComponent<Animator>().Play("forcefield_destroy");
 
-                            currentInstance--;
-
-                            if (forceFields[currentInstance] != null)
-                            {
-                                Instantiate(destroyParticle, forceFields[currentInstance].transform.position, Quaternion.identity);
-                            }
-
-                            Destroy(forceFields[currentInstance] != null ? forceFields[currentInstance] : null);
-                            forceFields.Remove(forceFields[currentInstance]);
-
-                            yield return new WaitForSeconds(0.1f);
+                            Destroy(g, 0.50f);
                         }
                     }
 
+                    foreach (GameObject g in instance)
+                    {
+                        Destroy(g, 0.50f);
+                    }
+
+                    forceFields.Clear();
+
+                    yield return new WaitForSeconds(0.1f);
+
+                    currentInstance = 0;
+
                     _animator.Play("arm_reload");
-                    yield return new WaitForSeconds(0.4f);
+
                     canShoot = true;
                     isGrappleInstatiated = false;
+                    isTimerOn = false;
+                    canReload = true;
                 }
             }
-        }
-    }
-
-    IEnumerator DelayDestory()
-    {
-        yield return new WaitForSeconds(lifeTime - 0.45f);
-        if (instance[1] != null)
-        {
-            instance[1].GetComponent<Animator>().Play("forcefield_destroy");
-        }
-        yield return new WaitForSeconds(0.35f);
-        if (instance[1] != null)
-        {
-            Instantiate(destroyParticle, instance[1].transform.position, Quaternion.identity);
-        }
-        yield return new WaitForSeconds(0.15f);
-        if (instance[1] != null)
-        {
-            Destroy(instance[1]);
         }
     }
 
@@ -195,7 +247,7 @@ public class ForceFieldShooter : MonoBehaviour
 
         StopForceField();
 
-        if (currentInstance <= maxInstances)
+        if (currentInstance < maxInstances)
         {
             canShoot = true;
         }

@@ -29,6 +29,19 @@ public class CameraRotation : MonoBehaviour
 
             orientation.rotation *= Quaternion.Euler(0f, mouseX, 0f);
             transform.rotation *= Quaternion.Euler(-mouseY, 0f, 0f);
+
+            /*
+            if(transform.localEulerAngles.x >= 90)
+            {
+                transform.rotation = Quaternion.Euler(90, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+            }
+
+            if (transform.localEulerAngles.x <= -90)
+            {
+                transform.rotation = Quaternion.Euler(-90, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+            }
+            */
+            //transform.rotation = Quaternion.Euler(Mathf.Clamp(transform.localEulerAngles.x, -90, 90), transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
             /*
             
             */
