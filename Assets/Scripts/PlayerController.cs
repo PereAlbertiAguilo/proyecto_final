@@ -86,7 +86,6 @@ public class PlayerController : MonoBehaviour
             {
                 _playerRigidbody.drag = groundDrag;
                 canAttatch = true;
-                canSecondJump = false;
                 CantWallJump();
                 Physics.gravity = new Vector3(0, normalGrav, 0);
             }
@@ -98,7 +97,6 @@ public class PlayerController : MonoBehaviour
             if (isWalledRight || isWalledLeft || isWalledBack || isWalledFront)
             {
                 Physics.gravity = new Vector3(0, wallGrav, 0);
-                canSecondJump = false;
             }
             else if (!isGrounded)
             {
@@ -149,7 +147,8 @@ public class PlayerController : MonoBehaviour
                 Invoke(nameof(JumpReset), jumpCooldown);
             }
         }
-        else if (Input.GetKey(KeyCode.Space) && canSecondJump && !grapplingController.isGrappled)
+
+        if (Input.GetKeyDown(KeyCode.Space) && canSecondJump && !grapplingController.isGrappled && !isGrounded)
         {
             canSecondJump = false;
 
@@ -415,6 +414,6 @@ public class PlayerController : MonoBehaviour
     IEnumerator Delay(Collider other)
     {
         yield return new WaitForSeconds(0.40f);
-        Instantiate(forceFieldShooter.destroyParticle, other.transform.position, Quaternion.identity);
+        Instantiate(forceFieldShooter.destroyParticlePurple, other.transform.position, Quaternion.identity);
     }
 }

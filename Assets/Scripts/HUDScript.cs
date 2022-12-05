@@ -14,6 +14,7 @@ public class HUDScript : MonoBehaviour
     [SerializeField] private Slider slider3;
 
     private float value;
+    private bool timer;
 
     private void Start()
     {
@@ -30,16 +31,27 @@ public class HUDScript : MonoBehaviour
     {
         slider1.value = slider1.maxValue - forceFieldShooter.currentInstance;
 
-        if (forceFieldShooter.forceFields.Count <= forceFieldShooter.maxInstances && Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1))
         {
-            value = forceFieldShooter.cooldown;
+            if (forceFieldShooter.forceFields.Count > 0)
+            {
+                timer = true;
+            }
         }
+        
 
-        if(value > 0)
+        if(value > 0 && timer)
         {
+            //value = forceFieldShooter.cooldown;
+
             value -= Time.deltaTime;
 
             slider2.value = value;
+        }
+        else if (forceFieldShooter.canShoot)
+        {
+            value = forceFieldShooter.cooldown;
+            timer = false;
         }
 
         if (!forceFieldShooter.isTimerOn)
