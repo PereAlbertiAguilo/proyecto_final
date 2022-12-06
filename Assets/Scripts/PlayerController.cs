@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask whatIsGorund;
 
     private bool canJump = true;
-    private bool canSecondJump;
+    [HideInInspector] public bool canSecondJump;
     [HideInInspector] public bool isGrounded = true;
 
     private bool canWallJumpRight;

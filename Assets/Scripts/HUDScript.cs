@@ -6,12 +6,13 @@ using UnityEngine.UI;
 public class HUDScript : MonoBehaviour
 {
     private ForceFieldShooter forceFieldShooter;
+    private PlayerController playerController;
 
     [SerializeField] private Slider slider1;
-
     [SerializeField] private Slider slider2;
-
     [SerializeField] private Slider slider3;
+
+    [SerializeField] private Toggle toggle;
 
     private float value;
     private bool timer;
@@ -19,6 +20,7 @@ public class HUDScript : MonoBehaviour
     private void Start()
     {
         forceFieldShooter = FindObjectOfType<ForceFieldShooter>();
+        playerController = FindObjectOfType<PlayerController>();
 
         slider1.maxValue = forceFieldShooter.maxInstances;
 
@@ -27,7 +29,7 @@ public class HUDScript : MonoBehaviour
         slider3.maxValue = forceFieldShooter.lifeTime;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         slider1.value = slider1.maxValue - forceFieldShooter.currentInstance;
 
@@ -38,12 +40,18 @@ public class HUDScript : MonoBehaviour
                 timer = true;
             }
         }
-        
 
-        if(value > 0 && timer)
+        if (playerController.canSecondJump)
         {
-            //value = forceFieldShooter.cooldown;
+            toggle.isOn = true;
+        }
+        else
+        {
+            toggle.isOn = false;
+        }
 
+        if (value > 0 && timer)
+        {
             value -= Time.deltaTime;
 
             slider2.value = value;

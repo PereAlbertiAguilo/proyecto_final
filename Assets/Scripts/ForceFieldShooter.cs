@@ -40,8 +40,6 @@ public class ForceFieldShooter : MonoBehaviour
     [Header("Others\n")]
     [SerializeField] private float clickDist;
     [SerializeField] private Animator _animator;
-    [SerializeField] private new Transform camera;
-
 
     [Header("Hand Color\n")]
     [SerializeField] private Material handMat;
@@ -198,7 +196,7 @@ public class ForceFieldShooter : MonoBehaviour
     IEnumerator Fill()
     {
         RaycastHit hit;
-        if (Physics.Raycast(camera.position, camera.forward, out hit, clickDist))
+        if (Physics.Raycast(cam.position, cam.forward, out hit, clickDist))
         {
             if (hit.transform.CompareTag("Reset"))
             {
