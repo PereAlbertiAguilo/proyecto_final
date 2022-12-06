@@ -38,6 +38,11 @@ public class GrapplingController : MonoBehaviour
         lr = GetComponent<LineRenderer>();
     }
 
+    private void Start()
+    {
+        StopGrapple();
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && isGrappleAvalible)

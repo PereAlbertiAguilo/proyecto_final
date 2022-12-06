@@ -3006,7 +3006,7 @@ MonoBehaviour:
   massScale: 20
   maxStrech: 0.25
   minStrech: 0.2
-  maxDistance: 15
+  maxDistance: 16
 --- !u!120 &1589103617
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -3071,9 +3071,9 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 0}
-      key1: {r: 0.85966986, g: 0.5707547, b: 1, a: 0}
-      key2: {r: 0, g: 0, b: 0, a: 1}
+      key0: {r: 0.85966986, g: 0.5707547, b: 1, a: 1}
+      key1: {r: 0.85966986, g: 0.5707547, b: 1, a: 0.5882353}
+      key2: {r: 0, g: 0, b: 0, a: 0.5882353}
       key3: {r: 0, g: 0, b: 0, a: 1}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
@@ -3088,8 +3088,8 @@ LineRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 14264
-      atime2: 31611
+      atime1: 20239
+      atime2: 47609
       atime3: 65535
       atime4: 0
       atime5: 0
@@ -3132,9 +3132,9 @@ MonoBehaviour:
     type: 3}
   dobleJump: {fileID: 5214774603021519068, guid: 1c07b5eb0a032a4449e4ccf872904523,
     type: 3}
-  destroyParticlePurple: {fileID: 6177091066851129571, guid: a1f4ddd54beab644fb1ed6964b1dad94,
+  destroyParticlePurple: {fileID: 3123075737211501182, guid: c8db62ee0caa5ba4398dce77e53d238f,
     type: 3}
-  destroyParticleBlue: {fileID: 6177091066851129571, guid: 992856b1a534f084b80615482a22ca6e,
+  destroyParticleBlue: {fileID: 3123075737211501182, guid: a3f72d5f213bb7d458dfc2c4369e7acf,
     type: 3}
   instance:
   - {fileID: 0}
@@ -3873,7 +3873,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2067999054}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3885,7 +3885,7 @@ Transform:
   - {fileID: 502618573}
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2068198529
 GameObject:
   m_ObjectHideFlags: 0

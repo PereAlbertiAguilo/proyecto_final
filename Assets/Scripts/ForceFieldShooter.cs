@@ -108,7 +108,7 @@ public class ForceFieldShooter : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            StartCoroutine(Fill());
+            StartCoroutine(Reload());
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -193,7 +193,7 @@ public class ForceFieldShooter : MonoBehaviour
         }
     }
 
-    IEnumerator Fill()
+    IEnumerator Reload()
     {
         RaycastHit hit;
         if (Physics.Raycast(cam.position, cam.forward, out hit, clickDist))
@@ -241,6 +241,7 @@ public class ForceFieldShooter : MonoBehaviour
                     canShoot = true;
                     isGrappleInstatiated = false;
                     isTimerOn = false;
+                    playerController.canSecondJump = false;
                     canReload = true;
                 }
             }
