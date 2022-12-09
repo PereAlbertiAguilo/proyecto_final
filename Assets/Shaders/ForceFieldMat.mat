@@ -55,7 +55,7 @@ Material:
     - _Grid_Scale: 2
     - _Noise_Scale: 10
     - _Offset: 0.05
-    - _Power: 2.5
+    - _Power: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Speed: 0.2
