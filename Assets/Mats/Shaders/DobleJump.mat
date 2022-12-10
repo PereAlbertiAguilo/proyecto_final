@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ForceFieldMat
+  m_Name: DobleJump
   m_Shader: {fileID: -6465566751694194690, guid: 7ad01e07a8b6bf04c893b82cc59146f7,
     type: 3}
   m_ValidKeywords: []
@@ -55,10 +55,10 @@ Material:
     - _Grid_Scale: 2
     - _Noise_Scale: 10
     - _Offset: 0.05
-    - _Power: 1
+    - _Power: 2.5
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Speed: 0.2
+    - _Speed: 0.05
     m_Colors:
-    - _Emision: {r: 0.5803922, g: 0, b: 1.4980392, a: 0}
+    - _Emision: {r: 0, g: 0.09411765, b: 1.4980392, a: 0}
   m_BuildTextureStacks: []
