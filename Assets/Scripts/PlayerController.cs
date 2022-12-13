@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private GrapplingController grapplingController;
     private ForceFieldShooter forceFieldShooter;
 
+    [SerializeField] private Transform virtualCam;
     [SerializeField] private Transform cam;
 
     [Header("Speed Parametres\n")]
@@ -81,6 +83,8 @@ public class PlayerController : MonoBehaviour
             PlayerInput();
             SpeedControl();
             Running(isRunning);
+
+            transform.rotation = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0);
 
             if (isGrounded)
             {
@@ -316,7 +320,7 @@ public class PlayerController : MonoBehaviour
     {
 
         float fov;
-        fov = cam.GetComponentInChildren<Camera>().fieldOfView;
+        fov = virtualCam.GetComponent<CinemachineVirtualCamera>().m_Lens.FieldOfView;
 
         if (isGrounded)
         {
@@ -334,7 +338,7 @@ public class PlayerController : MonoBehaviour
             fov = Mathf.Lerp(fov, fieldOfView, 0.1f);
         }
 
-        cam.GetComponentInChildren<Camera>().fieldOfView = fov;
+        virtualCam.GetComponent<CinemachineVirtualCamera>().m_Lens.FieldOfView = fov;
     }
 
     void SpeedControl()
