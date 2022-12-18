@@ -111,7 +111,6 @@ GameObject:
   - component: {fileID: 3331902}
   - component: {fileID: 2370732}
   - component: {fileID: 6445372}
-  - component: {fileID: 20571378}
   m_Layer: 0
   m_Name: sky_floor_lod1 (6)
   m_TagString: Untagged
@@ -200,26 +199,3 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300016, guid: 71f6b54e2e708df4db10865532ccfe85, type: 3}
---- !u!205 &20571378
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 187770}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.0020842552, y: 0, z: -0.34707475}
-  m_Size: 10.5737505
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.39539915
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2370732}
-  - screenRelativeHeight: 0.024102561
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2394776}
-  m_Enabled: 1
