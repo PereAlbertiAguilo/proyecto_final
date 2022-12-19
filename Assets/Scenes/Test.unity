@@ -756,7 +756,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 98946171}
   m_Lens:
-    FieldOfView: 74.95637
+    FieldOfView: 74.16615
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -4707,7 +4707,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 74.95637
+  field of view: 74.16615
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
@@ -5611,7 +5611,7 @@ GameObject:
   - component: {fileID: 2846758387046699739}
   - component: {fileID: 4185833061764851640}
   - component: {fileID: 1295484460}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: OuterRin_Alpha02_polySurface2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
