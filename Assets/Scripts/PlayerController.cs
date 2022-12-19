@@ -295,7 +295,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (isRunning)
             {
-                _playerRigidbody.AddForce(moveDirection.normalized * force * 12f, ForceMode.Force);
+                _playerRigidbody.AddForce(moveDirection.normalized * force * 13f, ForceMode.Force);
             }
             else
             {
@@ -322,20 +322,13 @@ public class PlayerController : MonoBehaviour
         float fov;
         fov = virtualCam.GetComponent<CinemachineVirtualCamera>().m_Lens.FieldOfView;
 
-        if (isGrounded)
+        if (b)
         {
-            if (b)
-            {
-                fov = Mathf.Lerp(fov, fieldOfView + 5, 0.1f);
-            }
-            else
-            {
-                fov = Mathf.Lerp(fov, fieldOfView, 0.1f);
-            }
+            fov = Mathf.Lerp(fov, fieldOfView + 5, 0.05f);
         }
         else
         {
-            fov = Mathf.Lerp(fov, fieldOfView, 0.1f);
+            fov = Mathf.Lerp(fov, fieldOfView, 0.05f);
         }
 
         virtualCam.GetComponent<CinemachineVirtualCamera>().m_Lens.FieldOfView = fov;
