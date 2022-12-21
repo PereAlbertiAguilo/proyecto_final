@@ -72,12 +72,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHight * 0.5f + 0.1f, whatIsGorund);
-
-        Debug.DrawRay(transform.position, Vector3.down, Color.green);
-        Debug.DrawRay(transform.position, transform.right, Color.blue);
-        Debug.DrawRay(transform.position, -transform.right, Color.red);
-        
         if (canMove)
         {
             PlayerInput();
@@ -133,6 +127,8 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         MovePlayer();
+
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHight * 0.5f + 0.1f, whatIsGorund);
     }
 
     void PlayerInput()
@@ -326,7 +322,7 @@ public class PlayerController : MonoBehaviour
         {
             fov = Mathf.Lerp(fov, fieldOfView + 5, 0.05f);
         }
-        else
+        else if(isGrounded)
         {
             fov = Mathf.Lerp(fov, fieldOfView, 0.05f);
         }
