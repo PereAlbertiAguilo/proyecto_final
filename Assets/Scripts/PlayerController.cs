@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
     Rigidbody _playerRigidbody;
 
     private GrapplingController grapplingController;
-    private ForceFieldShooter forceFieldShooter;
 
     [SerializeField] private Transform virtualCam;
     [SerializeField] private Transform cam;
@@ -40,19 +39,15 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool canSecondJump;
     [HideInInspector] public bool isGrounded = true;
 
-    private bool canWallJumpRight;
-    private bool canWallJumpLeft;
-    private bool canWallJumpFront;
-    private bool canWallJumpBack;
+    private Vector3 wallJumpDir;
 
+    public bool canWallJump;
+ 
     [Header("Wall Attatch\n")]
     public LayerMask whatIsWalls;
 
-    private bool canAttatch;
-    private bool isWalledRight;
-    private bool isWalledLeft;
-    private bool isWalledFront;
-    private bool isWalledBack;
+    public bool canAttatch;
+    public bool isAttatched;
 
     [Header("Gravity Modifier\n")]
     [SerializeField] private float wallGrav = -1f;
@@ -63,11 +58,12 @@ public class PlayerController : MonoBehaviour
     {
         _playerRigidbody = GetComponent<Rigidbody>();
         grapplingController = FindObjectOfType<GrapplingController>();
-        forceFieldShooter = FindObjectOfType<ForceFieldShooter>();
 
         Cursor.lockState = CursorLockMode.Locked;
 
         transform.rotation = new Quaternion(0, -180, 0, 0);
+
+        wallJumpDir = Vector3.forward;
     }
 
     private void Update()
@@ -83,8 +79,6 @@ public class PlayerController : MonoBehaviour
             if (isGrounded)
             {
                 _playerRigidbody.drag = groundDrag;
-                canAttatch = true;
-                CantWallJump();
                 Physics.gravity = new Vector3(0, normalGrav, 0);
             }
             else
@@ -92,34 +86,18 @@ public class PlayerController : MonoBehaviour
                 _playerRigidbody.drag = 1f;
             }
 
-            if (isWalledRight || isWalledLeft || isWalledBack || isWalledFront)
+            if (isAttatched)
             {
                 Physics.gravity = new Vector3(0, wallGrav, 0);
+                canWallJump = true;
+            }
+            else if (!canAttatch)
+            {
+                Physics.gravity = new Vector3(0, normalGrav, 0);
             }
             else if (!isGrounded)
             {
                 Physics.gravity = new Vector3(0, normalGrav, 0);
-            }
-
-            if (isWalledRight)
-            {
-                canWallJumpRight = true;
-                ResetOtherJumps(isWalledBack, isWalledFront, isWalledLeft);
-            }
-            else if (isWalledLeft)
-            {
-                canWallJumpLeft = true;
-                ResetOtherJumps(isWalledBack, isWalledFront, isWalledRight);
-            }
-            else if (isWalledFront)
-            {
-                canWallJumpFront = true;
-                ResetOtherJumps(isWalledBack, isWalledLeft, isWalledRight);
-            }
-            else if (isWalledBack)
-            {
-                canWallJumpBack = true;
-                ResetOtherJumps(isWalledLeft, isWalledFront, isWalledRight);
             }
         }
     }
@@ -155,85 +133,27 @@ public class PlayerController : MonoBehaviour
             JumpMechanic();
         }
 
-        if (canAttatch)
+        if (Input.GetKey(KeyCode.Space))
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (canAttatch)
             {
-                AttatchWallRight();
-                AttatchWallLeft();
-                AttatchWallFront();
-                AttatchWallBack();
-
-                if (!isWalledRight || !isWalledLeft || !isWalledBack || !isWalledFront)
-                {
-                    Physics.gravity = new Vector3(0, normalGrav, 0);
-                    CantWallJump();
-                }
+                isAttatched = true;
             }
-            else
+        }
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (canWallJump)
             {
-                NotWalled();
-                Invoke(nameof(WallJumpReset), jumpCooldown);
+                canWallJump = false;
+                isAttatched = false;
+
+                WallJumpMechanic();
             }
         }
         else
         {
-            Physics.gravity = new Vector3(0, normalGrav, 0);
-
-            NotWalled();
-            CantWallJump();
+            isAttatched = false;
         }
-        
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            if (canJump && canAttatch)
-            {
-                if (canWallJumpRight)
-                {
-                    canJump = false;
-                    canAttatch = false;
-                    canWallJumpRight = false;
-
-                    WallJumpMechanic(-transform.right);
-
-                    Invoke(nameof(WallJumpReset), jumpCooldown);
-                }
-                
-                if (canWallJumpLeft)
-                {
-                    canJump = false;
-                    canAttatch = false;
-                    canWallJumpLeft = false;
-
-                    WallJumpMechanic(transform.right);
-
-                    Invoke(nameof(WallJumpReset), jumpCooldown);
-                }
-
-                if (canWallJumpFront)
-                {
-                    canJump = false;
-                    canAttatch = false;
-                    canWallJumpFront = false;
-
-                    WallJumpMechanic(-transform.forward);
-
-                    Invoke(nameof(WallJumpReset), jumpCooldown);
-                }
-
-                if (canWallJumpBack)
-                {
-                    canJump = false;
-                    canAttatch = false;
-                    canWallJumpBack = false;
-
-                    WallJumpMechanic(transform.forward);
-
-                    Invoke(nameof(WallJumpReset), jumpCooldown);
-                }
-            }
-        }
-
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -259,26 +179,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void AttatchWallLeft()
-    {
-        isWalledLeft = Physics.Raycast(transform.position, -transform.right, playerHight * 0.25f + 0.25f, whatIsWalls);
-    }
-
-    void AttatchWallRight()
-    {
-        isWalledRight = Physics.Raycast(transform.position, transform.right, playerHight * 0.25f + 0.25f, whatIsWalls);
-    }
-
-    void AttatchWallFront()
-    {
-        isWalledFront = Physics.Raycast(transform.position, transform.forward, playerHight * 0.25f + 0.25f, whatIsWalls);
-    }
-
-    void AttatchWallBack()
-    {
-        isWalledBack = Physics.Raycast(transform.position, -transform.forward, playerHight * 0.25f + 0.25f, whatIsWalls);
-    }
-
     void MovePlayer()
     {
         moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
@@ -291,14 +191,14 @@ public class PlayerController : MonoBehaviour
             }
             else if (isRunning)
             {
-                _playerRigidbody.AddForce(moveDirection.normalized * force * 13f, ForceMode.Force);
+                _playerRigidbody.AddForce(moveDirection.normalized * force * 14f, ForceMode.Force);
             }
             else
             {
                 _playerRigidbody.AddForce(moveDirection.normalized * force * 10f, ForceMode.Force);
             }
         }
-        else if (isWalledRight || isWalledLeft || isWalledBack || isWalledFront)
+        else if (isAttatched)
         {
             _playerRigidbody.AddForce(moveDirection.normalized * force * 2f, ForceMode.Force);
         }
@@ -349,48 +249,17 @@ public class PlayerController : MonoBehaviour
         _playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    void WallJumpMechanic(Vector3 direction)
+    void WallJumpMechanic()
     {
         _playerRigidbody.velocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
 
-        _playerRigidbody.AddForce(Vector3.up * jumpForce * 0.7f, ForceMode.Impulse);
-        _playerRigidbody.AddForce(direction * jumpForce * 0.8f, ForceMode.Impulse);
+        _playerRigidbody.AddForce(wallJumpDir * jumpForce * 0.8f, ForceMode.Impulse);
+        _playerRigidbody.AddForce(Vector3.up * jumpForce * 0.8f, ForceMode.Impulse);
     }
     
     void JumpReset()
     {
         canJump = true;
-        canAttatch = true;
-    }
-
-    void WallJumpReset()
-    {
-        canJump = true;
-        canAttatch = true;
-        CantWallJump();
-    }
-
-    void NotWalled()
-    {
-        isWalledBack = false;
-        isWalledFront = false;
-        isWalledLeft = false;
-        isWalledRight = false;
-    }
-
-    void CantWallJump()
-    {
-        canWallJumpBack = false;
-        canWallJumpFront = false;
-        canWallJumpLeft = false;
-        canWallJumpRight = false;
-    }
-
-    void ResetOtherJumps(bool b1, bool b2, bool b3)
-    {
-        b1 = false;
-        b2 = false;
-        b3 = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -398,15 +267,27 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("SecondJump"))
         {
             canSecondJump = true;
-            StartCoroutine(Delay(other));
             Destroy(other.gameObject, 0.45f);
             other.GetComponent<Animator>().Play("forcefield_destroy");
         }
     }
 
-    IEnumerator Delay(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-        yield return new WaitForSeconds(0.40f);
-        Instantiate(forceFieldShooter.destroyParticlePurple, other.transform.position, Quaternion.identity);
+        if (other.collider.CompareTag("Wall"))
+        {
+            wallJumpDir = other.transform.up;
+            canAttatch = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.collider.CompareTag("Wall"))
+        {
+            canAttatch = false;
+            isAttatched = false;
+            canWallJump = false;
+        }
     }
 }

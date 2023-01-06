@@ -42,12 +42,18 @@ public class ForceFieldShooter : MonoBehaviour
     [SerializeField] private Animator _animator;
 
     [Header("Hand Color\n")]
-    [SerializeField] private Material handMat;
+
+    private Material sphereMat;
+
+    [SerializeField] private GameObject sphere;
 
     [ColorUsage(true, true)]
     [SerializeField] private Color matColorBlue;
     [ColorUsage(true, true)]
     [SerializeField] private Color matColorPurple;
+
+    [SerializeField] private Material purpleMat;
+    [SerializeField] private Material blueMat;
 
     public List<GameObject> forceFields = new List<GameObject>();
 
@@ -67,11 +73,13 @@ public class ForceFieldShooter : MonoBehaviour
 
         if (mode == 1)
         {
-            handMat.SetColor("_EmissionColor", matColorPurple);
+            //sphereMat.SetColor("_EmissionColor", matColorPurple);
+            sphere.GetComponent<MeshRenderer>().material = blueMat;
         }
         else
         {
-            handMat.SetColor("_EmissionColor", matColorBlue);
+            //sphereMat.SetColor("_EmissionColor", matColorBlue);
+            sphere.GetComponent<MeshRenderer>().material = purpleMat;
         }
 
         if (instance[1] != null)

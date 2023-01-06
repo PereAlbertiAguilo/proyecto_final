@@ -7,7 +7,7 @@ public class RotateGun : MonoBehaviour
     private GrapplingController grapplingController;
 
     private Quaternion desiredRotation;
-    private float rotationSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 5f;
 
     private void Start()
     {

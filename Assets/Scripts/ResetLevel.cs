@@ -13,6 +13,14 @@ public class ResetLevel : MonoBehaviour
         GameObject.Find("Player").transform.position = levelStart.transform.position;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene("Test");
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name.Equals("Player"))
