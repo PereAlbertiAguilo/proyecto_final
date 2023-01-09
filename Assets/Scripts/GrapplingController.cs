@@ -10,6 +10,7 @@ public class GrapplingController : MonoBehaviour
     private Vector3 currentGrapplePosition;
 
     private GameObject target;
+    [SerializeField] private GameObject sphere;
 
     private SpringJoint joint;
 
@@ -22,6 +23,12 @@ public class GrapplingController : MonoBehaviour
     [HideInInspector] public bool isGrappleAvalible = true;
 
     [SerializeField] private float CooldownDuration = 1.0f;
+
+    private Material _armMat;
+
+    private Animator _armAnimator;
+
+    [SerializeField] private float disolveFactor;
 
     [Header("Rope Physics\n")]
     [SerializeField] private float spring = 4.5f;
@@ -36,6 +43,8 @@ public class GrapplingController : MonoBehaviour
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+        _armMat = GetComponent<MeshRenderer>().material;
+        _armAnimator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -56,7 +65,9 @@ public class GrapplingController : MonoBehaviour
 
         if (isGrappled)
         {
-            if(target != null)
+            _armAnimator.Play("arm_disolve0");
+
+            if (target != null)
             {
                 joint.connectedAnchor = target.transform.position;
             }
@@ -65,11 +76,17 @@ public class GrapplingController : MonoBehaviour
                 StopGrapple();
             }
         }
+        else
+        {
+            _armAnimator.Play("arm_disolve1");
+        }
     }
 
     void LateUpdate()
     {
         DrawRope();
+
+        _armMat.SetFloat("_DisolveFactor", disolveFactor);
     }
 
     void StartGrapple()

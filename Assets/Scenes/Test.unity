@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.043586466, g: 0.043192238, b: 0.043068275, a: 1}
+  m_IndirectSpecularColor: {r: 0.023147155, g: 0.02293775, b: 0.022872126, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -754,7 +754,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 98946171}
   m_Lens:
-    FieldOfView: 73.72478
+    FieldOfView: 74.82146
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -1587,12 +1587,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 624481491}
-  m_LocalRotation: {x: 0.02345115, y: 0.7234437, z: -0.104024075, w: 0.6820985}
-  m_LocalPosition: {x: 5.83, y: 1.55, z: 0.46}
-  m_LocalScale: {x: 1.0404923, y: 1.212806, z: 1.4711916}
+  m_LocalRotation: {x: -0.000000009313226, y: -0, z: 0.0000000037252903, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.39}
+  m_LocalScale: {x: 0.03558462, y: 0.035584617, z: 0.035584625}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1589103612}
+  m_Father: {fileID: 2068198534}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &624481494
@@ -1851,7 +1851,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944ab22e69dee3c4c94673471ff7f802, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 2
+  rotationSpeed: 8
 --- !u!95 &728444620
 Animator:
   serializedVersion: 4
@@ -2623,7 +2623,7 @@ MonoBehaviour:
   airMultiplyer: 0.16
   fieldOfView: 70
   canMove: 1
-  jumpForce: 17
+  jumpForce: 20
   jumpCooldown: 0.3
   playerHight: 2
   whatIsGorund:
@@ -3553,6 +3553,7 @@ GameObject:
   - component: {fileID: 1589103617}
   - component: {fileID: 1589103616}
   - component: {fileID: 1589103618}
+  - component: {fileID: 1589103619}
   m_Layer: 0
   m_Name: Arm
   m_TagString: Untagged
@@ -3574,7 +3575,6 @@ Transform:
   m_Children:
   - {fileID: 1840324808}
   - {fileID: 1851602120}
-  - {fileID: 624481492}
   m_Father: {fileID: 728444618}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -186.807, y: 87.238, z: -169.8}
@@ -3598,7 +3598,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cebdb5ee7b3af934ebec6ed3d6826550, type: 2}
+  - {fileID: 2100000, guid: c43bd48ff427d944f8cec1f569c48b4c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3640,6 +3640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35a5ed36f8c8cd048b56329593608ec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sphere: {fileID: 624481491}
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 4096
@@ -3649,6 +3650,7 @@ MonoBehaviour:
   isGrappled: 0
   isGrappleAvalible: 1
   CooldownDuration: 0.8
+  disolveFactor: -1
   spring: 25
   damper: 50
   massScale: 20
@@ -3795,6 +3797,26 @@ MonoBehaviour:
   purpleMat: {fileID: 2100000, guid: dce4059f8a8651340a2d8b27da7696bf, type: 2}
   blueMat: {fileID: 2100000, guid: 77f36bf42f7b67f4d9d4da81eb796efd, type: 2}
   forceFields: []
+--- !u!95 &1589103619
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589103611}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: def4577adb85fe242bcf5bf0d1165291, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1640446971
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4291,7 +4313,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1840324807}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.19, y: 1.083, z: 0.161}
+  m_LocalPosition: {x: -0.08, y: -0.14, z: -0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4850,7 +4872,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 73.72478
+  field of view: 74.82146
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
@@ -4882,6 +4904,7 @@ Transform:
   m_Children:
   - {fileID: 728444618}
   - {fileID: 1744219275}
+  - {fileID: 624481492}
   m_Father: {fileID: 2058231141}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
