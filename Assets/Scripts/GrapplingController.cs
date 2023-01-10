@@ -10,7 +10,6 @@ public class GrapplingController : MonoBehaviour
     private Vector3 currentGrapplePosition;
 
     private GameObject target;
-    [SerializeField] private GameObject sphere;
 
     private SpringJoint joint;
 
@@ -158,5 +157,4 @@ public class GrapplingController : MonoBehaviour
         yield return new WaitForSeconds(CooldownDuration);
         isGrappleAvalible = true;
     }
-
 }

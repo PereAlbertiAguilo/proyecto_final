@@ -28,9 +28,9 @@ public class ForceFieldShooter : MonoBehaviour
     [Header("Instances\n")]
     [SerializeField] private GameObject forceField;
     [SerializeField] private GameObject dobleJump;
-    [SerializeField] public GameObject destroyParticlePurple;
-    [SerializeField] public GameObject destroyParticleBlue;
     [SerializeField] private GameObject[] instance;
+
+    public List<GameObject> forceFields = new List<GameObject>();
 
     private Rigidbody _rigidbody;
 
@@ -56,7 +56,6 @@ public class ForceFieldShooter : MonoBehaviour
     [SerializeField] private Material purpleMat;
     [SerializeField] private Material blueMat;
 
-    public List<GameObject> forceFields = new List<GameObject>();
 
     private void Start()
     {
@@ -146,7 +145,6 @@ public class ForceFieldShooter : MonoBehaviour
                 isTimerOn = false;
 
                 instance[1].GetComponent<Animator>().Play("forcefield_destroy");
-                Instantiate(destroyParticleBlue, instance[1].transform.position, Quaternion.identity);
 
                 Destroy(instance[1], 0.5f);
             }
@@ -220,14 +218,6 @@ public class ForceFieldShooter : MonoBehaviour
             {
                 if (g != null)
                 {
-                    if (g == instance[1])
-                    {
-                        Instantiate(destroyParticleBlue, g.transform.position, Quaternion.identity);
-                    }
-                    else
-                    {
-                        Instantiate(destroyParticlePurple, g.transform.position, Quaternion.identity);
-                    }
                     g.GetComponent<Animator>().Play("forcefield_destroy");
 
                     Destroy(g, 0.50f);
@@ -240,8 +230,6 @@ public class ForceFieldShooter : MonoBehaviour
             }
 
             forceFields.Clear();
-
-            //yield return new WaitForSeconds(0.1f);
 
             currentInstance = 0;
 

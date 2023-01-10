@@ -6,6 +6,8 @@ public class RotateGun : MonoBehaviour
 {
     private GrapplingController grapplingController;
 
+    private Quaternion startRot;
+
     private void Start()
     {
         grapplingController = FindObjectOfType<GrapplingController>();
@@ -16,7 +18,14 @@ public class RotateGun : MonoBehaviour
         if (grapplingController.IsGrappling())
         {
             Vector3 pos = grapplingController.GetGrapplePoint();
-            transform.LookAt(new Vector3(pos.x, pos.y - 2.1f, pos.z));
+
+            //transform.rotation = grapplingController.gunTip.rotation;
+
+            //transform.LookAt(new Vector3(pos.x, pos.y - 2.5f, pos.z));
+        }
+        else
+        {
+            transform.rotation = new Quaternion(0, 0, 0, 0);
         }
     }
 }

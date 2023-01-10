@@ -756,7 +756,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 98946171}
   m_Lens:
-    FieldOfView: 74.99692
+    FieldOfView: 74.47663
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -1961,7 +1961,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 728444617}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 944ab22e69dee3c4c94673471ff7f802, type: 3}
   m_Name: 
@@ -1993,7 +1993,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 728444617}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2542ec4023246ec40b5faf251d5b6e2d, type: 3}
   m_Name: 
@@ -4173,7 +4173,7 @@ RectTransform:
   m_GameObject: {fileID: 1546678363}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.77903, y: 0.77903, z: 0.77903}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1744219275}
@@ -4181,8 +4181,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -85, y: -50}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -89, y: -81}
+  m_SizeDelta: {x: 443.2, y: 44.6}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1546678365
 MonoBehaviour:
@@ -4198,7 +4198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: dce4059f8a8651340a2d8b27da7696bf, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4631,7 +4631,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35a5ed36f8c8cd048b56329593608ec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sphere: {fileID: 0}
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 4096
@@ -4689,9 +4688,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.03
@@ -4707,6 +4704,24 @@ LineRenderer:
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.4399838
+        value: 0.24137878
+        inSlope: -1.0776118
+        outSlope: -1.0776118
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -4761,7 +4776,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canShoot: 1
   isTimerOn: 0
-  speed: 100
+  speed: 150
   cooldown: 0.8
   lifeTime: 8
   currentLife: 0
@@ -4773,13 +4788,10 @@ MonoBehaviour:
     type: 3}
   dobleJump: {fileID: 5214774603021519068, guid: 1c07b5eb0a032a4449e4ccf872904523,
     type: 3}
-  destroyParticlePurple: {fileID: 3123075737211501182, guid: c8db62ee0caa5ba4398dce77e53d238f,
-    type: 3}
-  destroyParticleBlue: {fileID: 3123075737211501182, guid: a3f72d5f213bb7d458dfc2c4369e7acf,
-    type: 3}
   instance:
   - {fileID: 0}
   - {fileID: 0}
+  forceFields: []
   clickDist: 2.5
   _animator: {fileID: 728444620}
   sphere: {fileID: 1546678363}
@@ -4787,7 +4799,6 @@ MonoBehaviour:
   matColorPurple: {r: 0.08627451, g: 0.27450982, b: 0.78431374, a: 1}
   purpleMat: {fileID: 2100000, guid: dce4059f8a8651340a2d8b27da7696bf, type: 2}
   blueMat: {fileID: 2100000, guid: 77f36bf42f7b67f4d9d4da81eb796efd, type: 2}
-  forceFields: []
 --- !u!95 &1589103619
 Animator:
   serializedVersion: 4
@@ -6324,7 +6335,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 74.99692
+  field of view: 74.47663
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
