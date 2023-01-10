@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ForceFieldShooter : MonoBehaviour
 {
@@ -73,13 +74,11 @@ public class ForceFieldShooter : MonoBehaviour
 
         if (mode == 1)
         {
-            //sphereMat.SetColor("_EmissionColor", matColorPurple);
-            sphere.GetComponent<MeshRenderer>().material = blueMat;
+            sphere.GetComponent<Image>().material = blueMat;
         }
         else
         {
-            //sphereMat.SetColor("_EmissionColor", matColorBlue);
-            sphere.GetComponent<MeshRenderer>().material = purpleMat;
+            sphere.GetComponent<Image>().material = purpleMat;
         }
 
         if (instance[1] != null)
@@ -116,7 +115,14 @@ public class ForceFieldShooter : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            StartCoroutine(Reload());
+            RaycastHit hit;
+            if (Physics.Raycast(cam.position, cam.forward, out hit, clickDist))
+            {
+                if (hit.transform.CompareTag("Reset"))
+                {
+                    Reload();
+                }
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -201,58 +207,51 @@ public class ForceFieldShooter : MonoBehaviour
         }
     }
 
-    IEnumerator Reload()
+    public void Reload()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(cam.position, cam.forward, out hit, clickDist))
+        if (forceFields.Count > 0 && canReload)
         {
-            if (hit.transform.CompareTag("Reset"))
+            _animator.Play("arm_shoot");
+
+            canShoot = false;
+            canReload = false;
+
+            foreach (GameObject g in forceFields)
             {
-                if (playerController.isGrounded && forceFields.Count > 0 && canReload)
+                if (g != null)
                 {
-                    _animator.Play("arm_shoot");
-
-                    canShoot = false;
-                    canReload = false;
-
-                    foreach (GameObject g in forceFields)
+                    if (g == instance[1])
                     {
-                        if (g != null)
-                        {
-                            if(g == instance[1])
-                            {
-                                Instantiate(destroyParticleBlue, g.transform.position, Quaternion.identity);
-                            }
-                            else
-                            {
-                                Instantiate(destroyParticlePurple, g.transform.position, Quaternion.identity);
-                            }
-                            g.GetComponent<Animator>().Play("forcefield_destroy");
-
-                            Destroy(g, 0.50f);
-                        }
+                        Instantiate(destroyParticleBlue, g.transform.position, Quaternion.identity);
                     }
-
-                    foreach (GameObject g in instance)
+                    else
                     {
-                        Destroy(g, 0.50f);
+                        Instantiate(destroyParticlePurple, g.transform.position, Quaternion.identity);
                     }
+                    g.GetComponent<Animator>().Play("forcefield_destroy");
 
-                    forceFields.Clear();
-
-                    yield return new WaitForSeconds(0.1f);
-
-                    currentInstance = 0;
-
-                    _animator.Play("arm_reload");
-
-                    canShoot = true;
-                    isGrappleInstatiated = false;
-                    isTimerOn = false;
-                    playerController.canSecondJump = false;
-                    canReload = true;
+                    Destroy(g, 0.50f);
                 }
             }
+
+            foreach (GameObject g in instance)
+            {
+                Destroy(g, 0.50f);
+            }
+
+            forceFields.Clear();
+
+            //yield return new WaitForSeconds(0.1f);
+
+            currentInstance = 0;
+
+            _animator.Play("arm_reload");
+
+            canShoot = true;
+            isGrappleInstatiated = false;
+            isTimerOn = false;
+            playerController.canSecondJump = false;
+            canReload = true;
         }
     }
 

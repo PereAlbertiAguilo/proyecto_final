@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     private GrapplingController grapplingController;
 
-    [SerializeField] private Transform virtualCam;
+    public Transform virtualCam;
     [SerializeField] private Transform cam;
 
     [Header("Speed Parametres\n")]

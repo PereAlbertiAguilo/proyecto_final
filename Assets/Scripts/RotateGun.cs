@@ -6,9 +6,6 @@ public class RotateGun : MonoBehaviour
 {
     private GrapplingController grapplingController;
 
-    private Quaternion desiredRotation;
-    [SerializeField] private float rotationSpeed = 5f;
-
     private void Start()
     {
         grapplingController = FindObjectOfType<GrapplingController>();
@@ -16,15 +13,10 @@ public class RotateGun : MonoBehaviour
 
     void Update()
     {
-        if (!grapplingController.IsGrappling())
+        if (grapplingController.IsGrappling())
         {
-            desiredRotation = transform.parent.rotation;
+            Vector3 pos = grapplingController.GetGrapplePoint();
+            transform.LookAt(new Vector3(pos.x, pos.y - 2.1f, pos.z));
         }
-        else
-        {
-            desiredRotation = Quaternion.LookRotation(grapplingController.GetGrapplePoint() - transform.position);
-        }
-
-        transform.rotation = Quaternion.Lerp(transform.rotation, desiredRotation, Time.deltaTime * rotationSpeed);
     }
 }
