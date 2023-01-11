@@ -111,6 +111,8 @@ public class GrapplingController : MonoBehaviour
             lr.positionCount = 2;
             currentGrapplePosition = gunTip.position;
 
+            transform.parent.GetComponent<Animator>().Play("arm_exit");
+
             isGrappled = true;
 
             StartCoroutine(StartCooldown());

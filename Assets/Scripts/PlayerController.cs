@@ -41,13 +41,13 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 wallJumpDir;
 
-    public bool canWallJump;
+    private bool canWallJump;
  
     [Header("Wall Attatch\n")]
     public LayerMask whatIsWalls;
 
-    public bool canAttatch;
-    public bool isAttatched;
+    private bool canAttatch;
+    private bool isAttatched;
 
     [Header("Gravity Modifier\n")]
     [SerializeField] private float wallGrav = -1f;

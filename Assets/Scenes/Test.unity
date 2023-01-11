@@ -756,7 +756,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 98946171}
   m_Lens:
-    FieldOfView: 74.47663
+    FieldOfView: 74.44909
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -3173,12 +3173,9 @@ MonoBehaviour:
     m_Bits: 1024
   canSecondJump: 0
   isGrounded: 1
-  canWallJump: 0
   whatIsWalls:
     serializedVersion: 2
     m_Bits: 2048
-  canAttatch: 0
-  isAttatched: 0
   wallGrav: -1.5
   normalGrav: -18
 --- !u!54 &1206444952
@@ -4181,7 +4178,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -89, y: -81}
+  m_AnchoredPosition: {x: -58, y: -81}
   m_SizeDelta: {x: 443.2, y: 44.6}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1546678365
@@ -6335,7 +6332,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 74.47663
+  field of view: 74.44909
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
