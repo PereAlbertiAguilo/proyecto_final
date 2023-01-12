@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(MeshCollider))]
 public class ResetLevel : MonoBehaviour
 {
     private ForceFieldShooter forceFieldShooterScript;
@@ -12,6 +12,7 @@ public class ResetLevel : MonoBehaviour
     [SerializeField] private GameObject player;
 
     [HideInInspector] public Transform checkPoint;
+
 
     private void Start()
     {
@@ -24,7 +25,7 @@ public class ResetLevel : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Restart();
+            Invoke(nameof(Restart), 0.2f);
         }
     }
 
@@ -32,7 +33,9 @@ public class ResetLevel : MonoBehaviour
     {
         forceFieldShooterScript.Reload();
 
-        if(checkPoint == null)
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+        if (checkPoint == null)
         {
             player.transform.position = levelStart.position;
         }
@@ -46,7 +49,7 @@ public class ResetLevel : MonoBehaviour
     {
         if (other.gameObject.name.Equals("Player"))
         {
-            Restart();
+            Invoke(nameof(Restart), 0.2f);
         }
     }
 }
