@@ -9,6 +9,7 @@ TagManager:
   - Reset
   - Wall
   - CheckPoint
+  - NextLevel
   layers:
   - Default
   - TransparentFX

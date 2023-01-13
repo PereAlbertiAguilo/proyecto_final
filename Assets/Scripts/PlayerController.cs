@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float airMultiplyer;
     [SerializeField] private float fieldOfView;
 
+    [HideInInspector] public static bool playerCreated;
     [HideInInspector] public bool canMove = true;
     private bool canSlide = true;
     private bool isSliding;
@@ -56,6 +57,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        playerCreated = true;
+
         _playerRigidbody = GetComponent<Rigidbody>();
         grapplingController = FindObjectOfType<GrapplingController>();
 

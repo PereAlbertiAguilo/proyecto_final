@@ -40,7 +40,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Grid_Scale: 1
-    - _Offset: 0.05
+    - _Offset: -1
     - _Power: 2.5
     - _QueueControl: 0
     - _QueueOffset: 0

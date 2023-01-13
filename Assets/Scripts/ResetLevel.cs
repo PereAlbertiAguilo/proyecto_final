@@ -9,7 +9,7 @@ public class ResetLevel : MonoBehaviour
     private ForceFieldShooter forceFieldShooterScript;
 
     [SerializeField] private Transform levelStart;
-    [SerializeField] private GameObject player;
+    private GameObject player;
 
     [HideInInspector] public Transform checkPoint;
 
@@ -17,6 +17,7 @@ public class ResetLevel : MonoBehaviour
     private void Start()
     {
         forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
+        player = GameObject.Find("Player");
 
         player.transform.position = levelStart.transform.position;
     }
@@ -25,11 +26,11 @@ public class ResetLevel : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Invoke(nameof(Restart), 0.2f);
+            Invoke(nameof(CheckPointRestart), 0.2f);
         }
     }
 
-    public void Restart()
+    public void CheckPointRestart()
     {
         forceFieldShooterScript.Reload();
 
@@ -49,7 +50,7 @@ public class ResetLevel : MonoBehaviour
     {
         if (other.gameObject.name.Equals("Player"))
         {
-            Invoke(nameof(Restart), 0.2f);
+            Invoke(nameof(CheckPointRestart), 0.2f);
         }
     }
 }
