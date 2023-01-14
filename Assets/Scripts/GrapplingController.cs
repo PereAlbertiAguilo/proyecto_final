@@ -13,7 +13,7 @@ public class GrapplingController : MonoBehaviour
 
     private SpringJoint joint;
 
-    public LayerMask whatIsGrappleable;
+    [SerializeField] private LayerMask whatIsGrappleable;
 
     public new Transform camera;
     public Transform gunTip, player;

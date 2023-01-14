@@ -39,6 +39,8 @@ public class ForceFieldShooter : MonoBehaviour
     private PlayerController playerController;
 
     [Header("Others\n")]
+    [SerializeField] private LayerMask whatIsReloadTerminal;
+
     [SerializeField] private float clickDist;
     [SerializeField] private Animator _animator;
 
@@ -115,12 +117,10 @@ public class ForceFieldShooter : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             RaycastHit hit;
-            if (Physics.Raycast(cam.position, cam.forward, out hit, clickDist))
+
+            if (Physics.Raycast(cam.transform.position, cam.forward, out hit, clickDist, whatIsReloadTerminal))
             {
-                if (hit.transform.CompareTag("Reset"))
-                {
-                    Reload();
-                }
+                Reload();
             }
         }
 

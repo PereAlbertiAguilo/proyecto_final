@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpCooldown;
     [SerializeField] private float playerHight;
 
-    public LayerMask whatIsGorund;
+    [SerializeField] private LayerMask whatIsGorund;
 
     private bool canJump = true;
     [HideInInspector] public bool canSecondJump;
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
     private bool canWallJump;
  
     [Header("Wall Attatch\n")]
-    public LayerMask whatIsWalls;
+    [SerializeField] private LayerMask whatIsWalls;
 
     private bool canAttatch;
     private bool isAttatched;

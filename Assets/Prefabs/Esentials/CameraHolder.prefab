@@ -1552,7 +1552,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   forceFields: []
-  clickDist: 2.5
+  whatIsReloadTerminal:
+    serializedVersion: 2
+    m_Bits: 8192
+  clickDist: 4
   _animator: {fileID: 6265221975450185197}
   sphere: {fileID: 6265221976209929082}
   matColorBlue: {r: 0.2901961, g: 0.15686275, b: 1.4980392, a: 1}
@@ -2152,7 +2155,7 @@ GameObject:
   - component: {fileID: 6265221976789415846}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
