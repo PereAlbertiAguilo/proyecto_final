@@ -7,7 +7,8 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody _playerRigidbody;
 
-    private GrapplingController grapplingController;
+    private GrapplingController grapplingControllerScript;
+    private DoorOpener doorOpenerScript;
 
     public Transform virtualCam;
     [SerializeField] private Transform cam;
@@ -60,7 +61,9 @@ public class PlayerController : MonoBehaviour
         playerCreated = true;
 
         _playerRigidbody = GetComponent<Rigidbody>();
-        grapplingController = FindObjectOfType<GrapplingController>();
+
+        grapplingControllerScript = FindObjectOfType<GrapplingController>();
+        doorOpenerScript = FindObjectOfType<DoorOpener>();
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -110,6 +113,11 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
 
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHight * 0.5f + 0.1f, whatIsGorund);
+
+        if (doorOpenerScript != null)
+        {
+            doorOpenerScript.canInteract = Physics.Raycast(cam.position, cam.forward, doorOpenerScript.interactDist, doorOpenerScript.whatIsInteractable);
+        }
     }
 
     void PlayerInput()
@@ -129,7 +137,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && canSecondJump && !grapplingController.isGrappled && !isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && canSecondJump && !grapplingControllerScript.isGrappled && !isGrounded)
         {
             canSecondJump = false;
 
@@ -205,7 +213,7 @@ public class PlayerController : MonoBehaviour
         {
             _playerRigidbody.AddForce(moveDirection.normalized * force * 2f, ForceMode.Force);
         }
-        else if (grapplingController.isGrappled)
+        else if (grapplingControllerScript.isGrappled)
         {
             _playerRigidbody.AddForce(moveDirection.normalized * force * 6f * airMultiplyer, ForceMode.Force);
         }

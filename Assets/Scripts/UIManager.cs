@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     private bool isPaused;
-    private bool canPause;
+    [HideInInspector] public bool canPause;
 
     private PlayerController playerControllerScript;
     private ResetLevel resetLevelScript;
@@ -50,7 +50,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void CanMove(bool b)
+    public void CanMove(bool b)
     {
         playerControllerScript.canMove = b;
         playerControllerScript.virtualCam.gameObject.SetActive(b);

@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class HUDScript : MonoBehaviour
 {
-    private ForceFieldShooter forceFieldShooter;
-    private PlayerController playerController;
+    private ForceFieldShooter forceFieldShooterScript;
+    private PlayerController playerControllerScript;
+    private DoorOpener doorOpenerScript;
 
     [SerializeField] private Slider slider1;
     [SerializeField] private Slider slider2;
@@ -14,34 +15,37 @@ public class HUDScript : MonoBehaviour
 
     [SerializeField] private Toggle toggle;
 
+    [SerializeField] private GameObject interactablePopUp;
+
     private float value;
     private bool timer;
 
     private void Start()
     {
-        forceFieldShooter = FindObjectOfType<ForceFieldShooter>();
-        playerController = FindObjectOfType<PlayerController>();
+        doorOpenerScript = FindObjectOfType<DoorOpener>();
+        forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
+        playerControllerScript = FindObjectOfType<PlayerController>();
 
-        slider1.maxValue = forceFieldShooter.maxInstances;
+        slider1.maxValue = forceFieldShooterScript.maxInstances;
 
-        slider2.maxValue = forceFieldShooter.cooldown;
+        slider2.maxValue = forceFieldShooterScript.cooldown;
 
-        slider3.maxValue = forceFieldShooter.lifeTime;
+        slider3.maxValue = forceFieldShooterScript.lifeTime;
     }
 
     private void Update()
     {
-        slider1.value = slider1.maxValue - forceFieldShooter.currentInstance;
+        slider1.value = slider1.maxValue - forceFieldShooterScript.currentInstance;
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (forceFieldShooter.forceFields.Count > 0)
+            if (forceFieldShooterScript.forceFields.Count > 0)
             {
                 timer = true;
             }
         }
 
-        if (playerController.canSecondJump)
+        if (playerControllerScript.canSecondJump)
         {
             toggle.isOn = true;
         }
@@ -56,20 +60,25 @@ public class HUDScript : MonoBehaviour
 
             slider2.value = value;
         }
-        else if (forceFieldShooter.canShoot)
+        else if (forceFieldShooterScript.canShoot)
         {
-            value = forceFieldShooter.cooldown;
+            value = forceFieldShooterScript.cooldown;
             timer = false;
         }
 
-        if (!forceFieldShooter.isTimerOn)
+        if (!forceFieldShooterScript.isTimerOn)
         {
             slider3.gameObject.SetActive(false);
         }
         else
         {
             slider3.gameObject.SetActive(true);
-            slider3.value = forceFieldShooter.currentLife;
-        }   
+            slider3.value = forceFieldShooterScript.currentLife;
+        }
+        
+        if(doorOpenerScript != null)
+        {
+            interactablePopUp.SetActive(doorOpenerScript.canInteract);
+        }
     }
 }
