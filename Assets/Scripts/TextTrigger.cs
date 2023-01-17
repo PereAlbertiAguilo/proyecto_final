@@ -14,11 +14,10 @@ public class TextTrigger : MonoBehaviour
         {
             if (textWritter != null)
             {
-                textWritter.SetActive(true);
-
                 textWriterScript = textWritter.GetComponent<TextWriter>();
 
-                StartCoroutine(textWriterScript.DisplayText());
+                textWriterScript.canWrite = true;
+                textWriterScript.triggerText = true;
 
                 gameObject.SetActive(false);
             }

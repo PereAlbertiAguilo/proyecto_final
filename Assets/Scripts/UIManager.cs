@@ -99,7 +99,6 @@ public class UIManager : MonoBehaviour
 
     public void NextLevel()
     {
-        Resume();
         nextLevelScript.LoadLevel();
     }
 

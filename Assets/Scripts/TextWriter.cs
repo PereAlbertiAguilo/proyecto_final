@@ -11,7 +11,6 @@ public class TextWriter : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textUI;
 
     [SerializeField] private GameObject skipIndicator;
-    private GameObject tutorial;
 
     [Header("Text Parameters \n")]
     [SerializeField] private float delay;
@@ -19,8 +18,11 @@ public class TextWriter : MonoBehaviour
 
     [SerializeField] private bool writeInStart;
     [SerializeField] private bool isIntro;
+    [SerializeField] private bool isTriggered;
     private bool isLineFinished;
     private bool canFlicker;
+    [HideInInspector] public bool canWrite = true;
+    [HideInInspector] public bool triggerText;
 
     [HideInInspector] public int currentTextIndex = 0;
     private int currentLine = 1;
@@ -35,14 +37,19 @@ public class TextWriter : MonoBehaviour
     {
         UIManagerScript = FindObjectOfType<UIManager>();
 
-        if (isIntro)
+        if (isTriggered)
         {
-            tutorial = transform.parent.GetChild(0).gameObject;
+            DeactivateUI();
         }
 
         if (writeInStart)
         {
+            canWrite = true;
             StartCoroutine(DisplayText());
+        }
+        else
+        {
+            canWrite = false;
         }
     }
 
@@ -50,7 +57,7 @@ public class TextWriter : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
-            if (isLineFinished)
+            if (isLineFinished && canWrite)
             {
                 if (textToDisplay.Length > currentLine)
                 {
@@ -67,12 +74,11 @@ public class TextWriter : MonoBehaviour
                         GetComponentInChildren<Animator>().Play("from_black");
 
                         Invoke(nameof(DeactivateUI), textExitTime);
-                        Invoke(nameof(EnterTutorial), textExitTime);
+                        Invoke(nameof(ExitText), textExitTime);
                     }
                     else
                     {
-                        DeactivateUI();
-
+                        Invoke(nameof(DeactivateUI), textExitTime);
                         Invoke(nameof(ExitText), textExitTime);
                     }
                 }
@@ -81,6 +87,12 @@ public class TextWriter : MonoBehaviour
             {
                 isLineFinished = true;
             }
+        }
+
+        if (triggerText)
+        {
+            triggerText = false;
+            StartCoroutine(DisplayText());
         }
     }
 
@@ -151,14 +163,9 @@ public class TextWriter : MonoBehaviour
         {
             foreach (Transform child in transform)
             {
-                child.gameObject.SetActive(false);
+                child.gameObject.SetActive(true);
             }
         }
-    }
-
-    void EnterTutorial()
-    {
-        tutorial.SetActive(true);
     }
 
     void EnterText()
