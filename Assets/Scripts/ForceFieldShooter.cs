@@ -105,11 +105,11 @@ public class ForceFieldShooter : MonoBehaviour
 
     void PlayerInput()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             Shoot();
         }
-        else if (Input.GetMouseButtonUp(1))
+        else if (Input.GetMouseButtonUp(0))
         {
             StopForceField();
         }

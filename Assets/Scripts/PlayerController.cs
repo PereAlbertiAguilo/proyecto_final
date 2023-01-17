@@ -5,7 +5,7 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
-    Rigidbody _playerRigidbody;
+    [HideInInspector] public Rigidbody _playerRigidbody;
 
     private GrapplingController grapplingControllerScript;
     private DoorOpener doorOpenerScript;
@@ -110,7 +110,10 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        MovePlayer();
+        if (canMove)
+        {
+            MovePlayer();
+        }
 
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHight * 0.5f + 0.1f, whatIsGorund);
 

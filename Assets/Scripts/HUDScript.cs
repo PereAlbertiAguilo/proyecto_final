@@ -37,7 +37,7 @@ public class HUDScript : MonoBehaviour
     {
         slider1.value = slider1.maxValue - forceFieldShooterScript.currentInstance;
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             if (forceFieldShooterScript.forceFields.Count > 0)
             {

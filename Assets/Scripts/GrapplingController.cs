@@ -53,11 +53,11 @@ public class GrapplingController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && isGrappleAvalible)
+        if (Input.GetMouseButtonDown(1) && isGrappleAvalible)
         {
             StartGrapple();
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(1))
         {
             StopGrapple();
         }

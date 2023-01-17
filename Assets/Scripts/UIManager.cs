@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public bool canPause;
 
     private PlayerController playerControllerScript;
+    private ForceFieldShooter ForceFieldShooterScript;
     private ResetLevel resetLevelScript;
     private NextLevel nextLevelScript;
 
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         playerControllerScript = FindObjectOfType<PlayerController>();
+        ForceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
         resetLevelScript = FindObjectOfType<ResetLevel>();
         nextLevelScript = FindObjectOfType<NextLevel>();
 
@@ -54,6 +56,12 @@ public class UIManager : MonoBehaviour
     {
         playerControllerScript.canMove = b;
         playerControllerScript.virtualCam.gameObject.SetActive(b);
+        ForceFieldShooterScript.canShoot = b;
+        
+        if (!b)
+        {
+            playerControllerScript._playerRigidbody.velocity = Vector3.zero;
+        }
     }
 
     public void Pause()

@@ -7,27 +7,38 @@ public class TextWriter : MonoBehaviour
 {
     private UIManager UIManagerScript;
 
+    [Header("Contents \n")]
     [SerializeField] private TextMeshProUGUI textUI;
 
     [SerializeField] private GameObject skipIndicator;
+    private GameObject tutorial;
 
+    [Header("Text Parameters \n")]
     [SerializeField] private float delay;
+    [SerializeField] private float textExitTime;
 
     [SerializeField] private bool writeInStart;
-
-    private int currentTextIndex = 0;
-    private int currentLine = 1;
-
-    [TextArea]
-    [SerializeField] private string[] textToDisplay;
-    private string currentText = "";
-
+    [SerializeField] private bool isIntro;
     private bool isLineFinished;
     private bool canFlicker;
+
+    [HideInInspector] public int currentTextIndex = 0;
+    private int currentLine = 1;
+
+    [Header("Text to display \n")]
+    [TextArea]
+    public string[] textToDisplay;
+    private string currentText = "";
+
 
     private void Start()
     {
         UIManagerScript = FindObjectOfType<UIManager>();
+
+        if (isIntro)
+        {
+            tutorial = transform.parent.GetChild(0).gameObject;
+        }
 
         if (writeInStart)
         {
@@ -50,8 +61,20 @@ public class TextWriter : MonoBehaviour
                 else
                 {
                     skipIndicator.SetActive(false);
-                    GetComponentInChildren<Animator>().Play("from_black");
-                    Invoke(nameof(ExitText), 1);
+
+                    if (isIntro)
+                    {
+                        GetComponentInChildren<Animator>().Play("from_black");
+
+                        Invoke(nameof(DeactivateUI), textExitTime);
+                        Invoke(nameof(EnterTutorial), textExitTime);
+                    }
+                    else
+                    {
+                        DeactivateUI();
+
+                        Invoke(nameof(ExitText), textExitTime);
+                    }
                 }
             }
             else
@@ -61,8 +84,10 @@ public class TextWriter : MonoBehaviour
         }
     }
 
-    IEnumerator DisplayText()
+    public IEnumerator DisplayText()
     {
+        ActivateUI();
+
         EnterText();
 
         bool isAddingRichTextTag = false;
@@ -92,8 +117,6 @@ public class TextWriter : MonoBehaviour
                 yield return new WaitForSeconds(delay);
             }
 
-            
-
             if (isLineFinished)
             {
                 textUI.text = textToDisplay[currentTextIndex];
@@ -105,6 +128,37 @@ public class TextWriter : MonoBehaviour
         skipIndicator.GetComponent<Animator>().Play("indicator_flickering");
 
         isLineFinished = true;
+    }
+
+    void DeactivateUI()
+    {
+        if (writeInStart)
+        {
+            this.gameObject.SetActive(false);
+        }
+        else
+        {
+            foreach(Transform child in transform)
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    void ActivateUI()
+    {
+        if (!writeInStart)
+        {
+            foreach (Transform child in transform)
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    void EnterTutorial()
+    {
+        tutorial.SetActive(true);
     }
 
     void EnterText()
