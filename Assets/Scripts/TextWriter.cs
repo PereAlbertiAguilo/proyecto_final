@@ -6,11 +6,13 @@ using TMPro;
 public class TextWriter : MonoBehaviour
 {
     private UIManager UIManagerScript;
+    private PlayerController playerControllerScript;
 
     [Header("Contents \n")]
     [SerializeField] private TextMeshProUGUI textUI;
 
     [SerializeField] private GameObject skipIndicator;
+    [SerializeField] private GameObject textTrigger;
 
     [Header("Text Parameters \n")]
     [SerializeField] private float delay;
@@ -21,11 +23,11 @@ public class TextWriter : MonoBehaviour
     [SerializeField] private bool isTriggered;
     private bool isLineFinished;
     private bool canFlicker;
+    private bool canTrigger = true;
     [HideInInspector] public bool canWrite = true;
-    [HideInInspector] public bool triggerText;
 
+    [HideInInspector] public int currentLine = 1;
     [HideInInspector] public int currentTextIndex = 0;
-    private int currentLine = 1;
 
     [Header("Text to display \n")]
     [TextArea]
@@ -35,6 +37,7 @@ public class TextWriter : MonoBehaviour
 
     private void Start()
     {
+        playerControllerScript = FindObjectOfType<PlayerController>();
         UIManagerScript = FindObjectOfType<UIManager>();
 
         if (isTriggered)
@@ -57,7 +60,7 @@ public class TextWriter : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
-            if (isLineFinished && canWrite)
+            if (isLineFinished && !playerControllerScript.canMove && canWrite)
             {
                 if (textToDisplay.Length > currentLine)
                 {
@@ -73,12 +76,10 @@ public class TextWriter : MonoBehaviour
                     {
                         GetComponentInChildren<Animator>().Play("from_black");
 
-                        Invoke(nameof(DeactivateUI), textExitTime);
                         Invoke(nameof(ExitText), textExitTime);
                     }
                     else
                     {
-                        Invoke(nameof(DeactivateUI), textExitTime);
                         Invoke(nameof(ExitText), textExitTime);
                     }
                 }
@@ -89,10 +90,20 @@ public class TextWriter : MonoBehaviour
             }
         }
 
-        if (triggerText)
+        if (!isLineFinished)
         {
-            triggerText = false;
-            StartCoroutine(DisplayText());
+            UIManagerScript.CanMove(false);
+        }
+
+
+        if(textTrigger != null)
+        {
+            if (!textTrigger.activeInHierarchy && isTriggered && canTrigger)
+            {
+                canTrigger = false;
+                canWrite = true;
+                StartCoroutine(DisplayText());
+            }
         }
     }
 
@@ -144,13 +155,9 @@ public class TextWriter : MonoBehaviour
 
     void DeactivateUI()
     {
-        if (writeInStart)
+        if (!writeInStart)
         {
-            this.gameObject.SetActive(false);
-        }
-        else
-        {
-            foreach(Transform child in transform)
+            foreach (Transform child in transform)
             {
                 child.gameObject.SetActive(false);
             }
@@ -177,6 +184,8 @@ public class TextWriter : MonoBehaviour
 
     void ExitText()
     {
+        this.gameObject.SetActive(false);
+
         UIManagerScript.CanMove(true);
         UIManagerScript.canPause = true;
         Cursor.lockState = CursorLockMode.Locked;

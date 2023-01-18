@@ -124,13 +124,16 @@ public class ForceFieldShooter : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            mode = 0;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            mode = 1;
+            if(mode == 1)
+            {
+                mode = 0;
+            }
+            else
+            {
+                mode = 1;
+            }
         }
     }
 
