@@ -80,5 +80,9 @@ public class HUDScript : MonoBehaviour
         {
             interactablePopUp.SetActive(doorOpenerScript.canInteract);
         }
+        else
+        {
+            interactablePopUp.SetActive(false);
+        }
     }
 }

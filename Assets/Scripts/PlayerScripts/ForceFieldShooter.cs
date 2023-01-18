@@ -141,6 +141,17 @@ public class ForceFieldShooter : MonoBehaviour
     {
         if (instance[1] != null && isTimerOn)
         {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                isTimerOn = false;
+
+                instance[1].GetComponent<Animator>().Play("forcefield_destroy");
+
+                Destroy(instance[1], 0.5f);
+
+                currentLife = t;
+            }
+
             currentLife -= Time.deltaTime;
 
             if (currentLife <= 0.0f)
