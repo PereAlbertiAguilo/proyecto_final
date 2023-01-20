@@ -4,38 +4,43 @@ using UnityEngine;
 
 public class TranslatePlatform : MonoBehaviour
 {
+    [SerializeField] private Transform target;
+
     [SerializeField] private float speed;
-    [SerializeField] private float distance;
 
-    private bool canMove = true;
+    private Vector3 startPos;
+    private Vector3 targetStartPos;
 
-    private void Update()
+    private void Start()
     {
-        if (canMove)
+        if (target != null)
         {
-            transform.Translate(Vector3.forward * Time.deltaTime * speed);
-
-            StartCoroutine(MoveForward());
+            startPos = transform.position;
+            targetStartPos = target.position;
         }
         else
         {
-            transform.Translate(Vector3.back * Time.deltaTime * speed);
-
-            StartCoroutine(MoveBack());
+            print("target has not been assigned");
         }
     }
 
-    IEnumerator MoveForward()
+    private void Update()
     {
-        yield return new WaitForSeconds(distance);
+        if(target != null)
+        {
+            if (Mathf.Round(transform.position.magnitude) == Mathf.Round(target.position.magnitude))
+            {
+                if (target.position == targetStartPos)
+                {
+                    target.position = startPos;
+                }
+                else
+                {
+                    target.position = targetStartPos;
+                }
+            }
 
-        canMove = false;
-    }
-
-    IEnumerator MoveBack()
-    {
-        yield return new WaitForSeconds(distance);
-
-        canMove = true;
+            transform.position = Vector3.Lerp(transform.position, target.position, speed * Time.deltaTime);
+        }
     }
 }

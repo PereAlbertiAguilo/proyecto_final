@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class CheckPoint : MonoBehaviour
 {
-    private ResetLevel resetLevelScript;
+    private ResetLevel[] resetLevelScript;
 
     private void Start()
     {
-        resetLevelScript = FindObjectOfType<ResetLevel>();    
+        resetLevelScript = FindObjectsOfType<ResetLevel>();    
     }
     private void OnTriggerEnter(Collider other)
     {
-        resetLevelScript.checkPoint = transform.GetChild(0);
+        foreach(ResetLevel rs in resetLevelScript)
+        {
+            rs.checkPoint = transform.GetChild(0);
+        }
     }
 }
