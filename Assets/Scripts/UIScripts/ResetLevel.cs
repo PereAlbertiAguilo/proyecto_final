@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class ResetLevel : MonoBehaviour
 {
     private ForceFieldShooter forceFieldShooterScript;
+    private DisableForceFields disableForceFieldsScript;
     private UIManager UIManagerScript;
 
     private Transform levelStart;
@@ -20,6 +21,7 @@ public class ResetLevel : MonoBehaviour
     {
         UIManagerScript = FindObjectOfType<UIManager>();
         forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
+        disableForceFieldsScript = FindObjectOfType<DisableForceFields>();
 
         player = GameObject.Find("Player");
         cameraHolder = GameObject.Find("CameraHolder");
@@ -39,6 +41,10 @@ public class ResetLevel : MonoBehaviour
     public IEnumerator CheckPointRestart()
     {
         forceFieldShooterScript.Reload();
+
+        disableForceFieldsScript.HUD.SetActive(!player.GetComponent<PlayerController>().forceFieldShooter);
+
+        forceFieldShooterScript.enabled = !player.GetComponent<PlayerController>().forceFieldShooter;
 
         player.GetComponent<Rigidbody>().velocity = Vector3.zero;
 

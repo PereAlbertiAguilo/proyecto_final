@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public static bool playerCreated;
     [HideInInspector] public bool canMove = true;
+    [HideInInspector] public bool forceFieldShooter = true;
+
     private bool canSlide = true;
     private bool isSliding;
     private bool isRunning;
@@ -278,11 +280,23 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("SecondJump"))
+        if (other.tag.Equals("SecondJump"))
         {
             canSecondJump = true;
             Destroy(other.gameObject, 0.45f);
             other.GetComponent<Animator>().Play("forcefield_destroy");
+        }
+
+        if (other.tag.Equals("ForceFieldActivator"))
+        {
+            if (other.GetComponent<DisableForceFields>().enable)
+            {
+                forceFieldShooter = false;
+            }
+            else if (other.GetComponent<DisableForceFields>().disable)
+            {
+                forceFieldShooter = true;
+            }
         }
     }
 
