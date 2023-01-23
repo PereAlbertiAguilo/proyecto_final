@@ -198,7 +198,7 @@ public class ForceFieldShooter : MonoBehaviour
             _rigidbody = instance[mode].GetComponentInChildren<Rigidbody>();
             _sphereCollider = instance[mode].GetComponentInChildren<SphereCollider>();
 
-            _sphereCollider.enabled = false;
+            //_sphereCollider.enabled = false;
             _rigidbody.AddForce(instance[mode].transform.forward * speed * 10, ForceMode.Force);
             forceFields.Add(instance[mode]);
 
@@ -215,7 +215,7 @@ public class ForceFieldShooter : MonoBehaviour
             }
 
             _rigidbody.velocity = Vector3.zero;
-            _sphereCollider.enabled = true;
+            //_sphereCollider.enabled = true;
         }
     }
 

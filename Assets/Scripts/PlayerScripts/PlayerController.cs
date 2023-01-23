@@ -20,8 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float fieldOfView;
 
     [HideInInspector] public static bool playerCreated;
-    [HideInInspector] public bool canMove = true;
-    [HideInInspector] public bool forceFieldShooter = true;
+    [HideInInspector] public bool canMove = true;   
 
     private bool canSlide = true;
     private bool isSliding;
@@ -285,18 +284,6 @@ public class PlayerController : MonoBehaviour
             canSecondJump = true;
             Destroy(other.gameObject, 0.45f);
             other.GetComponent<Animator>().Play("forcefield_destroy");
-        }
-
-        if (other.tag.Equals("ForceFieldActivator"))
-        {
-            if (other.GetComponent<DisableForceFields>().enable)
-            {
-                forceFieldShooter = false;
-            }
-            else if (other.GetComponent<DisableForceFields>().disable)
-            {
-                forceFieldShooter = true;
-            }
         }
     }
 
