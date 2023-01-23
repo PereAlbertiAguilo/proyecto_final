@@ -30,6 +30,7 @@ public class DisableForceFields : MonoBehaviour
             {
                 HUD.SetActive(false);
                 forceFieldShooterScript.enabled = false;
+                forceFieldShooterScript.Reload();
             }
         }
     }

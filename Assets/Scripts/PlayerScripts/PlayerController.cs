@@ -13,18 +13,18 @@ public class PlayerController : MonoBehaviour
     public Transform virtualCam;
     [SerializeField] private Transform cam;
 
+    [HideInInspector] public static bool playerCreated;
+    [HideInInspector] public bool canMove = true;
+    public bool forceFieldsActive;
+    private bool canSlide = true;
+    private bool isSliding;
+    private bool isRunning;
+
     [Header("Speed Parametres\n")]
     [SerializeField] private float force = 30f;
     [SerializeField] private float groundDrag = 10f;
     [SerializeField] private float airMultiplyer;
     [SerializeField] private float fieldOfView;
-
-    [HideInInspector] public static bool playerCreated;
-    [HideInInspector] public bool canMove = true;   
-
-    private bool canSlide = true;
-    private bool isSliding;
-    private bool isRunning;
 
     private float horizontalInput;
     private float verticalInput;
@@ -284,6 +284,11 @@ public class PlayerController : MonoBehaviour
             canSecondJump = true;
             Destroy(other.gameObject, 0.45f);
             other.GetComponent<Animator>().Play("forcefield_destroy");
+        }
+
+        if (other.tag.Equals("CheckPoint"))
+        {
+            forceFieldsActive = other.GetComponent<CheckPoint>().forceFieldsActive;
         }
     }
 

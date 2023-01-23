@@ -5,16 +5,36 @@ using UnityEngine;
 public class CheckPoint : MonoBehaviour
 {
     private ResetLevel[] resetLevelScript;
+    private ForceFieldShooter forceFieldShooterScript;
+
+    [HideInInspector] public bool forceFieldsActive;
 
     private void Start()
     {
+        forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
         resetLevelScript = FindObjectsOfType<ResetLevel>();    
     }
+
+    private void Update()
+    {
+        if (forceFieldShooterScript.enabled == true)
+        {
+            forceFieldsActive = true;
+        }
+        else
+        {
+            forceFieldsActive = false;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        foreach(ResetLevel rs in resetLevelScript)
+        if (other.tag.Equals("Player"))
         {
-            rs.checkPoint = transform.GetChild(0);
+            foreach (ResetLevel rs in resetLevelScript)
+            {
+                rs.checkPoint = transform.GetChild(0);
+            }
         }
     }
 }

@@ -9,7 +9,6 @@ public class ResetLevel : MonoBehaviour
 {
     private ForceFieldShooter forceFieldShooterScript;
     private DisableForceFields disableForceFieldsScript;
-    private UIManager UIManagerScript;
 
     private Transform levelStart;
     private GameObject player;
@@ -20,7 +19,6 @@ public class ResetLevel : MonoBehaviour
 
     private void Start()
     {
-        UIManagerScript = FindObjectOfType<UIManager>();
         forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
         disableForceFieldsScript = FindObjectOfType<DisableForceFields>();
 
@@ -47,11 +45,9 @@ public class ResetLevel : MonoBehaviour
 
         forceFieldShooterScript.Reload();
 
+        disableForceFieldsScript.HUD.SetActive(playerControllerScript.forceFieldsActive);
 
-        
-        disableForceFieldsScript.HUD.SetActive(forceFieldShooterScript.enabled);
-
-        forceFieldShooterScript.enabled = forceFieldShooterScript.enabled;  
+        forceFieldShooterScript.enabled = playerControllerScript.forceFieldsActive;
 
         player.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
