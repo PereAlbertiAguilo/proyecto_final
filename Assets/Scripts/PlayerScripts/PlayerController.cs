@@ -71,6 +71,9 @@ public class PlayerController : MonoBehaviour
         transform.rotation = new Quaternion(0, -180, 0, 0);
 
         wallJumpDir = Vector3.forward;
+
+        virtualCam.GetComponent<CinemachineVirtualCamera>().m_Lens.FieldOfView = PlayerPrefs.GetFloat("fov");
+        print(PlayerPrefs.GetFloat("fov"));
     }
 
     private void Update()
@@ -229,13 +232,12 @@ public class PlayerController : MonoBehaviour
 
     void Running(bool b)
     {
-
         float fov;
         fov = virtualCam.GetComponent<CinemachineVirtualCamera>().m_Lens.FieldOfView;
 
         if (b)
         {
-            fov = Mathf.Lerp(fov, fieldOfView + 5, 0.05f);
+            fov = Mathf.Lerp(fov, fieldOfView + 6, 0.05f);
         }
         else if(isGrounded)
         {
