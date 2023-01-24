@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private DoorOpener doorOpenerScript;
 
     public Transform virtualCam;
+    private CinemachineVirtualCamera cvCam;
     [SerializeField] private Transform cam;
 
     [HideInInspector] public static bool playerCreated;
@@ -66,14 +67,31 @@ public class PlayerController : MonoBehaviour
         grapplingControllerScript = FindObjectOfType<GrapplingController>();
         doorOpenerScript = FindObjectOfType<DoorOpener>();
 
+        cvCam = virtualCam.GetComponent<CinemachineVirtualCamera>();
+
         Cursor.lockState = CursorLockMode.Locked;
 
         transform.rotation = new Quaternion(0, -180, 0, 0);
 
         wallJumpDir = Vector3.forward;
 
-        virtualCam.GetComponent<CinemachineVirtualCamera>().m_Lens.FieldOfView = PlayerPrefs.GetFloat("fov");
-        print(PlayerPrefs.GetFloat("fov"));
+        CinemachinePOV cPOV = cvCam.GetCinemachineComponent<CinemachinePOV>();
+
+        if (PlayerPrefs.HasKey("fov"))
+        {
+            fieldOfView = PlayerPrefs.GetFloat("fov");
+
+            cvCam.m_Lens.FieldOfView = PlayerPrefs.GetFloat("fov");
+        }
+        if (PlayerPrefs.HasKey("sensX"))
+        {
+            cPOV.m_HorizontalAxis.m_MaxSpeed = PlayerPrefs.GetFloat("sensX");
+        }
+        if (PlayerPrefs.HasKey("sensY"))
+        {
+            cPOV.m_VerticalAxis.m_MaxSpeed = PlayerPrefs.GetFloat("sensY");
+        }
+
     }
 
     private void Update()
@@ -233,7 +251,7 @@ public class PlayerController : MonoBehaviour
     void Running(bool b)
     {
         float fov;
-        fov = virtualCam.GetComponent<CinemachineVirtualCamera>().m_Lens.FieldOfView;
+        fov = cvCam.m_Lens.FieldOfView;
 
         if (b)
         {
@@ -244,7 +262,7 @@ public class PlayerController : MonoBehaviour
             fov = Mathf.Lerp(fov, fieldOfView, 0.05f);
         }
 
-        virtualCam.GetComponent<CinemachineVirtualCamera>().m_Lens.FieldOfView = fov;
+        cvCam.m_Lens.FieldOfView = fov;
     }
 
     void SpeedControl()

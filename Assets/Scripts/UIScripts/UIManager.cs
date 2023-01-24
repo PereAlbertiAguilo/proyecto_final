@@ -116,6 +116,17 @@ public class UIManager : MonoBehaviour
 
     public void Quit()
     {
+        StartCoroutine(ChangeScene());
+    }
+
+    IEnumerator ChangeScene()
+    {
+        Time.timeScale = 1;
+
+        PlayerPrefs.SetString("currentScene", SceneManager.GetActiveScene().name);
+
+        yield return new WaitForSeconds(1);
+
         SceneManager.LoadScene("MainMenu");
     }
 
