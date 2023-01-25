@@ -23,6 +23,8 @@ public class NextLevel : MonoBehaviour
     public void LoadLevel()
     {
         SceneManager.LoadScene(nextLevel);
+
+        PlayerPrefs.SetString("currentScene", nextLevel);
     }
 
     private void OnTriggerEnter(Collider other)

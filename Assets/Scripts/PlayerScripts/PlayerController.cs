@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
     private DoorOpener doorOpenerScript;
 
     public Transform virtualCam;
-    private CinemachineVirtualCamera cvCam;
+    [HideInInspector] public CinemachineVirtualCamera cvCam;
+    [HideInInspector] public CinemachinePOV cPOV;
     [SerializeField] private Transform cam;
 
     [HideInInspector] public static bool playerCreated;
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float force = 30f;
     [SerializeField] private float groundDrag = 10f;
     [SerializeField] private float airMultiplyer;
-    [SerializeField] private float fieldOfView;
+    public float fieldOfView;
 
     private float horizontalInput;
     private float verticalInput;
@@ -75,7 +76,7 @@ public class PlayerController : MonoBehaviour
 
         wallJumpDir = Vector3.forward;
 
-        CinemachinePOV cPOV = cvCam.GetCinemachineComponent<CinemachinePOV>();
+        cPOV = cvCam.GetCinemachineComponent<CinemachinePOV>();
 
         if (PlayerPrefs.HasKey("fov"))
         {

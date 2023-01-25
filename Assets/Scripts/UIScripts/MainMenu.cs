@@ -81,6 +81,7 @@ public class MainMenu : MonoBehaviour
         PostPorcessingParameters();
 
         UpdateUI();
+        UpdateScene();
     }
 
     void PostPorcessingParameters()
@@ -174,6 +175,20 @@ public class MainMenu : MonoBehaviour
         ppToggle.isOn = ppIsOn;
     }
 
+    void UpdateScene()
+    {
+        PostProcesingToggle(ppIsOn);
+        FullScreenToggle(fsIsOn);
+
+        Quality(qLevel);
+
+        AntiAliasing(aaValue);
+        GammaGain(lggValue);
+        FieldOfView(fovValue);
+        SensX(sensX);
+        SensY(sensY);
+    }
+
     public void CurrentButton(GameObject g)
     {
         EventSystem.current.SetSelectedGameObject(null);
@@ -250,7 +265,6 @@ public class MainMenu : MonoBehaviour
         QualitySettings.SetQualityLevel(qLevel);
 
         PlayerPrefs.SetInt("qLevel", qLevel);
-        print(QualitySettings.GetQualityLevel());
     }
 
     public void AntiAliasing(float f)

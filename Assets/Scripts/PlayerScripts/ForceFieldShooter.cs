@@ -75,11 +75,11 @@ public class ForceFieldShooter : MonoBehaviour
 
         if (mode == 1)
         {
-            sphere.GetComponent<Image>().material = blueMat;
+            sphere.GetComponent<Image>().color = matColorBlue;
         }
         else
         {
-            sphere.GetComponent<Image>().material = purpleMat;
+            sphere.GetComponent<Image>().color = matColorPurple;
         }
 
         if (instance[1] != null)
