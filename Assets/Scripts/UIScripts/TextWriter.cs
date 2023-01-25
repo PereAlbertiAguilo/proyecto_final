@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+[RequireComponent(typeof(AudioSource))]
 public class TextWriter : MonoBehaviour
 {
     private UIManager UIManagerScript;
     private PlayerController playerControllerScript;
+
+    private AudioSource _audioSource;
 
     [Header("Contents \n")]
     [SerializeField] private TextMeshProUGUI textUI;
@@ -40,6 +43,9 @@ public class TextWriter : MonoBehaviour
         playerControllerScript = FindObjectOfType<PlayerController>();
         UIManagerScript = FindObjectOfType<UIManager>();
 
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.mute = true;
+
         if (isTriggered)
         {
             DeactivateUI();
@@ -64,6 +70,8 @@ public class TextWriter : MonoBehaviour
             {
                 if (textToDisplay.Length > currentLine)
                 {
+                    _audioSource.mute = true;
+
                     currentLine++;
                     currentTextIndex++;
                     StartCoroutine(DisplayText());
@@ -109,6 +117,8 @@ public class TextWriter : MonoBehaviour
 
     public IEnumerator DisplayText()
     {
+        _audioSource.mute = false;
+
         ActivateUI();
 
         EnterText();
@@ -151,6 +161,8 @@ public class TextWriter : MonoBehaviour
         skipIndicator.GetComponent<Animator>().Play("indicator_flickering");
 
         isLineFinished = true;
+
+        _audioSource.mute = true;
     }
 
     void DeactivateUI()

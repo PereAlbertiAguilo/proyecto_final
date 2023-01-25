@@ -6,6 +6,7 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     [HideInInspector] public Rigidbody _playerRigidbody;
+    private AudioSource _playerAudioSource;
 
     private GrapplingController grapplingControllerScript;
     private DoorOpener doorOpenerScript;
@@ -64,6 +65,7 @@ public class PlayerController : MonoBehaviour
         playerCreated = true;
 
         _playerRigidbody = GetComponent<Rigidbody>();
+        _playerAudioSource = GetComponent<AudioSource>();
 
         grapplingControllerScript = FindObjectOfType<GrapplingController>();
         doorOpenerScript = FindObjectOfType<DoorOpener>();

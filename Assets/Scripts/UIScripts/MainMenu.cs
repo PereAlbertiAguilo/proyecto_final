@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 using TMPro;
 
 public class MainMenu : MonoBehaviour
@@ -18,6 +19,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Slider lggSlider;
     [SerializeField] private Slider sXSlider;
     [SerializeField] private Slider sYSlider;
+    [SerializeField] private Slider mSlider;
+    [SerializeField] private Slider sfxSlider;
 
     [Header("\n")]
     [SerializeField] private Toggle fsToggle;
@@ -34,11 +37,13 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject mainMenuFirstButton;
     [SerializeField] private GameObject optionsFirstButton;
 
-    [Header("Parameters\n")]
+    [Header("Components\n")]
     [SerializeField] private Volume postProcessingVolume;
+    [SerializeField] private AudioMixer musicAudioMixer;
+    [SerializeField] private AudioMixer SFXAudioMixer;
+
     LiftGammaGain liftGammaGain;
     Bloom bloom;
-    LensDistortion lensDistortion;
     Vignette vignette;
     
     [SerializeField] private RenderTexture renderTexture;
@@ -48,6 +53,8 @@ public class MainMenu : MonoBehaviour
     private float aaValue;
     private float sensX;
     private float sensY;
+    private float mVolume;
+    private float sfxVolume;
 
     private int qLevel;
     
@@ -59,8 +66,10 @@ public class MainMenu : MonoBehaviour
         lggValue = CheckFloatKey("gamma", lggSlider.value);
         fovValue = CheckFloatKey("fov", fovSlider.value);
         aaValue = CheckFloatKey("aaValue", aaSlider.value);
-        sensX = CheckFloatKey("sensX", sensX);
-        sensY = CheckFloatKey("sensY", sensY);
+        sensX = CheckFloatKey("sensX", sXSlider.value);
+        sensY = CheckFloatKey("sensY", sYSlider.value);
+        mVolume = CheckFloatKey("mVolume", SetAudioMixerValue(musicAudioMixer, "MusicVolume", mVolume));
+        sfxVolume = CheckFloatKey("sfxVolume", SetAudioMixerValue(SFXAudioMixer, "SFXVolume", sfxVolume));
 
         qLevel = CheckIntKey("qLevel", 0);
 
@@ -84,6 +93,14 @@ public class MainMenu : MonoBehaviour
         UpdateScene();
     }
 
+    float SetAudioMixerValue(AudioMixer am, string s, float f)
+    {
+        am.GetFloat(s, out f);
+
+        return Mathf.Log10(f) * 20;
+
+    }
+
     void PostPorcessingParameters()
     {
         if (!postProcessingVolume.profile.TryGet(out liftGammaGain))
@@ -93,10 +110,6 @@ public class MainMenu : MonoBehaviour
         if (!postProcessingVolume.profile.TryGet(out bloom))
         {
             throw new System.NullReferenceException(nameof(bloom));
-        }
-        if (!postProcessingVolume.profile.TryGet(out lensDistortion))
-        {
-            throw new System.NullReferenceException(nameof(lensDistortion));
         }
         if (!postProcessingVolume.profile.TryGet(out vignette))
         {
@@ -168,6 +181,8 @@ public class MainMenu : MonoBehaviour
         fovSlider.value = fovValue;
         sXSlider.value = sensX;
         sYSlider.value = sensY;
+        mSlider.value = mVolume;
+        sfxSlider.value = sfxVolume;
 
         qDropdown.value = qLevel;
 
@@ -229,7 +244,6 @@ public class MainMenu : MonoBehaviour
     public void PostProcesingToggle(bool b)
     {
         vignette.active = b;
-        lensDistortion.active = b;
         bloom.active = b;
 
         if (b)
@@ -305,6 +319,24 @@ public class MainMenu : MonoBehaviour
         fovValue = f;
 
         PlayerPrefs.SetFloat("fov", fovValue);
+    }
+
+    public void SetMusicVolume(float f)
+    {
+        mVolume = f;
+
+        musicAudioMixer.SetFloat("MusicVolume", Mathf.Log10(mVolume) * 20);
+
+        PlayerPrefs.SetFloat("mVolume", mVolume);
+    }
+
+    public void SetSFXVolume(float f)
+    {
+        sfxVolume = f;
+
+        SFXAudioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
+
+        PlayerPrefs.SetFloat("sfxVolume", sfxVolume);
     }
 
     public void SensX(float f)
