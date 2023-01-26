@@ -11,8 +11,8 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private string tutorial;
-    public string actualLevel;
+    [HideInInspector] public string actualLevel;
+
     [Header("UI\n")]
     [SerializeField] private Slider fovSlider;
     [SerializeField] private Slider aaSlider;
@@ -87,7 +87,7 @@ public class UIManager : MonoBehaviour
         ppIsOn = CheckBoolKey("ppBool");
         fsIsOn = CheckBoolKey("fsBool");
 
-        actualLevel = CheckStringKey("currentScene", tutorial);
+        actualLevel = CheckStringKey("currentScene", SceneManager.GetActiveScene().name);
     }
 
     private void Start()
@@ -298,6 +298,8 @@ public class UIManager : MonoBehaviour
     public void NextLevel()
     {
         nextLevelScript.LoadLevel();
+
+        PlayerPrefs.SetString("currentScene", SceneManager.GetActiveScene().name);
     }
 
     public void CheckPointRestart()
@@ -478,4 +480,9 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetString("currentScene", SceneManager.GetActiveScene().name);
+    }
 }
