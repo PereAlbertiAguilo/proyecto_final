@@ -7,24 +7,17 @@ public class CheckPoint : MonoBehaviour
     private ResetLevel[] resetLevelScript;
     private ForceFieldShooter forceFieldShooterScript;
 
-    [HideInInspector] public bool forceFieldsActive;
+    private AudioSource _audioSource;
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
 
     private void Start()
     {
         forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
-        resetLevelScript = FindObjectsOfType<ResetLevel>();    
-    }
-
-    private void Update()
-    {
-        if (forceFieldShooterScript.enabled == true)
-        {
-            forceFieldsActive = true;
-        }
-        else
-        {
-            forceFieldsActive = false;
-        }
+        resetLevelScript = FindObjectsOfType<ResetLevel>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,6 +26,11 @@ public class CheckPoint : MonoBehaviour
         {
             foreach (ResetLevel rs in resetLevelScript)
             {
+                if (rs.checkPoint != transform.GetChild(0))
+                {
+                    _audioSource.Play();
+                }
+
                 rs.checkPoint = transform.GetChild(0);
             }
         }

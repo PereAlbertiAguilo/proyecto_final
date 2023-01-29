@@ -13,10 +13,20 @@ public class DoorOpener : MonoBehaviour
     [HideInInspector] public bool canInteract;
     private bool isDoorOpened;
 
+    private AudioSource _audioSource;
+    [SerializeField] private AudioClip[] sfxs;
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E) && canInteract && !isDoorOpened)
         {
+            _audioSource.PlayOneShot(sfxs[0]);
+
             StartCoroutine(OpenDoor());
         }
     }
@@ -27,6 +37,7 @@ public class DoorOpener : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         door.SetActive(false);
         yield return new WaitForSeconds(0.3f);
+        _audioSource.PlayOneShot(sfxs[1]);
         door.SetActive(true);
         yield return new WaitForSeconds(0.02f);
         door.SetActive(false);

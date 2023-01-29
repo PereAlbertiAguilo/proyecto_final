@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 40
-  delay: 0.1
+  delay: 0.8
 --- !u!64 &6650523274428304951
 MeshCollider:
   m_ObjectHideFlags: 0

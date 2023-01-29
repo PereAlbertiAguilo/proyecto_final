@@ -10,6 +10,7 @@ public class TextWriter : MonoBehaviour
     private PlayerController playerControllerScript;
 
     private AudioSource _audioSource;
+    private GameObject musicManager;
 
     [Header("Contents \n")]
     [SerializeField] private TextMeshProUGUI textUI;
@@ -45,6 +46,14 @@ public class TextWriter : MonoBehaviour
 
         _audioSource = GetComponent<AudioSource>();
         _audioSource.mute = true;
+
+        musicManager = GameObject.Find("Music");
+
+        if (isIntro)
+        {
+            musicManager.SetActive(false);
+
+        }
 
         if (isTriggered)
         {
@@ -83,6 +92,8 @@ public class TextWriter : MonoBehaviour
                     if (isIntro)
                     {
                         GetComponentInChildren<Animator>().Play("from_black");
+
+                        musicManager.SetActive(true);
 
                         Invoke(nameof(ExitText), textExitTime);
                     }

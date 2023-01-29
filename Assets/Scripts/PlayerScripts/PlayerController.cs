@@ -6,9 +6,9 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     [HideInInspector] public Rigidbody _playerRigidbody;
-    private AudioSource _playerAudioSource;
 
     private GrapplingController grapplingControllerScript;
+    private ForceFieldShooter forceFieldShooterScript;
     private DoorOpener doorOpenerScript;
 
     public Transform virtualCam;
@@ -57,8 +57,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Gravity Modifier\n")]
     [SerializeField] private float wallGrav = -1f;
-    [SerializeField] private float normalGrav = -10f;
+    public float normalGrav = -10f;
 
+    [Header("Audio Parameters\n")]
+    [SerializeField] private float defaultVolume;
+    [SerializeField] private float defaultPitch;
+    public AudioClip[] sfxs;
+
+    [SerializeField] private AudioSource _sfxAudioSource;
+    private AudioSource _playerAudioSource;
 
     void Start()
     {
@@ -69,12 +76,11 @@ public class PlayerController : MonoBehaviour
 
         grapplingControllerScript = FindObjectOfType<GrapplingController>();
         doorOpenerScript = FindObjectOfType<DoorOpener>();
+        forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
 
         cvCam = virtualCam.GetComponent<CinemachineVirtualCamera>();
 
         Cursor.lockState = CursorLockMode.Locked;
-
-        transform.rotation = new Quaternion(0, -180, 0, 0);
 
         wallJumpDir = Vector3.forward;
 
@@ -94,7 +100,6 @@ public class PlayerController : MonoBehaviour
         {
             cPOV.m_VerticalAxis.m_MaxSpeed = PlayerPrefs.GetFloat("sensY");
         }
-
     }
 
     private void Update()
@@ -104,6 +109,7 @@ public class PlayerController : MonoBehaviour
             PlayerInput();
             SpeedControl();
             Running(isRunning);
+            PlayerWalkSFX();
 
             transform.rotation = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0);
 
@@ -218,6 +224,39 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void PlayerWalkSFX()
+    {
+        if (Mathf.Abs(verticalInput) != 0 || Mathf.Abs(horizontalInput) != 0)
+        {
+            _playerAudioSource.volume = Mathf.Lerp(_playerAudioSource.volume, defaultVolume, 0.05f);
+        }
+        else if (!_playerAudioSource.mute)
+        {
+            if (_playerAudioSource.volume >= 0.01f)
+            {
+                _playerAudioSource.volume = Mathf.Lerp(_playerAudioSource.volume, 0f, Time.deltaTime * 2);
+            }
+        }
+
+        if (isRunning)
+        {
+            _playerAudioSource.pitch = Mathf.Lerp(_playerAudioSource.pitch, defaultPitch, Time.deltaTime * 2);
+        }
+        else
+        {
+            _playerAudioSource.pitch = Mathf.Lerp(_playerAudioSource.pitch, 1f, 0.05f);
+        }
+    }
+
+    public void PlayerSFX(AudioClip ac, float f1, float f2)
+    {
+        float randomIndex = Random.Range(f1, f2);
+
+        _sfxAudioSource.pitch = randomIndex;
+
+        _sfxAudioSource.PlayOneShot(ac);
+    }
+
     void MovePlayer()
     {
         moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
@@ -285,6 +324,8 @@ public class PlayerController : MonoBehaviour
         _playerRigidbody.velocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
 
         _playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+        PlayerSFX(sfxs[0], 1, 1.5f);
     }
 
     void WallJumpMechanic()
@@ -293,8 +334,10 @@ public class PlayerController : MonoBehaviour
 
         _playerRigidbody.AddForce(wallJumpDir * jumpForce * 0.8f, ForceMode.Impulse);
         _playerRigidbody.AddForce(Vector3.up * jumpForce * 0.8f, ForceMode.Impulse);
+
+        PlayerSFX(sfxs[0], 1, 1.5f);
     }
-    
+
     void JumpReset()
     {
         canJump = true;
@@ -306,12 +349,13 @@ public class PlayerController : MonoBehaviour
         {
             canSecondJump = true;
             Destroy(other.gameObject, 0.45f);
+            forceFieldShooterScript._animator.Play("arm_reload");
             other.GetComponent<Animator>().Play("forcefield_destroy");
         }
 
         if (other.tag.Equals("CheckPoint"))
         {
-            forceFieldsActive = other.GetComponent<CheckPoint>().forceFieldsActive;
+            forceFieldsActive = forceFieldShooterScript.enabled;
         }
     }
 

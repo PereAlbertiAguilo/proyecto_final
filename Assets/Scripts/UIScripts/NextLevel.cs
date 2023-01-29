@@ -8,7 +8,7 @@ public class NextLevel : MonoBehaviour
 {
     private UIManager UIManagerScript;
 
-    [SerializeField] private string nextLevel;
+    public string nextLevel;
 
     private void Awake()
     {
@@ -18,13 +18,6 @@ public class NextLevel : MonoBehaviour
     private void Start()
     {
         UIManagerScript = FindObjectOfType<UIManager>();
-    }
-
-    public void LoadLevel()
-    {
-        SceneManager.LoadScene(nextLevel);
-
-        PlayerPrefs.SetString("currentScene", nextLevel);
     }
 
     private void OnTriggerEnter(Collider other)

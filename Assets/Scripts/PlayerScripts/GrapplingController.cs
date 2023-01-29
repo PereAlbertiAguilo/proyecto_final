@@ -39,6 +39,8 @@ public class GrapplingController : MonoBehaviour
     [SerializeField] private float minStrech = 4.5f;
     [SerializeField] private float maxDistance = 10f;
 
+    private PlayerController playerControllerScript;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -48,6 +50,8 @@ public class GrapplingController : MonoBehaviour
 
     private void Start()
     {
+        playerControllerScript = player.GetComponent<PlayerController>();
+
         StopGrapple();
     }
 
@@ -112,6 +116,8 @@ public class GrapplingController : MonoBehaviour
             currentGrapplePosition = gunTip.position;
 
             transform.parent.GetComponent<Animator>().Play("arm_exit");
+
+            playerControllerScript.PlayerSFX(playerControllerScript.sfxs[1], 1, 1.5f);
 
             isGrappled = true;
 

@@ -29,10 +29,21 @@ public class UIManager : MonoBehaviour
     [Header("\n")]
     [SerializeField] private TMP_Dropdown qDropdown;
 
+    [Header("\n")]
+    [SerializeField] private TextMeshProUGUI confirmMesage;
+
+    [Header("\n")]
+    [SerializeField] private GameObject yesExit;
+    [SerializeField] private GameObject yesRestart;
+
     [Header("Parameters\n")]
     [SerializeField] private Volume postProcessingVolume;
     [SerializeField] private AudioMixer musicAudioMixer;
     [SerializeField] private AudioMixer SFXAudioMixer;
+    [SerializeField] private AudioSource sfxAudioSource;
+    [SerializeField] private AudioClip[] sfxs;
+    [SerializeField] private Animator blackPanelAnimator;
+
 
     LiftGammaGain liftGammaGain;
     Bloom bloom;
@@ -66,11 +77,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject optionsPanel;
     [SerializeField] private GameObject nextLevelPanel;
+    [SerializeField] private GameObject confirmPanel;
 
     [Header("Buttons\n")]
     [SerializeField] private GameObject pauseFirstButton;
     [SerializeField] private GameObject optionsFirstButton;
     [SerializeField] private GameObject nextLevelFirstButton;
+    [SerializeField] private GameObject confirmFirstButton;
 
     private void Awake()
     {
@@ -98,10 +111,15 @@ public class UIManager : MonoBehaviour
         nextLevelScript = FindObjectOfType<NextLevel>();
 
         postProcessingVolume = GameObject.Find("PostProcesing").GetComponent<Volume>();
+        sfxAudioSource = GameObject.Find("SFX").GetComponent<AudioSource>();
 
         PostPorcessingParameters();
+
+        sfxAudioSource.mute = true;
         UpdateUI();
         UpdateScene();
+        sfxAudioSource.mute = false;
+
         Resume();
 
         canPause = true;
@@ -232,7 +250,12 @@ public class UIManager : MonoBehaviour
 
         if (!b)
         {
+            Physics.gravity = Vector3.zero;
             playerControllerScript._playerRigidbody.velocity = Vector3.zero;
+        }
+        else
+        {
+            Physics.gravity = new Vector3(0, playerControllerScript.normalGrav, 0);
         }
     }
 
@@ -242,7 +265,14 @@ public class UIManager : MonoBehaviour
         {
             if (isPaused && pausePanel.activeInHierarchy)
             {
-                Resume();
+                if (confirmPanel.activeInHierarchy)
+                {
+                    GoBack();
+                }
+                else
+                {
+                    Resume();
+                }
             }
             else if(isPaused && !pausePanel.activeInHierarchy)
             {
@@ -255,12 +285,15 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    #region PauseMenuButtons
     public void Pause()
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         CanMove(false);
+        
         isPaused = true;
         Cursor.lockState = CursorLockMode.Confined;
-        Time.timeScale = 0;
         backgroundPanel.SetActive(true);
         pausePanel.SetActive(true);
         CurrentButton(pauseFirstButton);
@@ -268,10 +301,12 @@ public class UIManager : MonoBehaviour
 
     public void Resume()
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         CanMove(true);
+
         isPaused = false;
         Cursor.lockState = CursorLockMode.Locked;
-        Time.timeScale = 1;
         backgroundPanel.SetActive(false);
         pausePanel.SetActive(false);
         EventSystem.current.SetSelectedGameObject(null);
@@ -279,6 +314,8 @@ public class UIManager : MonoBehaviour
 
     public void Options()
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         pausePanel.SetActive(false);
         optionsPanel.SetActive(true);
         CurrentButton(optionsFirstButton);
@@ -286,10 +323,12 @@ public class UIManager : MonoBehaviour
 
     public void FinishLevel()
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         canPause = false;
         CanMove(false);
+        
         Cursor.lockState = CursorLockMode.Confined;
-        Time.timeScale = 0;
         backgroundPanel.SetActive(true);
         nextLevelPanel.SetActive(true);
         CurrentButton(nextLevelFirstButton);
@@ -297,43 +336,85 @@ public class UIManager : MonoBehaviour
 
     public void NextLevel()
     {
-        nextLevelScript.LoadLevel();
+        CanMove(false);
 
-        PlayerPrefs.SetString("currentScene", SceneManager.GetActiveScene().name);
+        StartCoroutine(LoadScene(nextLevelScript.nextLevel, nextLevelScript.nextLevel));
     }
 
     public void CheckPointRestart()
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         Resume();
         resetLevelScript.CheckPointRestart();
     }
 
     public void ResetLevel()
     {
-        Resume();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        CanMove(false);
+
+        StartCoroutine(LoadScene(SceneManager.GetActiveScene().name, SceneManager.GetActiveScene().name));
+    }
+
+    public void PlayerSFX(AudioClip ac, float f1, float f2)
+    {
+        float randomIndex = Random.Range(f1, f2);
+
+        sfxAudioSource.pitch = randomIndex;
+
+        sfxAudioSource.PlayOneShot(ac);
+    }
+
+    public void ConfirmMessage(string s)
+    {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
+        confirmMesage.text = s;
+
+        confirmPanel.SetActive(true);
+        CurrentButton(confirmFirstButton);
+    }
+
+    public void ConfirmButtons(bool b)
+    {
+        if (b)
+        {
+            yesRestart.SetActive(false);
+            yesExit.SetActive(true);
+        }
+        else
+        {
+            yesExit.SetActive(false);
+            yesRestart.SetActive(true);
+        }
     }
 
     public void Quit()
     {
-        StartCoroutine(ChangeScene());
+        StartCoroutine(LoadScene("MainMenu", SceneManager.GetActiveScene().name));
     }
 
-    IEnumerator ChangeScene()
+    IEnumerator LoadScene(string loadScene, string saveScene)
     {
-        Time.timeScale = 1;
+        PlayerSFX(sfxs[0], 1, 1.5f);
 
-        PlayerPrefs.SetString("currentScene", SceneManager.GetActiveScene().name);
+        blackPanelAnimator.SetBool("ToBlack", true);
 
-        yield return new WaitForSeconds(1);
+        PlayerPrefs.SetString("currentScene", saveScene);
 
-        SceneManager.LoadScene("MainMenu");
+        yield return new WaitForSeconds(3f);
+
+        SceneManager.LoadScene(loadScene);
     }
+
+#endregion
 
     #region OptionMenuButtons
 
     public void PostProcesingToggle(bool b)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         vignette.active = b;
         bloom.active = b;
 
@@ -349,6 +430,8 @@ public class UIManager : MonoBehaviour
 
     public void FullScreenToggle(bool b)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         if (b)
         {
             Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
@@ -365,6 +448,8 @@ public class UIManager : MonoBehaviour
 
     public void Quality(int i)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         qLevel = i;
 
         QualitySettings.SetQualityLevel(qLevel);
@@ -374,6 +459,8 @@ public class UIManager : MonoBehaviour
 
     public void AntiAliasing(float f)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         aaValue = f;
 
         if (aaValue == 0)
@@ -398,6 +485,8 @@ public class UIManager : MonoBehaviour
 
     public void GammaGain(float f)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         lggValue = f;
 
         liftGammaGain.gamma.Override(new Vector4(1f, 1f, 1f, lggValue));
@@ -407,6 +496,8 @@ public class UIManager : MonoBehaviour
 
     public void FieldOfView(float f)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         fovValue = f;
 
         playerControllerScript.cvCam.m_Lens.FieldOfView = fovValue;
@@ -417,6 +508,8 @@ public class UIManager : MonoBehaviour
 
     public void SetMusicVolume(float f)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         mVolume = f;
 
         musicAudioMixer.SetFloat("MusicVolume", Mathf.Log10(mVolume) * 20);
@@ -426,6 +519,8 @@ public class UIManager : MonoBehaviour
 
     public void SetSFXVolume(float f)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         sfxVolume = f;
 
         SFXAudioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
@@ -434,6 +529,8 @@ public class UIManager : MonoBehaviour
     }
     public void SensX(float f)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         sensX = f;
 
         playerControllerScript.cPOV.m_HorizontalAxis.m_MaxSpeed = sensX;
@@ -443,6 +540,8 @@ public class UIManager : MonoBehaviour
 
     public void SensY(float f)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         sensY = f;
 
         playerControllerScript.cPOV.m_VerticalAxis.m_MaxSpeed = sensY;
@@ -452,6 +551,8 @@ public class UIManager : MonoBehaviour
 
     public void IgualateSens()
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         SensY(sensX);
 
         sensY = sensX;
@@ -465,6 +566,8 @@ public class UIManager : MonoBehaviour
 
     void SetAntialiasing(int i)
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         renderTexture.Release();
 
         renderTexture.antiAliasing = i;
@@ -474,7 +577,12 @@ public class UIManager : MonoBehaviour
 
     public void GoBack()
     {
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
+        PlayerSFX(sfxs[0], 1, 1.5f);
+
         optionsPanel.SetActive(false);
+        confirmPanel.SetActive(false);
         pausePanel.SetActive(true);
         CurrentButton(pauseFirstButton);
     }

@@ -45,7 +45,10 @@ public class ResetLevel : MonoBehaviour
 
         forceFieldShooterScript.Reload();
 
-        disableForceFieldsScript.HUD.SetActive(playerControllerScript.forceFieldsActive);
+        if(disableForceFieldsScript != null)
+        {
+            disableForceFieldsScript.HUD.SetActive(playerControllerScript.forceFieldsActive);
+        }
 
         forceFieldShooterScript.enabled = playerControllerScript.forceFieldsActive;
 

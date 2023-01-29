@@ -15,7 +15,9 @@ public class Jumper : MonoBehaviour
         if (other.gameObject.name.Equals("Player") && canJump)
         {
             Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
+            PlayerController playerControllerScript = other.gameObject.GetComponent<PlayerController>();
 
+            playerControllerScript.PlayerSFX(playerControllerScript.sfxs[0], 1, 1.5f);
             rb.AddForce(Vector3.up * force, ForceMode.Impulse);
             //StartCoroutine(Delay(other));
         }
@@ -26,7 +28,5 @@ public class Jumper : MonoBehaviour
         canJump = false;
         yield return new WaitForSeconds(delay);
         canJump = true;
-
-        
     }
 }

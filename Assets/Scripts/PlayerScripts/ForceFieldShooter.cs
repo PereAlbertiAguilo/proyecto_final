@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class ForceFieldShooter : MonoBehaviour
 {
-
     [HideInInspector] public bool canShoot = true;
     private bool isGrappleInstatiated;
     [HideInInspector] public bool isTimerOn;
@@ -36,13 +35,13 @@ public class ForceFieldShooter : MonoBehaviour
 
     private SphereCollider _sphereCollider;
 
-    private PlayerController playerController;
+    private PlayerController playerControllerScript;
 
     [Header("Others\n")]
     [SerializeField] private LayerMask whatIsReloadTerminal;
 
     [SerializeField] private float clickDist;
-    [SerializeField] private Animator _animator;
+    public Animator _animator;
 
     [Header("Hand Color\n")]
 
@@ -61,7 +60,7 @@ public class ForceFieldShooter : MonoBehaviour
 
     private void Start()
     {
-        playerController = FindObjectOfType<PlayerController>();
+        playerControllerScript = FindObjectOfType<PlayerController>();
         mode = 0;
         currentInstance = 0;
         currentLife = lifeTime;
@@ -173,6 +172,8 @@ public class ForceFieldShooter : MonoBehaviour
     {
         if (canShoot && currentInstance < maxInstances)
         {
+            playerControllerScript.PlayerSFX(playerControllerScript.sfxs[2], 1, 1.5f);
+
             _animator.Play("arm_shoot");
 
             canShoot = false;
@@ -198,7 +199,7 @@ public class ForceFieldShooter : MonoBehaviour
             _rigidbody = instance[mode].GetComponentInChildren<Rigidbody>();
             _sphereCollider = instance[mode].GetComponentInChildren<SphereCollider>();
 
-            //_sphereCollider.enabled = false;
+            _sphereCollider.enabled = false;
             _rigidbody.AddForce(instance[mode].transform.forward * speed * 10, ForceMode.Force);
             forceFields.Add(instance[mode]);
 
@@ -211,11 +212,14 @@ public class ForceFieldShooter : MonoBehaviour
         {
             if (!canShoot && _rigidbody.velocity != Vector3.zero)
             {
-                _animator.Play("arm_reload");
+                if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("arm_reload"))
+                {
+                    _animator.Play("arm_reload");
+                }
             }
 
             _rigidbody.velocity = Vector3.zero;
-            //_sphereCollider.enabled = true;
+            _sphereCollider.enabled = true;
         }
     }
 
@@ -252,7 +256,7 @@ public class ForceFieldShooter : MonoBehaviour
             canShoot = true;
             isGrappleInstatiated = false;
             isTimerOn = false;
-            playerController.canSecondJump = false;
+            playerControllerScript.canSecondJump = false;
             canReload = true;
         }
     }
