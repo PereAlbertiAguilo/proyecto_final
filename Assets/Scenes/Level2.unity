@@ -1327,7 +1327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a10a0c1b265a444c854cb0651f4932e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextLevel: 
+  nextLevel: Level3
 --- !u!65 &550852729
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8419,7 +8419,7 @@ PrefabInstance:
     - target: {fileID: 6265221974826109514, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
       propertyPath: m_Lens.FieldOfView
-      value: 70.2426
+      value: 69.02133
       objectReference: {fileID: 0}
     - target: {fileID: 6265221975000797412, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
@@ -8490,6 +8490,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_HorizontalAxis.Value
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6265221975541088861, guid: d6db6d70ae6643347b7c8a20edd278b1,
+        type: 3}
+      propertyPath: m_VerticalAxis.m_MaxSpeed
+      value: 1.864142
+      objectReference: {fileID: 0}
+    - target: {fileID: 6265221975541088861, guid: d6db6d70ae6643347b7c8a20edd278b1,
+        type: 3}
+      propertyPath: m_HorizontalAxis.m_MaxSpeed
+      value: 1.864142
       objectReference: {fileID: 0}
     - target: {fileID: 6265221975964362875, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
@@ -8579,7 +8589,7 @@ PrefabInstance:
     - target: {fileID: 6265221976789415844, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
       propertyPath: field of view
-      value: 70.2426
+      value: 69.02133
       objectReference: {fileID: 0}
     - target: {fileID: 6265221976789415847, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}

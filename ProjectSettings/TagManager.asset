@@ -11,6 +11,7 @@ TagManager:
   - CheckPoint
   - NextLevel
   - ForceFieldActivator
+  - Grapable
   layers:
   - Default
   - TransparentFX

@@ -248,6 +248,11 @@ public class UIManager : MonoBehaviour
         playerControllerScript.virtualCam.gameObject.SetActive(b);
         ForceFieldShooterScript.canShoot = b;
 
+        if (ForceFieldShooterScript.enabled)
+        {
+            ForceFieldShooterScript.canShoot = b;
+        }
+
         if (!b)
         {
             Physics.gravity = Vector3.zero;

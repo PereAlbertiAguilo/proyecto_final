@@ -5,6 +5,9 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
+    private int XboxOneController = 0;
+    private int PS4Controller = 0;
+
     [HideInInspector] public Rigidbody _playerRigidbody;
 
     private GrapplingController grapplingControllerScript;
@@ -156,10 +159,49 @@ public class PlayerController : MonoBehaviour
 
     void PlayerInput()
     {
+        /*
+        string[] names = Input.GetJoystickNames();
+
+        for (int i = 0; i < names.Length; i++)
+        {
+            print(names[i].Length);
+
+            if (names[i].Length == 19)
+            {
+                print("PS4 CONTROLLER IS CONNECTED");
+                PS4Controller = 1;
+                XboxOneController = 0;
+            }
+            if (names[i].Length == 33)
+            {
+                print("XBOX ONE CONTROLLER IS CONNECTED");
+                PS4Controller = 0;
+                XboxOneController = 1;
+            }
+        }
+
+        if (XboxOneController == 1)
+        {
+            //do somet$$anonymous$$ng
+        }
+        else if (PS4Controller == 1)
+        {
+            //do somet$$anonymous$$ng
+        }
+        else
+        {
+            // there is no controllers
+        }
+        */
+
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        float leftTrigger = Input.GetAxis("LeftTrigger");
+        float rightTrigger = Input.GetAxisRaw("RightTrigger");
+
+
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton9) && isGrounded)
         {
             if (canJump)
             {
@@ -171,21 +213,21 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && canSecondJump && !grapplingControllerScript.isGrappled && !isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton9) && canSecondJump && !grapplingControllerScript.isGrappled && !isGrounded)
         {
             canSecondJump = false;
 
             JumpMechanic();
         }
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton9))
         {
             if (canAttatch)
             {
                 isAttatched = true;
             }
         }
-        else if (Input.GetKeyUp(KeyCode.Space))
+        else if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.JoystickButton9))
         {
             if (canWallJump)
             {
@@ -199,24 +241,24 @@ public class PlayerController : MonoBehaviour
         {
             isAttatched = false;
         }
-
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        print(leftTrigger);
+        if (Input.GetKeyDown(KeyCode.LeftControl) || leftTrigger > 0)
         {
             isRunning = true;
         }
-        else if (Input.GetKeyUp(KeyCode.LeftControl))
+        else if (Input.GetKeyUp(KeyCode.LeftControl) || leftTrigger < 0)
         {
             isRunning = false;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && isGrounded && canSlide)
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton8) && isGrounded && canSlide)
         {
             canSlide = false;
             isSliding = true;
             GetComponent<CapsuleCollider>().height = 1f;
             _playerRigidbody.AddForce(Vector3.down * force, ForceMode.Impulse);
         }
-        else if(Input.GetKeyUp(KeyCode.LeftShift) || !isGrounded)
+        else if(Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.JoystickButton8) || !isGrounded)
         {
             GetComponent<CapsuleCollider>().height = 2f;
             canSlide = true;

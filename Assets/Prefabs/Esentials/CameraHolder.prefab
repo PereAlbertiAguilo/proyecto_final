@@ -1521,7 +1521,8 @@ MonoBehaviour:
   massScale: 20
   maxStrech: 0.25
   minStrech: 0.2
-  maxDistance: 16
+  maxDistance: 18
+  grappables: []
 --- !u!114 &6265221976167616291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1617,7 +1618,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 771.4003, y: -79.65014}
+  m_AnchoredPosition: {x: 771.4003, y: -79.65015}
   m_SizeDelta: {x: -1891.9099, y: -212.54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6265221976209929087
@@ -2189,7 +2190,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 5000
-  field of view: 68.27069
+  field of view: 69.27111
   orthographic: 0
   orthographic size: 10
   m_Depth: 0

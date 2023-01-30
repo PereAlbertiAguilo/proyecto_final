@@ -41,6 +41,9 @@ public class GrapplingController : MonoBehaviour
 
     private PlayerController playerControllerScript;
 
+    [Header("\n")]
+    [SerializeField] private GameObject[] grappables;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -57,14 +60,26 @@ public class GrapplingController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1) && isGrappleAvalible)
+        grappables = GameObject.FindGameObjectsWithTag("Grapable");
+
+        foreach(GameObject g in grappables)
         {
-            StartGrapple();
+            float dist = Vector3.Distance(player.position, g.transform.position);
+
+            if (dist <= maxDistance)
+            {
+                print("canGrapple");
+                if (Input.GetMouseButtonDown(1) && isGrappleAvalible)
+                {
+                    StartGrapple(g.transform);
+                }
+                else if (Input.GetMouseButtonUp(1))
+                {
+                    StopGrapple();
+                }
+            }
         }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            StopGrapple();
-        }
+
 
         if (isGrappled)
         {
@@ -92,6 +107,35 @@ public class GrapplingController : MonoBehaviour
         _armMat.SetFloat("_DisolveFactor", disolveFactor);
     }
 
+    void StartGrapple(Transform t)
+    {
+        target = t.gameObject;
+        grapplePoint = t.position;
+        joint = player.gameObject.AddComponent<SpringJoint>();
+        joint.autoConfigureConnectedAnchor = false;
+        joint.connectedAnchor = grapplePoint;
+
+        float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
+
+        joint.maxDistance = distanceFromPoint * maxStrech;
+        joint.minDistance = distanceFromPoint * minStrech;
+
+        joint.spring = spring;
+        joint.damper = damper;
+        joint.massScale = massScale;
+
+        lr.positionCount = 2;
+        currentGrapplePosition = gunTip.position;
+
+        transform.parent.GetComponent<Animator>().Play("arm_exit");
+
+        playerControllerScript.PlayerSFX(playerControllerScript.sfxs[1], 1, 1.5f);
+
+        isGrappled = true;
+
+        StartCoroutine(StartCooldown());
+    }
+    /*
     void StartGrapple()
     {
         RaycastHit hit;
@@ -124,6 +168,7 @@ public class GrapplingController : MonoBehaviour
             StartCoroutine(StartCooldown());
         }
     }
+    */
 
     public void StopGrapple()
     {
