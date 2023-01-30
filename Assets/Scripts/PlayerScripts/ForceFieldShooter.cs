@@ -104,16 +104,16 @@ public class ForceFieldShooter : MonoBehaviour
 
     void PlayerInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton5))
         {
             Shoot();
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.JoystickButton5))
         {
             StopForceField();
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton2))
         {
             RaycastHit hit;
 
@@ -123,7 +123,7 @@ public class ForceFieldShooter : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyUp(KeyCode.JoystickButton3))
         {
             if(mode == 1)
             {

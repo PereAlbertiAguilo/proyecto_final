@@ -11,6 +11,9 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    private int XboxOneController = 0;
+    private int PS4Controller = 0;
+
     [HideInInspector] public string actualLevel;
 
     [Header("UI\n")]
@@ -43,6 +46,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private AudioSource sfxAudioSource;
     [SerializeField] private AudioClip[] sfxs;
     [SerializeField] private Animator blackPanelAnimator;
+    [SerializeField] private Color highLightedColor;
 
 
     LiftGammaGain liftGammaGain;
@@ -127,8 +131,17 @@ public class UIManager : MonoBehaviour
 
     public void CurrentButton(GameObject g)
     {
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(g);
+        if(PS4Controller == 0 && XboxOneController == 0)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(g);
+        }
     }
 
     void PostPorcessingParameters()
@@ -266,7 +279,68 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && canPause)
+        string[] names = Input.GetJoystickNames();
+
+        for (int i = 0; i < names.Length; i++)
+        {
+            if (names[i].Length == 19)
+            {
+                PS4Controller = 1;
+                XboxOneController = 0;
+            }
+            if (names[i].Length == 33)
+            {
+                PS4Controller = 0;
+                XboxOneController = 1;
+            }
+        }
+
+        if (EventSystem.current.currentSelectedGameObject != null)
+        {
+            if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Button b))
+            {
+                ColorBlock cb = b.colors;
+                cb.highlightedColor = highLightedColor;
+                cb.selectedColor = highLightedColor;
+                b.colors = cb;
+            }
+            else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Slider s))
+            {
+                ColorBlock cb = s.colors;
+                cb.highlightedColor = highLightedColor;
+                cb.selectedColor = highLightedColor;
+                s.colors = cb;
+
+                if (Input.GetKeyDown(KeyCode.JoystickButton1))
+                {
+                    EventSystem.current.SetSelectedGameObject(s.transform.parent.gameObject);
+                }
+            }
+            else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Toggle t))
+            {
+                ColorBlock cb = t.colors;
+                cb.highlightedColor = highLightedColor;
+                cb.selectedColor = highLightedColor;
+                t.colors = cb;
+            }
+            else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Dropdown dd))
+            {
+                ColorBlock cb = dd.colors;
+                cb.highlightedColor = highLightedColor;
+                cb.selectedColor = highLightedColor;
+                dd.colors = cb;
+            }
+        }
+        else if(!isPaused)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7) && canPause)
         {
             if (isPaused && pausePanel.activeInHierarchy)
             {
@@ -376,6 +450,7 @@ public class UIManager : MonoBehaviour
 
         confirmMesage.text = s;
 
+        pausePanel.SetActive(false);
         confirmPanel.SetActive(true);
         CurrentButton(confirmFirstButton);
     }
@@ -415,6 +490,11 @@ public class UIManager : MonoBehaviour
 #endregion
 
     #region OptionMenuButtons
+
+    public void ActivateSlider(GameObject g)
+    {
+        EventSystem.current.SetSelectedGameObject(g);
+    }
 
     public void PostProcesingToggle(bool b)
     {
