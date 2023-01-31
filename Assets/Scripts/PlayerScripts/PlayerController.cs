@@ -162,10 +162,9 @@ public class PlayerController : MonoBehaviour
         float leftTrigger = Input.GetAxis("LeftTrigger");
         float rightTrigger = Input.GetAxisRaw("RightTrigger");
 
-
-        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0) && isGrounded)
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0))
         {
-            if (canJump)
+            if (canJump && isGrounded)
             {
                 canJump = false;
 
@@ -175,11 +174,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0) && canSecondJump && !grapplingControllerScript.isGrappled && !isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
-            canSecondJump = false;
+            if(canSecondJump && !grapplingControllerScript.isGrappled && !isGrounded)
+            {
+                canSecondJump = false;
 
-            JumpMechanic();
+                JumpMechanic();
+            }
         }
 
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0))
@@ -204,14 +206,15 @@ public class PlayerController : MonoBehaviour
             isAttatched = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftControl) || leftTrigger < 0)
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             isRunning = true;
         }
-        else if (Input.GetKeyUp(KeyCode.LeftControl) || leftTrigger >= 0)
+        else if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             isRunning = false;
         }
+        
 
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton8) && isGrounded && canSlide)
         {

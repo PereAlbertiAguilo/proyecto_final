@@ -68,10 +68,12 @@ public class GrapplingController : MonoBehaviour
 
             if (dist <= maxDistance)
             {
-                print("canGrapple");
-                if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.JoystickButton4) && isGrappleAvalible)
+                if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.JoystickButton4))
                 {
-                    StartGrapple(g.transform);
+                    if (isGrappleAvalible)
+                    {
+                        StartGrapple(g.transform);
+                    }
                 }
                 else if (Input.GetMouseButtonUp(1) ||Input.GetKeyUp(KeyCode.JoystickButton4))
                 {

@@ -47,6 +47,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private AudioClip[] sfxs;
     [SerializeField] private Animator blackPanelAnimator;
     [SerializeField] private Color highLightedColor;
+    [SerializeField] private LayerMask layerUI;
 
 
     LiftGammaGain liftGammaGain;
@@ -297,43 +298,20 @@ public class UIManager : MonoBehaviour
 
         if (EventSystem.current.currentSelectedGameObject != null)
         {
-            if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Button b))
+            if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Slider s))
             {
-                ColorBlock cb = b.colors;
-                cb.highlightedColor = highLightedColor;
-                cb.selectedColor = highLightedColor;
-                b.colors = cb;
-            }
-            else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Slider s))
-            {
-                ColorBlock cb = s.colors;
-                cb.highlightedColor = highLightedColor;
-                cb.selectedColor = highLightedColor;
-                s.colors = cb;
-
                 if (Input.GetKeyDown(KeyCode.JoystickButton1))
                 {
                     EventSystem.current.SetSelectedGameObject(s.transform.parent.gameObject);
                 }
             }
-            else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Toggle t))
-            {
-                ColorBlock cb = t.colors;
-                cb.highlightedColor = highLightedColor;
-                cb.selectedColor = highLightedColor;
-                t.colors = cb;
-            }
-            else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Dropdown dd))
-            {
-                ColorBlock cb = dd.colors;
-                cb.highlightedColor = highLightedColor;
-                cb.selectedColor = highLightedColor;
-                dd.colors = cb;
-            }
         }
         else if(!isPaused)
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            if(PS4Controller == 1 || XboxOneController == 1)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
         else
         {

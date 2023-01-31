@@ -9,6 +9,7 @@ public class ResetLevel : MonoBehaviour
 {
     private ForceFieldShooter forceFieldShooterScript;
     private DisableForceFields disableForceFieldsScript;
+    private GrapplingController grapplingControllerScript;
 
     private Transform levelStart;
     private GameObject player;
@@ -21,6 +22,7 @@ public class ResetLevel : MonoBehaviour
     {
         forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
         disableForceFieldsScript = FindObjectOfType<DisableForceFields>();
+        grapplingControllerScript = FindObjectOfType<GrapplingController>();
 
         player = GameObject.Find("Player");
         cameraHolder = GameObject.Find("CameraHolder");
@@ -42,6 +44,8 @@ public class ResetLevel : MonoBehaviour
         PlayerController playerControllerScript = player.GetComponent<PlayerController>();
         CinemachineVirtualCamera vCam = playerControllerScript.virtualCam.GetComponent<CinemachineVirtualCamera>();
         CinemachinePOV POV = vCam.GetCinemachineComponent<CinemachinePOV>();
+
+        grapplingControllerScript.StopGrapple();
 
         forceFieldShooterScript.Reload();
 

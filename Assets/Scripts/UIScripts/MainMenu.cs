@@ -156,14 +156,12 @@ public class MainMenu : MonoBehaviour
             if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Button b))
             {
                 ColorBlock cb = b.colors;
-                cb.highlightedColor = highLightedColor;
                 cb.selectedColor = highLightedColor;
                 b.colors = cb;
             }
             else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Slider s))
             {
                 ColorBlock cb = s.colors;
-                cb.highlightedColor = highLightedColor;
                 cb.selectedColor = highLightedColor;
                 s.colors = cb;
 
@@ -175,14 +173,12 @@ public class MainMenu : MonoBehaviour
             else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Toggle t))
             {
                 ColorBlock cb = t.colors;
-                cb.highlightedColor = highLightedColor;
                 cb.selectedColor = highLightedColor;
                 t.colors = cb;
             }
             else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Dropdown dd))
             {
                 ColorBlock cb = dd.colors;
-                cb.highlightedColor = highLightedColor;
                 cb.selectedColor = highLightedColor;
                 dd.colors = cb;
             }
