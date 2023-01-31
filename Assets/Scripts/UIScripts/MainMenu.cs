@@ -210,6 +210,10 @@ public class MainMenu : MonoBehaviour
                 CurrentButton(confirmFirstButton);
             }
         }
+        else
+        {
+            
+        }
 
         if (!move)
         {
