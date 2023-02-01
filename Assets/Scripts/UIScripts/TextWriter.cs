@@ -73,7 +73,7 @@ public class TextWriter : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
             if (isLineFinished && !playerControllerScript.canMove && canWrite)
             {

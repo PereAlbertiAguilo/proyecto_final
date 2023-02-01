@@ -2127,7 +2127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 2
+    m_Mode: 3
     m_WrapAround: 1
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -6641,7 +6641,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 2
+    m_Mode: 3
     m_WrapAround: 1
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -10166,7 +10166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 2
+    m_Mode: 3
     m_WrapAround: 1
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -12807,7 +12807,6 @@ MonoBehaviour:
   sfxs:
   - {fileID: 8300000, guid: 286f9110548381143908f8486cdc17c8, type: 3}
   blackPanelAnimator: {fileID: 24316151}
-  highLightedColor: {r: 0.25756755, g: 0.16834283, b: 0.3679245, a: 0.5882353}
   renderTexture: {fileID: 8400000, guid: 35965f665951c794994a12104c69d5bd, type: 2}
   alpha02: {fileID: 919132148444175590}
   target: {fileID: 1942031492}

@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private GrapplingController grapplingControllerScript;
     private ForceFieldShooter forceFieldShooterScript;
     private DoorOpener doorOpenerScript;
+    private UIManager UIManagerScript;
 
     public Transform virtualCam;
     [HideInInspector] public CinemachineVirtualCamera cvCam;
@@ -77,6 +78,7 @@ public class PlayerController : MonoBehaviour
         grapplingControllerScript = FindObjectOfType<GrapplingController>();
         doorOpenerScript = FindObjectOfType<DoorOpener>();
         forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
+        UIManagerScript = FindObjectOfType<UIManager>();
 
         cvCam = virtualCam.GetComponent<CinemachineVirtualCamera>();
 
@@ -206,15 +208,28 @@ public class PlayerController : MonoBehaviour
             isAttatched = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if(UIManagerScript.XboxOneController == 1)
         {
-            isRunning = true;
+            if (leftTrigger > 0)
+            {
+                isRunning = true;
+            }
+            else if (leftTrigger <= 0)
+            {
+                isRunning = false;
+            }
         }
-        else if (Input.GetKeyUp(KeyCode.LeftControl))
+        else
         {
-            isRunning = false;
-        }
-        
+            if (Input.GetKeyDown(KeyCode.LeftControl))
+            {
+                isRunning = true;
+            }
+            else if (Input.GetKeyUp(KeyCode.LeftControl))
+            {
+                isRunning = false;
+            }
+        }        
 
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton8) && isGrounded && canSlide)
         {

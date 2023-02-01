@@ -11,10 +11,7 @@ using TMPro;
 
 public class MainMenu : MonoBehaviour
 {
-    private bool nullSelecteion = true;
-
     private int XboxOneController = 0;
-    private int PS4Controller = 0;
 
     [SerializeField] private string tutorial;
     public string actualLevel;
@@ -59,7 +56,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private AudioSource sfxAudioSource;
     [SerializeField] private AudioClip[] sfxs;
     [SerializeField] private Animator blackPanelAnimator;
-    [SerializeField] private Color highLightedColor;
 
     LiftGammaGain liftGammaGain;
     Bloom bloom;
@@ -136,83 +132,65 @@ public class MainMenu : MonoBehaviour
     private void Update()
     {
         string[] names = Input.GetJoystickNames();
-
+        
         for (int i = 0; i < names.Length; i++)
         {
-            if (names[i].Length == 19)
-            {
-                PS4Controller = 1;
-                XboxOneController = 0;
-            }
             if (names[i].Length == 33)
             {
-                PS4Controller = 0;
+                print(names[i].Length);
+
                 XboxOneController = 1;
+            }
+            else
+            {
+                print(names[i].Length);
+
+                XboxOneController = 0;
             }
         }
 
         if (EventSystem.current.currentSelectedGameObject != null)
         {
-            if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Button b))
+            if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Slider s))
             {
-                ColorBlock cb = b.colors;
-                cb.selectedColor = highLightedColor;
-                b.colors = cb;
-            }
-            else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Slider s))
-            {
-                ColorBlock cb = s.colors;
-                cb.selectedColor = highLightedColor;
-                s.colors = cb;
-
-                if (Input.GetKeyDown(KeyCode.JoystickButton1))
+                if (Input.GetKeyDown(KeyCode.JoystickButton0))
                 {
                     EventSystem.current.SetSelectedGameObject(s.transform.parent.gameObject);
                 }
             }
-            else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Toggle t))
-            {
-                ColorBlock cb = t.colors;
-                cb.selectedColor = highLightedColor;
-                t.colors = cb;
-            }
-            else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Dropdown dd))
-            {
-                ColorBlock cb = dd.colors;
-                cb.selectedColor = highLightedColor;
-                dd.colors = cb;
-            }
-        }
-        else if(PS4Controller == 1 || XboxOneController == 1)
-        {
-            nullSelecteion = true;
         }
 
-        if(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7))
+        if(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton1))
         {
-            GoBack();
-        }
-
-        if(PS4Controller == 1 || XboxOneController == 1 && nullSelecteion)
-        {
-            nullSelecteion = false;
-
-            if (mainMenuPanel.activeInHierarchy)
+            if (!mainMenuPanel.activeInHierarchy)
             {
-                CurrentButton(mainMenuFirstButton);
-            }
-            else if(optionsPanel.activeInHierarchy)
-            {
-                CurrentButton(optionsFirstButton);
-            }
-            else if (confirmPanel.activeInHierarchy)
-            {
-                CurrentButton(confirmFirstButton);
+                GoBack();
             }
         }
-        else
+
+        if (Input.anyKeyDown)
         {
-            
+            if(XboxOneController == 1 && EventSystem.current.currentSelectedGameObject == null)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+
+                if (mainMenuPanel.activeInHierarchy)
+                {
+                    CurrentButton(mainMenuFirstButton);
+                }
+                else if (optionsPanel.activeInHierarchy)
+                {
+                    CurrentButton(optionsFirstButton);
+                }
+                else if (confirmPanel.activeInHierarchy)
+                {
+                    CurrentButton(confirmFirstButton);
+                }
+            }
+            else if (XboxOneController == 0 && EventSystem.current.currentSelectedGameObject == null)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
         }
 
         if (!move)
@@ -348,17 +326,8 @@ public class MainMenu : MonoBehaviour
 
     public void CurrentButton(GameObject g)
     {
-        if (PS4Controller == 0 && XboxOneController == 0)
-        {
-            Cursor.lockState = CursorLockMode.Confined;
-            EventSystem.current.SetSelectedGameObject(null);
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(g);
-        }
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(g);
     }
 
     public void ConfirmMessage(string s)

@@ -23,11 +23,14 @@ public class DoorOpener : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && canInteract && !isDoorOpened)
+        if (Input.GetKeyDown(KeyCode.E) || (Input.GetKeyDown(KeyCode.JoystickButton2)))
         {
-            _audioSource.PlayOneShot(sfxs[0]);
+            if (canInteract && !isDoorOpened)
+            {
+                _audioSource.PlayOneShot(sfxs[0]);
 
-            StartCoroutine(OpenDoor());
+                StartCoroutine(OpenDoor());
+            }
         }
     }
 

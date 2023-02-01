@@ -11,8 +11,7 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    private int XboxOneController = 0;
-    private int PS4Controller = 0;
+    [HideInInspector] public int XboxOneController = 0;
 
     [HideInInspector] public string actualLevel;
 
@@ -132,17 +131,8 @@ public class UIManager : MonoBehaviour
 
     public void CurrentButton(GameObject g)
     {
-        if(PS4Controller == 0 && XboxOneController == 0)
-        {
-            Cursor.lockState = CursorLockMode.Confined;
-            EventSystem.current.SetSelectedGameObject(null);
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(g);
-        }
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(g);
     }
 
     void PostPorcessingParameters()
@@ -284,15 +274,13 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < names.Length; i++)
         {
-            if (names[i].Length == 19)
-            {
-                PS4Controller = 1;
-                XboxOneController = 0;
-            }
             if (names[i].Length == 33)
             {
-                PS4Controller = 0;
                 XboxOneController = 1;
+            }
+            else
+            {
+                XboxOneController = 0;
             }
         }
 
@@ -306,16 +294,33 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
-        else if(!isPaused)
+
+        if (Input.anyKeyDown)
         {
-            if(PS4Controller == 1 || XboxOneController == 1)
+            if(pausePanel.activeInHierarchy || nextLevelPanel.activeInHierarchy)
             {
-                Cursor.lockState = CursorLockMode.Locked;
+                if (XboxOneController == 1 && EventSystem.current.currentSelectedGameObject == null)
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+
+                    if (pausePanel.activeInHierarchy)
+                    {
+                        CurrentButton(pausePanel);
+                    }
+                    else if (optionsPanel.activeInHierarchy)
+                    {
+                        CurrentButton(optionsFirstButton);
+                    }
+                    else if (confirmPanel.activeInHierarchy)
+                    {
+                        CurrentButton(confirmFirstButton);
+                    }
+                }
+                else if (XboxOneController == 0 && EventSystem.current.currentSelectedGameObject == null)
+                {
+                    Cursor.lockState = CursorLockMode.Confined;
+                }
             }
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Confined;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7) && canPause)
@@ -350,7 +355,6 @@ public class UIManager : MonoBehaviour
         CanMove(false);
         
         isPaused = true;
-        Cursor.lockState = CursorLockMode.Confined;
         backgroundPanel.SetActive(true);
         pausePanel.SetActive(true);
         CurrentButton(pauseFirstButton);
@@ -382,10 +386,9 @@ public class UIManager : MonoBehaviour
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
 
+        Cursor.lockState = CursorLockMode.Locked;
         canPause = false;
         CanMove(false);
-        
-        Cursor.lockState = CursorLockMode.Confined;
         backgroundPanel.SetActive(true);
         nextLevelPanel.SetActive(true);
         CurrentButton(nextLevelFirstButton);
