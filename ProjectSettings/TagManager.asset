@@ -12,6 +12,7 @@ TagManager:
   - NextLevel
   - ForceFieldActivator
   - Grapable
+  - Crouch
   layers:
   - Default
   - TransparentFX

@@ -136,7 +136,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54764
+  m_Name: pb_Mesh32988
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -397,7 +397,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54944
+  m_Name: pb_Mesh33168
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -672,7 +672,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54480
+  m_Name: pb_Mesh32704
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -836,7 +836,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54860
+  m_Name: pb_Mesh33084
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1198,7 +1198,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54464
+  m_Name: pb_Mesh32688
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1457,7 +1457,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54840
+  m_Name: pb_Mesh33064
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1621,7 +1621,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-53094
+  m_Name: pb_Mesh-9794
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1785,7 +1785,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-53158
+  m_Name: pb_Mesh-9858
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3212,7 +3212,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54420
+  m_Name: pb_Mesh32644
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9669,7 +9669,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-53122
+  m_Name: pb_Mesh-9822
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9839,7 +9839,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-53076
+  m_Name: pb_Mesh-9776
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10003,7 +10003,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54796
+  m_Name: pb_Mesh33020
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10256,7 +10256,7 @@ PrefabInstance:
     - target: {fileID: 6265221974826109514, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
       propertyPath: m_Lens.FieldOfView
-      value: 75.46923
+      value: 69.7755
       objectReference: {fileID: 0}
     - target: {fileID: 6265221975000797412, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
@@ -10441,7 +10441,7 @@ PrefabInstance:
     - target: {fileID: 6265221976789415844, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
       propertyPath: field of view
-      value: 75.46923
+      value: 69.7755
       objectReference: {fileID: 0}
     - target: {fileID: 9072268520712147804, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
@@ -15495,7 +15495,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54890
+  m_Name: pb_Mesh33114
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -16072,7 +16072,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54776
+  m_Name: pb_Mesh33000
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -19800,7 +19800,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54544
+  m_Name: pb_Mesh32768
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -20033,7 +20033,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-53172
+  m_Name: pb_Mesh-9872
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -20197,7 +20197,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54710
+  m_Name: pb_Mesh32934
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -20517,7 +20517,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54674
+  m_Name: pb_Mesh32898
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -23353,7 +23353,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54646
+  m_Name: pb_Mesh32870
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -23517,7 +23517,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54558
+  m_Name: pb_Mesh32782
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -23765,7 +23765,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54622
+  m_Name: pb_Mesh32846
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -23962,7 +23962,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-53110
+  m_Name: pb_Mesh-9810
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -24126,7 +24126,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54916
+  m_Name: pb_Mesh33140
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -26850,7 +26850,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54608
+  m_Name: pb_Mesh32832
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -27014,7 +27014,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54504
+  m_Name: pb_Mesh32728
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -28561,7 +28561,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh54434
+  m_Name: pb_Mesh32658
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -28731,7 +28731,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-53144
+  m_Name: pb_Mesh-9844
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -30714,9 +30714,10 @@ MonoBehaviour:
   - "Alpha_02 internal ship system Id: 03_1 \n<color=red>:error:</color>\nAlpha_02
     internal ship system Id: 24_6 \n<color=red>:error:</color> "
   - 'Initiating reintegration protocol, you could find your self desoriented. To
-    move you can use "W, A, S, D / Left Stick", to look around use "Mouse / Right
-    Stick" and "Space Bar / A" to jump '
-  - 'To interact with objects of your surroundings use "E / X" '
+    move you can use "W, A, S, D / Left Stick", to crouch use "Left Shift / Left
+    Stick Button" and "Space Bar / A" to jump '
+  - 'To look around use "Mouse / Right Stick" and to interact with objects of your
+    surroundings use "E / X" '
   - 'Finally there are <color=green>materialization points</color> marked with an
     arrow that if you step on them, and you take damage in any way you will be automatically
     teleported to it. You can also use the restart button on the <color=purple>internal

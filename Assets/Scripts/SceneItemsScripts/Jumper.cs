@@ -4,22 +4,30 @@ using UnityEngine;
 
 public class Jumper : MonoBehaviour
 {
+    private PlayerController playerControllerScript;
+
     [Header("Jumper Parameters\n")]
     public float force = 10f;
     public float delay = 0.2f;
 
     private bool canJump = true;
 
+    private void Start()
+    {
+        playerControllerScript = FindObjectOfType<PlayerController>();
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.name.Equals("Player") && canJump)
         {
             Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
-            PlayerController playerControllerScript = other.gameObject.GetComponent<PlayerController>();
+
+            playerControllerScript.activateSpeedControl = false;
 
             playerControllerScript.PlayerSFX(playerControllerScript.sfxs[0], 1, 1.5f);
-            rb.AddForce(Vector3.up * force, ForceMode.Impulse);
-            //StartCoroutine(Delay(other));
+            rb.AddForce(transform.up * force, ForceMode.Impulse);
+            StartCoroutine(Delay(other));
         }
     }
 
@@ -27,6 +35,7 @@ public class Jumper : MonoBehaviour
     {
         canJump = false;
         yield return new WaitForSeconds(delay);
+        playerControllerScript.activateSpeedControl = true;
         canJump = true;
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class DoorOpener : MonoBehaviour
 {
     [SerializeField] private GameObject door;
+    [SerializeField] private GameObject nextDoorOpener;
 
     public float interactDist;
 
@@ -21,6 +22,11 @@ public class DoorOpener : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
+    private void OnEnable()
+    {
+        isDoorOpened = false;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E) || (Input.GetKeyDown(KeyCode.JoystickButton2)))
@@ -28,6 +34,8 @@ public class DoorOpener : MonoBehaviour
             if (canInteract && !isDoorOpened)
             {
                 _audioSource.PlayOneShot(sfxs[0]);
+
+                transform.parent.Find("Trigger").gameObject.SetActive(false);
 
                 StartCoroutine(OpenDoor());
             }
@@ -48,6 +56,7 @@ public class DoorOpener : MonoBehaviour
         door.SetActive(true);
         yield return new WaitForSeconds(0.05f);
         door.SetActive(false);
+        _audioSource.PlayOneShot(sfxs[1]);
         yield return new WaitForSeconds(0.4f);
         door.SetActive(true);
         yield return new WaitForSeconds(0.2f);
@@ -56,5 +65,10 @@ public class DoorOpener : MonoBehaviour
         door.SetActive(true);
         yield return new WaitForSeconds(0.05f);
         door.SetActive(false);
+
+        if(nextDoorOpener != null)
+        {
+            nextDoorOpener.SetActive(true);
+        }
     }
 }

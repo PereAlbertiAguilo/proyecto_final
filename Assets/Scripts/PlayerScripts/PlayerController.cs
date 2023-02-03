@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     private GrapplingController grapplingControllerScript;
     private ForceFieldShooter forceFieldShooterScript;
-    private DoorOpener doorOpenerScript;
+    private DoorOpener[] doorOpenerScript;
     private UIManager UIManagerScript;
 
     public Transform virtualCam;
@@ -19,10 +19,12 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public static bool playerCreated;
     [HideInInspector] public bool canMove = true;
+    [HideInInspector] public bool activateSpeedControl = true;
     public bool forceFieldsActive;
     private bool canSlide = true;
     private bool isSliding;
     private bool isRunning;
+    private bool permaCrouch;
 
     [Header("Speed Parametres\n")]
     [SerializeField] private float force = 30f;
@@ -76,7 +78,7 @@ public class PlayerController : MonoBehaviour
         _playerAudioSource = GetComponent<AudioSource>();
 
         grapplingControllerScript = FindObjectOfType<GrapplingController>();
-        doorOpenerScript = FindObjectOfType<DoorOpener>();
+        doorOpenerScript = FindObjectsOfType<DoorOpener>(true);
         forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
         UIManagerScript = FindObjectOfType<UIManager>();
 
@@ -150,9 +152,9 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHight * 0.5f + 0.1f, whatIsGorund);
 
-        if (doorOpenerScript != null)
+        foreach (DoorOpener door in doorOpenerScript)
         {
-            doorOpenerScript.canInteract = Physics.Raycast(cam.position, cam.forward, doorOpenerScript.interactDist, doorOpenerScript.whatIsInteractable);
+            door.canInteract = Physics.Raycast(cam.position, cam.forward, door.interactDist, door.whatIsInteractable);
         }
     }
 
@@ -231,18 +233,26 @@ public class PlayerController : MonoBehaviour
             }
         }        
 
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton8) && isGrounded && canSlide)
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton8))
         {
-            canSlide = false;
-            isSliding = true;
-            GetComponent<CapsuleCollider>().height = 1f;
-            _playerRigidbody.AddForce(Vector3.down * force, ForceMode.Impulse);
+            if(isGrounded && canSlide)
+            {
+                canJump = false;
+                isSliding = true;
+                canSlide = false;
+                GetComponent<CapsuleCollider>().height = 1f;
+                _playerRigidbody.AddForce(Vector3.down * force, ForceMode.Impulse);
+            }
         }
-        else if(Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.JoystickButton8) || !isGrounded)
+        else if(Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.JoystickButton8))
         {
-            GetComponent<CapsuleCollider>().height = 2f;
-            canSlide = true;
-            isSliding = false;
+            if (!permaCrouch)
+            {
+                GetComponent<CapsuleCollider>().height = 2f;
+                canSlide = true;
+                isSliding = false;
+                canJump = true;
+            }
         }
     }
 
@@ -331,13 +341,16 @@ public class PlayerController : MonoBehaviour
 
     void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(_playerRigidbody.velocity.x, 0, _playerRigidbody.velocity.z);
-        float newForce = force / 2f;
-
-        if(flatVel.magnitude > newForce && !isRunning)
+        if (activateSpeedControl)
         {
-            Vector3 limitedVel = flatVel.normalized * newForce;
-            _playerRigidbody.velocity = new Vector3(limitedVel.x, _playerRigidbody.velocity.y, limitedVel.z);
+            Vector3 flatVel = new Vector3(_playerRigidbody.velocity.x, 0, _playerRigidbody.velocity.z);
+            float newForce = force / 2f;
+
+            if (flatVel.magnitude > newForce && !isRunning)
+            {
+                Vector3 limitedVel = flatVel.normalized * newForce;
+                _playerRigidbody.velocity = new Vector3(limitedVel.x, _playerRigidbody.velocity.y, limitedVel.z);
+            }
         }
     }
 
@@ -383,20 +396,48 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.collider.CompareTag("Wall"))
+        if (other.collider.tag.Equals("Wall"))
         {
             wallJumpDir = other.transform.up;
             canAttatch = true;
+        }
+
+        if (other.collider.tag.Equals("Crouch"))
+        {
+            GetComponent<CapsuleCollider>().height = 1f;
+            _playerRigidbody.AddForce(Vector3.down * force, ForceMode.Impulse);
+        }
+    }
+
+    private void OnCollisionStay(Collision other)
+    {
+        if (other.collider.tag.Equals("Crouch"))
+        {
+            permaCrouch = true;
+            canSlide = false;
+            canJump = false;
+            isSliding = true;
+            GetComponent<CapsuleCollider>().height = 1f;
         }
     }
 
     private void OnCollisionExit(Collision other)
     {
-        if (other.collider.CompareTag("Wall"))
+        if (other.collider.tag.Equals("Wall"))
         {
             canAttatch = false;
             isAttatched = false;
             canWallJump = false;
+        }
+
+        if (other.collider.tag.Equals("Crouch"))
+        {
+            GetComponent<CapsuleCollider>().height = 2f;
+
+            permaCrouch = false;
+            isSliding = false;
+            canSlide = true;
+            canJump = true;
         }
     }
 }

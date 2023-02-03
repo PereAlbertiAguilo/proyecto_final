@@ -25,6 +25,7 @@ public class TextWriter : MonoBehaviour
     [SerializeField] private bool writeInStart;
     [SerializeField] private bool isIntro;
     [SerializeField] private bool isTriggered;
+    [SerializeField] private bool mobileText;
     private bool isLineFinished;
     private bool canFlicker;
     private bool canTrigger = true;
@@ -109,7 +110,9 @@ public class TextWriter : MonoBehaviour
             }
         }
 
-        if (!isLineFinished)
+        
+
+        if (!isLineFinished && !mobileText)
         {
             UIManagerScript.CanMove(false);
         }
@@ -122,6 +125,13 @@ public class TextWriter : MonoBehaviour
                 canTrigger = false;
                 canWrite = true;
                 StartCoroutine(DisplayText());
+            }
+
+            if (textToDisplay.Length <= currentLine && mobileText && isLineFinished && !canTrigger)
+            {
+                skipIndicator.SetActive(false);
+
+                Invoke(nameof(ExitText), textExitTime);
             }
         }
     }
@@ -168,8 +178,11 @@ public class TextWriter : MonoBehaviour
             }
         }
 
-        skipIndicator.SetActive(true);
-        skipIndicator.GetComponent<Animator>().Play("indicator_flickering");
+        if (!mobileText)
+        {
+            skipIndicator.SetActive(true);
+            skipIndicator.GetComponent<Animator>().Play("indicator_flickering");
+        }
 
         isLineFinished = true;
 
@@ -200,9 +213,13 @@ public class TextWriter : MonoBehaviour
 
     void EnterText()
     {
-        UIManagerScript.CanMove(false);
+        if (!mobileText)
+        {
+            UIManagerScript.CanMove(false);
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+
         UIManagerScript.canPause = false;
-        Cursor.lockState = CursorLockMode.Confined;
     }
 
     void ExitText()
