@@ -131,8 +131,11 @@ public class UIManager : MonoBehaviour
 
     public void CurrentButton(GameObject g)
     {
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(g);
+        if(XboxOneController == 1)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(g);
+        }
     }
 
     void PostPorcessingParameters()
@@ -297,11 +300,11 @@ public class UIManager : MonoBehaviour
 
         if (Input.anyKeyDown)
         {
-            if(pausePanel.activeInHierarchy || nextLevelPanel.activeInHierarchy)
+            if(pausePanel.activeInHierarchy || nextLevelPanel.activeInHierarchy || confirmPanel.activeInHierarchy)
             {
                 if (XboxOneController == 1 && EventSystem.current.currentSelectedGameObject == null)
                 {
-                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
 
                     if (pausePanel.activeInHierarchy)
                     {
@@ -318,7 +321,7 @@ public class UIManager : MonoBehaviour
                 }
                 else if (XboxOneController == 0 && EventSystem.current.currentSelectedGameObject == null)
                 {
-                    Cursor.lockState = CursorLockMode.Confined;
+                    Cursor.visible = true;
                 }
             }
         }
@@ -353,7 +356,9 @@ public class UIManager : MonoBehaviour
         PlayerSFX(sfxs[0], 1, 1.5f);
 
         CanMove(false);
-        
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         isPaused = true;
         backgroundPanel.SetActive(true);
         pausePanel.SetActive(true);
@@ -386,7 +391,8 @@ public class UIManager : MonoBehaviour
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
 
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         canPause = false;
         CanMove(false);
         backgroundPanel.SetActive(true);

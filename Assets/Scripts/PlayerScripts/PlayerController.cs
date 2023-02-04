@@ -378,6 +378,15 @@ public class PlayerController : MonoBehaviour
         canJump = true;
     }
 
+    IEnumerator ResetPermaCrouch()
+    {
+        yield return new WaitForSeconds(.7f);
+
+        if (!isSliding)
+        {
+            GetComponent<CapsuleCollider>().height = 2f;
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("SecondJump"))
@@ -392,6 +401,36 @@ public class PlayerController : MonoBehaviour
         {
             forceFieldsActive = forceFieldShooterScript.enabled;
         }
+
+        if (other.tag.Equals("Crouch"))
+        {
+            GetComponent<CapsuleCollider>().height = 1f;
+            _playerRigidbody.AddForce(Vector3.down * force, ForceMode.Impulse);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag.Equals("Crouch"))
+        {
+            permaCrouch = true;
+            canSlide = false;
+            canJump = false;
+            isSliding = true;
+            GetComponent<CapsuleCollider>().height = 1f;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.GetComponent<Collider>().tag.Equals("Crouch"))
+        {
+            StartCoroutine(ResetPermaCrouch());
+            permaCrouch = false;
+            isSliding = false;
+            canSlide = true;
+            canJump = true;
+        }
     }
 
     private void OnCollisionEnter(Collision other)
@@ -400,24 +439,6 @@ public class PlayerController : MonoBehaviour
         {
             wallJumpDir = other.transform.up;
             canAttatch = true;
-        }
-
-        if (other.collider.tag.Equals("Crouch"))
-        {
-            GetComponent<CapsuleCollider>().height = 1f;
-            _playerRigidbody.AddForce(Vector3.down * force, ForceMode.Impulse);
-        }
-    }
-
-    private void OnCollisionStay(Collision other)
-    {
-        if (other.collider.tag.Equals("Crouch"))
-        {
-            permaCrouch = true;
-            canSlide = false;
-            canJump = false;
-            isSliding = true;
-            GetComponent<CapsuleCollider>().height = 1f;
         }
     }
 
@@ -428,16 +449,6 @@ public class PlayerController : MonoBehaviour
             canAttatch = false;
             isAttatched = false;
             canWallJump = false;
-        }
-
-        if (other.collider.tag.Equals("Crouch"))
-        {
-            GetComponent<CapsuleCollider>().height = 2f;
-
-            permaCrouch = false;
-            isSliding = false;
-            canSlide = true;
-            canJump = true;
         }
     }
 }

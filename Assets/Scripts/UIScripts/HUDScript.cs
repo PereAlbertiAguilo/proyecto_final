@@ -37,22 +37,15 @@ public class HUDScript : MonoBehaviour
     {
         slider1.value = slider1.maxValue - forceFieldShooterScript.currentInstance;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton5))
         {
-            if (forceFieldShooterScript.forceFields.Count > 0)
+            if (forceFieldShooterScript.currentInstance != forceFieldShooterScript.maxInstances)
             {
                 timer = true;
             }
         }
 
-        if (playerControllerScript.canSecondJump)
-        {
-            toggle.isOn = true;
-        }
-        else
-        {
-            toggle.isOn = false;
-        }
+        toggle.isOn = playerControllerScript.canSecondJump;
 
         if (value > 0 && timer)
         {

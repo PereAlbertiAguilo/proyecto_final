@@ -172,7 +172,7 @@ public class MainMenu : MonoBehaviour
         {
             if(XboxOneController == 1 && EventSystem.current.currentSelectedGameObject == null)
             {
-                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
 
                 if (mainMenuPanel.activeInHierarchy)
                 {
@@ -189,7 +189,7 @@ public class MainMenu : MonoBehaviour
             }
             else if (XboxOneController == 0 && EventSystem.current.currentSelectedGameObject == null)
             {
-                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
             }
         }
 
@@ -326,8 +326,11 @@ public class MainMenu : MonoBehaviour
 
     public void CurrentButton(GameObject g)
     {
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(g);
+        if (XboxOneController == 1)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(g);
+        }
     }
 
     public void ConfirmMessage(string s)
