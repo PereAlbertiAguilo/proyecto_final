@@ -314,7 +314,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (grapplingControllerScript.isGrappled)
         {
-            _playerRigidbody.AddForce(moveDirection.normalized * force * 6f * airMultiplyer, ForceMode.Force);
+            _playerRigidbody.AddForce(moveDirection.normalized * force * 10f * airMultiplyer, ForceMode.Force);
         }
         else
         {

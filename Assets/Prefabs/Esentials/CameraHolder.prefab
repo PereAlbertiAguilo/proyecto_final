@@ -1516,11 +1516,11 @@ MonoBehaviour:
   isGrappleAvalible: 1
   CooldownDuration: 0.8
   disolveFactor: -1
-  spring: 25
-  damper: 50
-  massScale: 20
-  maxStrech: 0.25
-  minStrech: 0.2
+  spring: 20
+  damper: 40
+  massScale: 18
+  maxStrech: 0.45
+  minStrech: 0.3
   maxDistance: 18
   grappables: []
 --- !u!114 &6265221976167616291
