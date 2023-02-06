@@ -10818,10 +10818,12 @@ MonoBehaviour:
   textTrigger: {fileID: 917684312}
   delay: 0.04
   textExitTime: 3
+  speed: 0
   writeInStart: 0
   isIntro: 0
   isTriggered: 1
   mobileText: 1
+  smoothIn: 0
   canWrite: 0
   currentLine: 1
   currentTextIndex: 0
@@ -15507,10 +15509,12 @@ MonoBehaviour:
   textTrigger: {fileID: 1228353248}
   delay: 0.04
   textExitTime: 3
+  speed: 0
   writeInStart: 0
   isIntro: 0
   isTriggered: 1
   mobileText: 1
+  smoothIn: 0
   canWrite: 0
   currentLine: 1
   currentTextIndex: 0
@@ -20169,7 +20173,7 @@ PrefabInstance:
     - target: {fileID: 6265221974826109514, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
       propertyPath: m_Lens.FieldOfView
-      value: 69.9497
+      value: 75.7507
       objectReference: {fileID: 0}
     - target: {fileID: 6265221975000797412, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
@@ -20349,7 +20353,7 @@ PrefabInstance:
     - target: {fileID: 6265221976789415844, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
       propertyPath: field of view
-      value: 69.9497
+      value: 75.7507
       objectReference: {fileID: 0}
     - target: {fileID: 6265221976789415844, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
@@ -21339,10 +21343,12 @@ MonoBehaviour:
   textTrigger: {fileID: 1253674745}
   delay: 0.04
   textExitTime: 3
+  speed: 0
   writeInStart: 0
   isIntro: 0
   isTriggered: 1
   mobileText: 1
+  smoothIn: 0
   canWrite: 0
   currentLine: 1
   currentTextIndex: 0
@@ -32852,7 +32858,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh28534
+  m_Name: pb_Mesh196216
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -44422,6 +44428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   time: 1
+  destroy: 1
 --- !u!65 &1797844693
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46459,7 +46466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a10a0c1b265a444c854cb0651f4932e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextLevel: 
+  nextLevel: End
 --- !u!65 &1822274148
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46629,10 +46636,12 @@ MonoBehaviour:
   textTrigger: {fileID: 1930485886}
   delay: 0.04
   textExitTime: 3
+  speed: 0
   writeInStart: 0
   isIntro: 0
   isTriggered: 1
   mobileText: 1
+  smoothIn: 0
   canWrite: 0
   currentLine: 1
   currentTextIndex: 0

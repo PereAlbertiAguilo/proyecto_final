@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(AudioSource))]
@@ -12,6 +13,10 @@ public class TextWriter : MonoBehaviour
     private AudioSource _audioSource;
     private GameObject musicManager;
 
+    private Image image;
+
+    private Color imageColor;
+
     [Header("Contents \n")]
     [SerializeField] private TextMeshProUGUI textUI;
 
@@ -21,11 +26,15 @@ public class TextWriter : MonoBehaviour
     [Header("Text Parameters \n")]
     [SerializeField] private float delay;
     [SerializeField] private float textExitTime;
+    [SerializeField] private float speed;
 
+    [Header("\n")]
     [SerializeField] private bool writeInStart;
     [SerializeField] private bool isIntro;
     [SerializeField] private bool isTriggered;
     [SerializeField] private bool mobileText;
+    [SerializeField] private bool smoothIn;
+    [SerializeField] private bool isEnd;
     private bool isLineFinished;
     private bool canFlicker;
     private bool canTrigger = true;
@@ -50,10 +59,18 @@ public class TextWriter : MonoBehaviour
 
         musicManager = GameObject.Find("Music");
 
+        image = transform.Find("TextBackground").GetComponent<Image>();
+
+        if (smoothIn)
+        {
+            imageColor = image.color;
+            imageColor.a = 0;
+            image.color = imageColor;
+        }
+
         if (isIntro)
         {
             musicManager.SetActive(false);
-
         }
 
         if (isTriggered)
@@ -92,14 +109,33 @@ public class TextWriter : MonoBehaviour
 
                     if (isIntro)
                     {
+                        if (isEnd)
+                        {
+                            Invoke(nameof(ExitText), textExitTime /= 2);
+
+                            Invoke(nameof(NextLevel), textExitTime);
+                        }
+
                         GetComponentInChildren<Animator>().Play("from_black");
 
                         musicManager.SetActive(true);
 
+                        UIManagerScript.CanMove(true);
+                        Cursor.lockState = CursorLockMode.Locked;
+
                         Invoke(nameof(ExitText), textExitTime);
+                    }
+                    else if (isEnd)
+                    {
+                        Invoke(nameof(ExitText), textExitTime /= 2);
+
+                        Invoke(nameof(NextLevel), textExitTime);
                     }
                     else
                     {
+                        UIManagerScript.CanMove(true);
+                        Cursor.lockState = CursorLockMode.Locked;
+
                         Invoke(nameof(ExitText), textExitTime);
                     }
                 }
@@ -110,9 +146,17 @@ public class TextWriter : MonoBehaviour
             }
         }
 
-        
+        if (smoothIn)
+        {
+            if (image.gameObject.activeInHierarchy)
+            {
+                image.color = imageColor;
+                Mathf.Lerp(imageColor.a, 255, Time.deltaTime * speed);
+                imageColor = image.color;
+            }
+        }
 
-        if (!isLineFinished && !mobileText)
+        if (!isLineFinished && !mobileText && canWrite)
         {
             UIManagerScript.CanMove(false);
         }
@@ -134,6 +178,11 @@ public class TextWriter : MonoBehaviour
                 Invoke(nameof(ExitText), textExitTime);
             }
         }
+    }
+
+    void NextLevel()
+    {
+        UIManagerScript.NextLevel();
     }
 
     public IEnumerator DisplayText()
@@ -226,8 +275,6 @@ public class TextWriter : MonoBehaviour
     {
         this.gameObject.SetActive(false);
 
-        UIManagerScript.CanMove(true);
         UIManagerScript.canPause = true;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 }

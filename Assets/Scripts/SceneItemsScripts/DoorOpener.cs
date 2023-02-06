@@ -33,7 +33,10 @@ public class DoorOpener : MonoBehaviour
         {
             if (canInteract && !isDoorOpened)
             {
-                _audioSource.PlayOneShot(sfxs[0]);
+                if(_audioSource != null)
+                {
+                    _audioSource.PlayOneShot(sfxs[0]);
+                }
 
                 transform.parent.Find("Trigger").gameObject.SetActive(false);
 
@@ -48,7 +51,10 @@ public class DoorOpener : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         door.SetActive(false);
         yield return new WaitForSeconds(0.3f);
-        _audioSource.PlayOneShot(sfxs[1]);
+        if (_audioSource != null)
+        {
+            _audioSource.PlayOneShot(sfxs[1]);
+        }
         door.SetActive(true);
         yield return new WaitForSeconds(0.02f);
         door.SetActive(false);
@@ -56,7 +62,10 @@ public class DoorOpener : MonoBehaviour
         door.SetActive(true);
         yield return new WaitForSeconds(0.05f);
         door.SetActive(false);
-        _audioSource.PlayOneShot(sfxs[1]);
+        if (_audioSource != null)
+        {
+            _audioSource.PlayOneShot(sfxs[1]);
+        }
         yield return new WaitForSeconds(0.4f);
         door.SetActive(true);
         yield return new WaitForSeconds(0.2f);

@@ -12955,7 +12955,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &7783982610764246036
 MonoBehaviour:
@@ -13009,6 +13009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3299cfbd452b2d543b329095bdcfc52e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  XboxOneController: 0
   actualLevel: 
   fovSlider: {fileID: 1899818597653380821}
   aaSlider: {fileID: 1899818597478590467}

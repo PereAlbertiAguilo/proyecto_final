@@ -8,6 +8,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
+using Cinemachine;
 
 public class UIManager : MonoBehaviour
 {
@@ -123,10 +124,10 @@ public class UIManager : MonoBehaviour
         UpdateUI();
         UpdateScene();
         sfxAudioSource.mute = false;
+        
+        canPause = true;
 
         Resume();
-
-        canPause = true;
     }
 
     public void CurrentButton(GameObject g)
@@ -326,26 +327,29 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7) && canPause)
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7))
         {
-            if (isPaused && pausePanel.activeInHierarchy)
+            if (canPause)
             {
-                if (confirmPanel.activeInHierarchy)
+                if (isPaused && pausePanel.activeInHierarchy)
+                {
+                    if (confirmPanel.activeInHierarchy)
+                    {
+                        GoBack();
+                    }
+                    else
+                    {
+                        Resume();
+                    }
+                }
+                else if (isPaused && !pausePanel.activeInHierarchy)
                 {
                     GoBack();
                 }
                 else
                 {
-                    Resume();
+                    Pause();
                 }
-            }
-            else if(isPaused && !pausePanel.activeInHierarchy)
-            {
-                GoBack();
-            }
-            else
-            {
-                Pause();
             }
         }
     }
