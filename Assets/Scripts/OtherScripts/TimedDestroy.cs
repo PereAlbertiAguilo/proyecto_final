@@ -8,6 +8,7 @@ public class TimedDestroy : MonoBehaviour
 
     [SerializeField] private bool destroy = true;
 
+    //At the start of the scene the gameobject that has this script destroys or deactivates itself in a certain time
     void Start()
     {
         if (destroy)

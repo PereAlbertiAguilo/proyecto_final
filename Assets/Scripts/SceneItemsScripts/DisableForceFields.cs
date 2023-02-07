@@ -21,6 +21,7 @@ public class DisableForceFields : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
+    //When the player triggers with this gameobject Disables or Enables the ability to use the forcefields
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))

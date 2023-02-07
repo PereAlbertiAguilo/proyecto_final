@@ -46,6 +46,7 @@ public class GrapplingController : MonoBehaviour
 
     void Awake()
     {
+        //Get the gameobject components and stores them in variables
         lr = GetComponent<LineRenderer>();
         _armMat = GetComponent<MeshRenderer>().material;
         _armAnimator = GetComponent<Animator>();
@@ -53,21 +54,26 @@ public class GrapplingController : MonoBehaviour
 
     private void Start()
     {
+        //Get scripts from scene and store them in variables
         playerControllerScript = player.GetComponent<PlayerController>();
 
+        //Stops the grapple
         StopGrapple();
     }
 
     void Update()
     {
+        //Stores all the gameobjects with a certain tag to an array
         grappables = GameObject.FindGameObjectsWithTag("Grapable");
 
+        //if the player is close enough to one of the stored grappables it can start a grapple
         foreach(GameObject g in grappables)
         {
             float dist = Vector3.Distance(player.position, g.transform.position);
 
             if (dist <= maxDistance)
             {
+                //Starts a gprapple
                 if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.JoystickButton4))
                 {
                     if (isGrappleAvalible)
@@ -75,14 +81,19 @@ public class GrapplingController : MonoBehaviour
                         StartGrapple(g.transform);
                     }
                 }
-                else if (Input.GetMouseButtonUp(1) ||Input.GetKeyUp(KeyCode.JoystickButton4))
-                {
-                    StopGrapple();
-                }
             }
         }
 
+        //Stops the grapple
+        if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.JoystickButton4))
+        {
+            if (isGrappled)
+            {
+                StopGrapple();
+            }
+        }
 
+        //If is grappled even if the grapple point pos changes the gprappling still attatches and follows it
         if (isGrappled)
         {
             _armAnimator.Play("arm_disolve0");
@@ -109,6 +120,7 @@ public class GrapplingController : MonoBehaviour
         _armMat.SetFloat("_DisolveFactor", disolveFactor);
     }
 
+    //Adds a joint as a component to the player with a start point same as the player and the end point same as the given transform with some determinated physic parameters given with variables
     void StartGrapple(Transform t)
     {
         target = t.gameObject;
@@ -137,41 +149,8 @@ public class GrapplingController : MonoBehaviour
 
         StartCoroutine(StartCooldown());
     }
-    /*
-    void StartGrapple()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
-        {
-            target = hit.collider.gameObject;
-            grapplePoint = hit.transform.position;
-            joint = player.gameObject.AddComponent<SpringJoint>();
-            joint.autoConfigureConnectedAnchor = false;
-            joint.connectedAnchor = grapplePoint;
 
-            float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
-
-            joint.maxDistance = distanceFromPoint * maxStrech;
-            joint.minDistance = distanceFromPoint * minStrech;
-
-            joint.spring = spring;
-            joint.damper = damper;
-            joint.massScale = massScale;
-
-            lr.positionCount = 2;
-            currentGrapplePosition = gunTip.position;
-
-            transform.parent.GetComponent<Animator>().Play("arm_exit");
-
-            playerControllerScript.PlayerSFX(playerControllerScript.sfxs[1], 1, 1.5f);
-
-            isGrappled = true;
-
-            StartCoroutine(StartCooldown());
-        }
-    }
-    */
-
+    //Stops the grapple and destroys the joint
     public void StopGrapple()
     {
         lr.positionCount = 0;
@@ -180,7 +159,7 @@ public class GrapplingController : MonoBehaviour
         isGrappled = false;
     }
 
-
+    //Draws the grapple rope with a line renderer with the same start and end of the joint if they exist
     void DrawRope()
     {
         if(target != null)
@@ -196,16 +175,7 @@ public class GrapplingController : MonoBehaviour
         }
     }
 
-    public bool IsGrappling()
-    {
-        return joint != null;
-    }
-
-    public Vector3 GetGrapplePoint()
-    {
-        return grapplePoint;
-    }
-
+    //Start a timer that limits the time bettween grapples
     public IEnumerator StartCooldown()
     {
         isGrappleAvalible = false;

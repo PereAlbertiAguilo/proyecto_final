@@ -84,13 +84,14 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
+        //Sets all the ui values to the saved playerpref key or its default value
         lggValue = CheckFloatKey("gamma", lggSlider.value);
         fovValue = CheckFloatKey("fov", fovSlider.value);
         aaValue = CheckFloatKey("aaValue", aaSlider.value);
         sensX = CheckFloatKey("sensX", sXSlider.value);
         sensY = CheckFloatKey("sensY", sYSlider.value);
-        mVolume = CheckFloatKey("mVolume", SetAudioMixerValue(musicAudioMixer, "MusicVolume", mVolume));
-        sfxVolume = CheckFloatKey("sfxVolume", SetAudioMixerValue(SFXAudioMixer, "SFXVolume", sfxVolume));
+        mVolume = CheckFloatKey("mVolume", GetAudioMixerValue(musicAudioMixer, "MusicVolume", mVolume));
+        sfxVolume = CheckFloatKey("sfxVolume", GetAudioMixerValue(SFXAudioMixer, "SFXVolume", sfxVolume));
 
         qLevel = CheckIntKey("qLevel", 0);
 
@@ -108,29 +109,33 @@ public class MainMenu : MonoBehaviour
         startPos = alpha02.transform.position;
         targetStartPos = target.position;
 
+        //If a playerpref key exists sets toggles a gameobject bettween true or false
         if (!PlayerPrefs.HasKey("currentScene"))
         {
-            mainMenuFirstButton.SetActive(false);
+            mainMenuPanel.transform.GetChild(0).Find("Continue").gameObject.SetActive(false);
         }
         else
         {
-            mainMenuFirstButton.SetActive(true);
+            mainMenuPanel.transform.GetChild(0).Find("Continue").gameObject.SetActive(true);
         }
 
         Screen.fullScreen = fsIsOn;
         Time.timeScale = 1;
         Cursor.lockState = CursorLockMode.Confined;
 
+        //Calls all the updated parameters functions (start)
         PostPorcessingParameters();
 
         sfxAudioSource.mute = true;
         UpdateUI();
         UpdateScene();
         sfxAudioSource.mute = false;
+        //(end)
     }
 
     private void Update()
     {
+        //Determinates if there is an xbox controller conected
         string[] names = Input.GetJoystickNames();
         
         for (int i = 0; i < names.Length; i++)
@@ -149,6 +154,7 @@ public class MainMenu : MonoBehaviour
             }
         }
 
+        //When there is a slider selected to exit this selection with a controller useing a specific input
         if (EventSystem.current.currentSelectedGameObject != null)
         {
             if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out Slider s))
@@ -160,6 +166,7 @@ public class MainMenu : MonoBehaviour
             }
         }
 
+        //If input a specific key returns to the main menu panel if its not active at the time
         if(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton1))
         {
             if (!mainMenuPanel.activeInHierarchy)
@@ -168,6 +175,7 @@ public class MainMenu : MonoBehaviour
             }
         }
 
+        //When you connect an xbox controller and you input any key sets the current selected gameobject depending on whitch panel is active and changes the visibility of the cursor
         if (Input.anyKeyDown)
         {
             if(XboxOneController == 1 && EventSystem.current.currentSelectedGameObject == null)
@@ -193,6 +201,7 @@ public class MainMenu : MonoBehaviour
             }
         }
 
+        //Moves an object of the scene bettween to positions (Same logic as the script translate platform)
         if (!move)
         {
             target.position = startPos;
@@ -205,13 +214,15 @@ public class MainMenu : MonoBehaviour
         alpha02.transform.position = Vector3.Lerp(alpha02.transform.position, target.position, 2 * Time.deltaTime);
     }
 
-    float SetAudioMixerValue(AudioMixer am, string s, float f)
+    //Gets the current volume of an AudioMixer
+    float GetAudioMixerValue(AudioMixer am, string s, float f)
     {
         am.GetFloat(s, out f);
 
         return Mathf.Log10(f) * 20;
     }
 
+    //Plays an audioclip with a random picth bettween 2 values
     public void PlayerSFX(AudioClip ac, float f1, float f2)
     {
         float randomIndex = Random.Range(f1, f2);
@@ -221,6 +232,7 @@ public class MainMenu : MonoBehaviour
         sfxAudioSource.PlayOneShot(ac);
     }
 
+    //Gets the paramters of a postprocesingVolume
     void PostPorcessingParameters()
     {
         if (!postProcessingVolume.profile.TryGet(out liftGammaGain))
@@ -237,6 +249,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    //Checks if float, int, string and bool Playerprefs have keys
     #region CheckPlayerPrefs
     float CheckFloatKey(string s, float f)
     {
@@ -294,6 +307,7 @@ public class MainMenu : MonoBehaviour
     }
     #endregion
 
+    //Updates al the ui elements with their corresponding values saved with Playerprefs
     void UpdateUI()
     {
         lggSlider.value = lggValue;
@@ -310,6 +324,7 @@ public class MainMenu : MonoBehaviour
         ppToggle.isOn = ppIsOn;
     }
 
+    //Activates all the ui functions with their corresponding values tu update them at the start of the scene
     void UpdateScene()
     {
         PostProcesingToggle(ppIsOn);
@@ -324,6 +339,7 @@ public class MainMenu : MonoBehaviour
         SensY(sensY);
     }
 
+    //If there is an xbox controller conected chnages the current selected gameobject by a given gameobject
     public void CurrentButton(GameObject g)
     {
         if (XboxOneController == 1)
@@ -333,6 +349,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    //Sets a active a panel and changes a text by a given string if a Playerpref key exists
     public void ConfirmMessage(string s)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -346,6 +363,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    //Depending on a give bool sets a gameobject true or false
     public void ConfirmButtons(bool b)
     {
         if (b)
@@ -360,7 +378,10 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    //Main menu ui functions
     #region MainMenuButtons
+
+    //If a Playerpref key doesn't exist loads a given scene
     public void NewGame()
     {
         if (!PlayerPrefs.HasKey("currentScene"))
@@ -369,16 +390,19 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    //Loads a given scene
     public void YesNewGame()
     {
         StartCoroutine(LoadScene(tutorial));
     }
 
+    //Loads a given scene
     public void Continue()
     {
         StartCoroutine(LoadScene(actualLevel));
     }
 
+    //Coroutine that starts a aniation of a panel that fades to black and then loads a scene
     IEnumerator LoadScene(string s)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -390,6 +414,7 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(s);
     }
 
+    //Opens the option panel
     public void Options()
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -401,6 +426,7 @@ public class MainMenu : MonoBehaviour
         move = true;
     }
 
+    //Exits the game
     public void Quit()
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -414,13 +440,16 @@ public class MainMenu : MonoBehaviour
     }
     #endregion
 
+    //Option ui functions
     #region OptionMenuButtons
 
+    //Function of a button that sets the current selected gameobject to a given gameobject (slider)
     public void ActivateSlider(GameObject g)
     {
         EventSystem.current.SetSelectedGameObject(g);
     }
 
+    //Activates and deactivates the postprocesing and saves a boolean (int) playerpref 
     public void PostProcesingToggle(bool b)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -438,6 +467,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    //Activates and deactivates the fullscreen and saves a boolean (int) playerpref 
     public void FullScreenToggle(bool b)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -456,6 +486,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    //Changes the quality settings of the project settings and saves the value with Playerprefs
     public void Quality(int i)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -467,6 +498,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("qLevel", qLevel);
     }
 
+    //Changes the antialising of a render texture (camera output canvas) and saves the value with Playerprefs
     public void AntiAliasing(float f)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -493,6 +525,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("aaValue", aaValue);
     }
 
+    //Changes the gamma (brightness) parameter of a post procesing volume and saves the value with Playerprefs
     public void GammaGain(float f)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -504,6 +537,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("gamma", lggValue);
     }
 
+    //Changes the field of view value of the player and saves the value with Playerprefs
     public void FieldOfView(float f)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -513,6 +547,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("fov", fovValue);
     }
 
+    //Changes the volume of an audio mixer and saves the value with Playerprefs
     public void SetMusicVolume(float f)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -524,6 +559,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("mVolume", mVolume);
     }
 
+    //Changes the volume of an audio mixer and saves the value with Playerprefs
     public void SetSFXVolume(float f)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -535,6 +571,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("sfxVolume", sfxVolume);
     }
 
+    //Changes the X sensibilitie of the camera rotation and saves the value with Playerprefs
     public void SensX(float f)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -544,6 +581,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("sensX", sensX);
     }
 
+    //Changes teh Y sensibilitie of the camera rotation and saves the value with Playerprefs
     public void SensY(float f)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -553,6 +591,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("sensY", sensY);
     }
 
+    //sets the Y sensibilitie to be the same as the X and saves the values with Playerprefs
     public void IgualateSens()
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
@@ -566,6 +605,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("sensY", sensY);
     }
 
+    //Sets the antialiasing of a render texture by a given int
     void SetAntialiasing(int i)
     {
         renderTexture.Release();
@@ -575,6 +615,7 @@ public class MainMenu : MonoBehaviour
         renderTexture.Create();
     }
 
+    //Activates the mainMenu panel and deactivates the rest
     public void GoBack()
     {
         PlayerSFX(sfxs[0], 1, 1.5f);

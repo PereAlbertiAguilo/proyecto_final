@@ -8,6 +8,7 @@ public class RotateObject : MonoBehaviour
 
     private void Update()
     {
+        //Rotates the gameobject using the upward axis with a given spedd
         transform.Rotate(Vector3.up * Time.deltaTime * speed);
     }
 }

@@ -17,6 +17,7 @@ public class Jumper : MonoBehaviour
         playerControllerScript = FindObjectOfType<PlayerController>();
     }
 
+    //when the player collides with the collider of this gameobject gets the players rigidbody and adds a force with the gameobject upwards
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.name.Equals("Player") && canJump)
@@ -27,11 +28,12 @@ public class Jumper : MonoBehaviour
 
             playerControllerScript.PlayerSFX(playerControllerScript.sfxs[0], 1, 1.5f);
             rb.AddForce(transform.up * force, ForceMode.Impulse);
-            StartCoroutine(Delay(other));
+            StartCoroutine(Delay());
         }
     }
 
-    IEnumerator Delay(Collision other)
+    //when called lets the player to only jump one time in a certain time
+    IEnumerator Delay()
     {
         canJump = false;
         yield return new WaitForSeconds(delay);

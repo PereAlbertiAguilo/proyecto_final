@@ -29,6 +29,7 @@ public class DoorOpener : MonoBehaviour
 
     private void Update()
     {
+        //When you input the right key sets 2 gameobjects to false if you can interact with this gameobejct
         if (Input.GetKeyDown(KeyCode.E) || (Input.GetKeyDown(KeyCode.JoystickButton2)))
         {
             if (canInteract && !isDoorOpened)
@@ -45,6 +46,7 @@ public class DoorOpener : MonoBehaviour
         }
     }
 
+    //Start a coroutine that deactivate a gameobject
     IEnumerator OpenDoor()
     {
         isDoorOpened = true;
@@ -62,12 +64,12 @@ public class DoorOpener : MonoBehaviour
         door.SetActive(true);
         yield return new WaitForSeconds(0.05f);
         door.SetActive(false);
+        yield return new WaitForSeconds(0.4f);
+        door.SetActive(true);
         if (_audioSource != null)
         {
             _audioSource.PlayOneShot(sfxs[1]);
         }
-        yield return new WaitForSeconds(0.4f);
-        door.SetActive(true);
         yield return new WaitForSeconds(0.2f);
         door.SetActive(false);
         yield return new WaitForSeconds(0.1f);

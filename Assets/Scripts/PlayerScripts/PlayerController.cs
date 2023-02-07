@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public CinemachinePOV cPOV;
     [SerializeField] private Transform cam;
 
-    [HideInInspector] public static bool playerCreated;
     [HideInInspector] public bool canMove = true;
     [HideInInspector] public bool activateSpeedControl = true;
     public bool forceFieldsActive;
@@ -72,11 +71,11 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        playerCreated = true;
-
+        //Get player components and store them in variables
         _playerRigidbody = GetComponent<Rigidbody>();
         _playerAudioSource = GetComponent<AudioSource>();
 
+        //Get scripts from scene and store them in variables
         grapplingControllerScript = FindObjectOfType<GrapplingController>();
         doorOpenerScript = FindObjectsOfType<DoorOpener>(true);
         forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
@@ -90,6 +89,7 @@ public class PlayerController : MonoBehaviour
 
         cPOV = cvCam.GetCinemachineComponent<CinemachinePOV>();
 
+        //Set the field of view and the sensiblities if they have been changed in the main menu
         if (PlayerPrefs.HasKey("fov"))
         {
             fieldOfView = PlayerPrefs.GetFloat("fov");
@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        //Restricting the movement of the player with a boolean
         if (canMove)
         {
             PlayerInput();
@@ -115,8 +116,10 @@ public class PlayerController : MonoBehaviour
             Running(isRunning);
             PlayerWalkSFX();
 
+            //sets the rotation of the player to be the same as the camera
             transform.rotation = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0);
 
+            //Drag value and gravity changes depending on if the player is touching the ground or not
             if (isGrounded)
             {
                 _playerRigidbody.drag = groundDrag;
@@ -127,6 +130,7 @@ public class PlayerController : MonoBehaviour
                 _playerRigidbody.drag = 1f;
             }
 
+            //Gravity changes depending on if the player is attatched to a wall
             if (isAttatched)
             {
                 Physics.gravity = new Vector3(0, wallGrav, 0);
@@ -145,27 +149,31 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        //Restricting the movement of the player with a boolean
         if (canMove)
         {
             MovePlayer();
         }
 
+        //Raycast that checks if the player is touching the ground
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHight * 0.5f + 0.1f, whatIsGorund);
 
+        //Raycast that checks if the player can interact with certain objects
         foreach (DoorOpener door in doorOpenerScript)
         {
             door.canInteract = Physics.Raycast(cam.position, cam.forward, door.interactDist, door.whatIsInteractable);
         }
     }
 
+    //All the inputs on whitch the player depends to move arround
     void PlayerInput()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
         float leftTrigger = Input.GetAxis("LeftTrigger");
-        float rightTrigger = Input.GetAxisRaw("RightTrigger");
 
+        //Jump if the player is on the ground
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0))
         {
             if (canJump && isGrounded)
@@ -178,6 +186,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        //Jump if the player obtains a second jump power up
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
             if(canSecondJump && !grapplingControllerScript.isGrappled && !isGrounded)
@@ -188,6 +197,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        //Jump if the player is attatched to a wall
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0))
         {
             if (canAttatch)
@@ -210,6 +220,7 @@ public class PlayerController : MonoBehaviour
             isAttatched = false;
         }
 
+        //Player running state
         if(UIManagerScript.XboxOneController == 1)
         {
             if (leftTrigger > 0)
@@ -233,6 +244,7 @@ public class PlayerController : MonoBehaviour
             }
         }        
 
+        //Player crouching state
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton8))
         {
             if(isGrounded && canSlide)
@@ -256,6 +268,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //Emits a sound effect if the player is moving in any direction, and changes the pitch if, while moveing, the player start running
     void PlayerWalkSFX()
     {
         if (Mathf.Abs(verticalInput) != 0 || Mathf.Abs(horizontalInput) != 0)
@@ -280,6 +293,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //Plays a given audioclip with a random picth value determinated by 2 given floats
     public void PlayerSFX(AudioClip ac, float f1, float f2)
     {
         float randomIndex = Random.Range(f1, f2);
@@ -289,6 +303,7 @@ public class PlayerController : MonoBehaviour
         _sfxAudioSource.PlayOneShot(ac);
     }
 
+    //All the diferents move speeds of the player depending on if is touching the ground, running, crouching, attatched to a wall, grappling or in free fall
     void MovePlayer()
     {
         moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
@@ -322,6 +337,7 @@ public class PlayerController : MonoBehaviour
         }   
     }
 
+    //Changes the field of view if the player is running
     void Running(bool b)
     {
         float fov;
@@ -339,6 +355,7 @@ public class PlayerController : MonoBehaviour
         cvCam.m_Lens.FieldOfView = fov;
     }
 
+    //If the player isn't running the players max speed is clamped to a max value
     void SpeedControl()
     {
         if (activateSpeedControl)
@@ -354,6 +371,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //When called this function adds an upwards force to the player
     void JumpMechanic()
     {
         _playerRigidbody.velocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
@@ -363,6 +381,7 @@ public class PlayerController : MonoBehaviour
         PlayerSFX(sfxs[0], 1, 1.5f);
     }
 
+    //When called this function adds an upwards force to the player and a force in the opposite directon of the wall that is collideing
     void WallJumpMechanic()
     {
         _playerRigidbody.velocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
@@ -373,11 +392,13 @@ public class PlayerController : MonoBehaviour
         PlayerSFX(sfxs[0], 1, 1.5f);
     }
 
+    //When called set the ability to jump to true
     void JumpReset()
     {
         canJump = true;
     }
 
+    //Adds a delay to exit the permacrouch state
     IEnumerator ResetPermaCrouch()
     {
         yield return new WaitForSeconds(.7f);
@@ -387,8 +408,11 @@ public class PlayerController : MonoBehaviour
             GetComponent<CapsuleCollider>().height = 2f;
         }
     }
+
+    
     private void OnTriggerEnter(Collider other)
     {
+        //Sets the ability to jump in mid air
         if (other.tag.Equals("SecondJump"))
         {
             canSecondJump = true;
@@ -397,11 +421,13 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Animator>().Play("forcefield_destroy");
         }
 
+        //Saves to a checkpoint if the player has the ability to use the forcefieldshooter script
         if (other.tag.Equals("CheckPoint"))
         {
             forceFieldsActive = forceFieldShooterScript.enabled;
         }
 
+        //Enters the permacrouch state
         if (other.tag.Equals("Crouch"))
         {
             GetComponent<CapsuleCollider>().height = 1f;
@@ -411,6 +437,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        //Stays in the permacrouch state
         if (other.tag.Equals("Crouch"))
         {
             permaCrouch = true;
@@ -423,6 +450,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        //Exits the permacrouch state
         if (other.GetComponent<Collider>().tag.Equals("Crouch"))
         {
             StartCoroutine(ResetPermaCrouch());
@@ -435,6 +463,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        //Lets the player the ability to attatch to wall
         if (other.collider.tag.Equals("Wall"))
         {
             wallJumpDir = other.transform.up;
@@ -444,6 +473,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionExit(Collision other)
     {
+        //Exits the wall attatched state
         if (other.collider.tag.Equals("Wall"))
         {
             canAttatch = false;

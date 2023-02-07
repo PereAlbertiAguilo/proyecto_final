@@ -8,6 +8,7 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
+        //Sets the position of this gameobject to a given position continiously
         transform.position = cameraPos.position;
     }
 }

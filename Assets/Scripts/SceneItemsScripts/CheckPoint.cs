@@ -20,6 +20,7 @@ public class CheckPoint : MonoBehaviour
         resetLevelScript = FindObjectsOfType<ResetLevel>();
     }
 
+    //When the player triggers with this gameobject stores the transform of the child of this gameobject to be the respawn point
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))

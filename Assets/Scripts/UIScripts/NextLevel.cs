@@ -20,6 +20,7 @@ public class NextLevel : MonoBehaviour
         UIManagerScript = FindObjectOfType<UIManager>();
     }
 
+    //If the player triggers its collider with this gameobjects collider starts a UIManager script function
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))

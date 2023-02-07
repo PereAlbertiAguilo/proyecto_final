@@ -26,6 +26,7 @@ public class HUDScript : MonoBehaviour
         forceFieldShooterScript = FindObjectOfType<ForceFieldShooter>();
         playerControllerScript = FindObjectOfType<PlayerController>();
 
+        //Sets the max values to their corresponding values
         slider1.maxValue = forceFieldShooterScript.maxInstances;
 
         slider2.maxValue = forceFieldShooterScript.cooldown;
@@ -35,8 +36,11 @@ public class HUDScript : MonoBehaviour
 
     private void Update()
     {
+        //Updates the value of a slider substracting a int that changes in the forcefieldshooter script
         slider1.value = slider1.maxValue - forceFieldShooterScript.currentInstance;
 
+        //When you the current instance is lower than the max instances and inputs the right key starts a timer
+        //that lowers a slider value in time from a given float "cooldown" to 0, when it reaches 0 the timer resets
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton5))
         {
             if (forceFieldShooterScript.currentInstance != forceFieldShooterScript.maxInstances)
@@ -44,8 +48,6 @@ public class HUDScript : MonoBehaviour
                 timer = true;
             }
         }
-
-        toggle.isOn = playerControllerScript.canSecondJump;
 
         if (value > 0 && timer)
         {
@@ -59,6 +61,10 @@ public class HUDScript : MonoBehaviour
             timer = false;
         }
 
+        //A toggle boolean is determined by a boolenan in the playercontroller script
+        toggle.isOn = playerControllerScript.canSecondJump;
+
+        //Enables a gameobject depending on if a boolean of the forcefieldshooter script
         if (!forceFieldShooterScript.isTimerOn)
         {
             slider3.gameObject.SetActive(false);
@@ -68,8 +74,9 @@ public class HUDScript : MonoBehaviour
             slider3.gameObject.SetActive(true);
             slider3.value = forceFieldShooterScript.currentLife;
         }
-        
-        if(doorOpenerScript != null)
+
+        //If there is a dooropener script in the scene a popup gameobjects toggles bettween true or false depending on a boolean in the dooropener script script
+        if (doorOpenerScript != null)
         {
             interactablePopUp.SetActive(doorOpenerScript.canInteract);
         }

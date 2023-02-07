@@ -6,6 +6,7 @@ public class ActivateCursor : MonoBehaviour
 {
     private void Start()
     {
+        //Confines the cursor to the screen size
         Cursor.lockState = CursorLockMode.Confined;
     }
 }

@@ -60,7 +60,9 @@ public class ForceFieldShooter : MonoBehaviour
 
     private void Start()
     {
+        //Get scripts from scene and store them in variables
         playerControllerScript = FindObjectOfType<PlayerController>();
+
         mode = 0;
         currentInstance = 0;
         currentLife = lifeTime;
@@ -72,6 +74,7 @@ public class ForceFieldShooter : MonoBehaviour
 
         Timer(lifeTime);
 
+        //Sets the color of an image determined by on if an int mode changes frome 0 to 1
         if (mode == 1)
         {
             sphere.GetComponent<Image>().color = matColorPurple;
@@ -81,6 +84,7 @@ public class ForceFieldShooter : MonoBehaviour
             sphere.GetComponent<Image>().color = matColorBlue;
         }
 
+        //Causes that if mode 1 has been triggered to switch to mode 0
         if (instance[1] != null)
         {
             isGrappleInstatiated = true;
@@ -91,11 +95,13 @@ public class ForceFieldShooter : MonoBehaviour
             isGrappleInstatiated = false;
         }
 
+        //Sets the courrent instance to the max even if the mode 1 has not been used
         if (instance[1] == null && currentInstance > 0)
         {
             currentInstance = forceFields.Count;
         }
 
+        //Sets the ability to reload if the player shoots at least one time
         if(forceFields.Count > 0)
         {
             canReload = true;
@@ -104,6 +110,7 @@ public class ForceFieldShooter : MonoBehaviour
 
     void PlayerInput()
     {
+        //Shoots and stops a forcefield
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton5))
         {
             Shoot();
@@ -113,6 +120,7 @@ public class ForceFieldShooter : MonoBehaviour
             StopForceField();
         }
 
+        //Reloads if a raycast hits a certain layer
         if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton2))
         {
             RaycastHit hit;
@@ -123,6 +131,7 @@ public class ForceFieldShooter : MonoBehaviour
             }
         }
 
+        //Toggles bettween the 2 modes
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyUp(KeyCode.JoystickButton3))
         {
             if(mode == 1)
@@ -136,6 +145,7 @@ public class ForceFieldShooter : MonoBehaviour
         }
     }
 
+    //Timer logic that start when a mode 1 forcefield is instantiated
     void Timer(float t)
     {
         if (instance[1] != null && isTimerOn)
@@ -168,6 +178,7 @@ public class ForceFieldShooter : MonoBehaviour
         }
     }
 
+    //Shoot logic
     void Shoot()
     {
         if (canShoot && currentInstance < maxInstances)
@@ -180,6 +191,7 @@ public class ForceFieldShooter : MonoBehaviour
 
             currentInstance++;
 
+            //Determinates whitch forcefield to shoot depending on the mode
             if(mode == 0)
             {
                 instance[mode] = Instantiate(dobleJump, shootPoint.position, cam.transform.rotation);
@@ -196,19 +208,27 @@ public class ForceFieldShooter : MonoBehaviour
                 instance[mode] = Instantiate(dobleJump, shootPoint.position, cam.transform.rotation);
             }
 
+            //Sets a rigidbody variable and a collider variable to be the same as the last forcefield instantiated
             _rigidbody = instance[mode].GetComponentInChildren<Rigidbody>();
             _sphereCollider = instance[mode].GetComponentInChildren<SphereCollider>();
 
             _sphereCollider.enabled = false;
+
+            //If is in the shooting state adds a forward force the the rigidbody of the last forcefield instantiated
             _rigidbody.AddForce(instance[mode].transform.forward * speed * 10, ForceMode.Force);
+
+            //Adds the last forcefield instantiated to a list
             forceFields.Add(instance[mode]);
 
             StartCoroutine(Cooldown());
         }
     }
+
+    //Stop Forcefield logic
     void StopForceField()
     {
-        if(_rigidbody != null)
+        //If there is a forcefield instantiated stops the rigidbodys velocity of the last forcefield instantiated
+        if (_rigidbody != null)
         {
             if (!canShoot && _rigidbody.velocity != Vector3.zero)
             {
@@ -223,8 +243,10 @@ public class ForceFieldShooter : MonoBehaviour
         }
     }
 
+    //Reload logic
     public void Reload()
     {
+        //Chechs if the player can reload
         if (forceFields.Count > 0 && canReload)
         {
             _animator.Play("arm_shoot");
@@ -232,6 +254,7 @@ public class ForceFieldShooter : MonoBehaviour
             canShoot = false;
             canReload = false;
 
+            //Destroys all the instatiated forcefields on the scene with a delay so that an animation of the forcefields can be played
             foreach (GameObject g in forceFields)
             {
                 if (g != null)
@@ -242,17 +265,21 @@ public class ForceFieldShooter : MonoBehaviour
                 }
             }
 
+            //Destroys all the instatiated forcefields on the scene with a delay so that an animation of the forcefields can be played
             foreach (GameObject g in instance)
             {
                 Destroy(g, 0.50f);
             }
 
+            //Clears the list of forcefields
             forceFields.Clear();
 
+            //Sets the currentinstance to 0
             currentInstance = 0;
 
             _animator.Play("arm_reload");
 
+            //Resets all the paramters
             canShoot = true;
             isGrappleInstatiated = false;
             isTimerOn = false;
@@ -261,6 +288,7 @@ public class ForceFieldShooter : MonoBehaviour
         }
     }
 
+    //When called starts a cooldown timer
     IEnumerator Cooldown()
     {
         yield return new WaitForSeconds(cooldown);

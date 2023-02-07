@@ -13,10 +13,6 @@ public class TextWriter : MonoBehaviour
     private AudioSource _audioSource;
     private GameObject musicManager;
 
-    private Image image;
-
-    private Color imageColor;
-
     [Header("Contents \n")]
     [SerializeField] private TextMeshProUGUI textUI;
 
@@ -33,7 +29,6 @@ public class TextWriter : MonoBehaviour
     [SerializeField] private bool isIntro;
     [SerializeField] private bool isTriggered;
     [SerializeField] private bool mobileText;
-    [SerializeField] private bool smoothIn;
     [SerializeField] private bool isEnd;
     private bool isLineFinished;
     private bool canFlicker;
@@ -59,25 +54,19 @@ public class TextWriter : MonoBehaviour
 
         musicManager = GameObject.Find("Music");
 
-        image = transform.Find("TextBackground").GetComponent<Image>();
-
-        if (smoothIn)
-        {
-            imageColor = image.color;
-            imageColor.a = 0;
-            image.color = imageColor;
-        }
-
+        //If the bool is true the music at the start of the scene is off
         if (isIntro)
         {
             musicManager.SetActive(false);
         }
 
+        //If the bool is true deactivates the ui visible components 
         if (isTriggered)
         {
             DeactivateUI();
         }
 
+        //If the bool is true the dysplaytextFunction starts at the begining of the scene
         if (writeInStart)
         {
             canWrite = true;
@@ -91,10 +80,12 @@ public class TextWriter : MonoBehaviour
 
     private void Update()
     {
+        //If you input the right key and the text is being displayed 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
             if (isLineFinished && !playerControllerScript.canMove && canWrite)
             {
+                //if there are more lines to display goes to the next line
                 if (textToDisplay.Length > currentLine)
                 {
                     _audioSource.mute = true;
@@ -103,9 +94,12 @@ public class TextWriter : MonoBehaviour
                     currentTextIndex++;
                     StartCoroutine(DisplayText());
                 }
+                //Exits the logic
                 else
                 {
                     skipIndicator.SetActive(false);
+
+                    //Depending on whitch bool is active the exit logic changes
 
                     if (isIntro)
                     {
@@ -140,28 +134,21 @@ public class TextWriter : MonoBehaviour
                     }
                 }
             }
+            //If the line isn't finished it finishes
             else
             {
                 isLineFinished = true;
             }
         }
 
-        if (smoothIn)
-        {
-            if (image.gameObject.activeInHierarchy)
-            {
-                image.color = imageColor;
-                Mathf.Lerp(imageColor.a, 255, Time.deltaTime * speed);
-                imageColor = image.color;
-            }
-        }
-
+        //While line isn't finished and you are able to move and there is a text writting the player is able to move
         if (!isLineFinished && !mobileText && canWrite)
         {
             UIManagerScript.CanMove(false);
         }
 
 
+        //When a gemobject becomes inactive starts to Dysplay the text
         if(textTrigger != null)
         {
             if (!textTrigger.activeInHierarchy && isTriggered && canTrigger)
@@ -180,6 +167,7 @@ public class TextWriter : MonoBehaviour
         }
     }
 
+    //Loads a new scene
     void NextLevel()
     {
         UIManagerScript.NextLevel();
@@ -187,34 +175,39 @@ public class TextWriter : MonoBehaviour
 
     public IEnumerator DisplayText()
     {
+        //activates all the display components (start)
         _audioSource.mute = false;
 
         ActivateUI();
 
         EnterText();
+        //(end)
 
         bool isAddingRichTextTag = false;
 
+        //Dysplays a string array to a ui text displaying letter by letter
         for (int i = 0; i < textToDisplay[currentTextIndex].Length; i++)
         {
             skipIndicator.SetActive(false);
 
             isLineFinished = false;
 
+            //if the next letter to display is the scpecified character ('<') it means that there is a color comand executing in the string
             if(textToDisplay[currentTextIndex].Substring(0, i).EndsWith('<') || isAddingRichTextTag)
             {
                 isAddingRichTextTag = true;
 
                 currentText = textToDisplay[currentTextIndex].Substring(0, i);
                 textUI.text = currentText;
-
-                if(textToDisplay[currentTextIndex].Substring(0, i).EndsWith('>'))
+                //if the next letter to display is the scpecified character ('<') it means that the color comand executing in the string is over
+                if (textToDisplay[currentTextIndex].Substring(0, i).EndsWith('>'))
                 {
                     isAddingRichTextTag = false;
                 }
             }
             else
             {
+                //Delay bettween characters
                 currentText = textToDisplay[currentTextIndex].Substring(0, i);
                 textUI.text = currentText;
                 yield return new WaitForSeconds(delay);
@@ -227,17 +220,20 @@ public class TextWriter : MonoBehaviour
             }
         }
 
+        //Unless is a mobileText the skipIndicateor is inactive
         if (!mobileText)
         {
             skipIndicator.SetActive(true);
             skipIndicator.GetComponent<Animator>().Play("indicator_flickering");
         }
 
+        //At the end sets the line to be over and mutes the audiosource
         isLineFinished = true;
 
         _audioSource.mute = true;
     }
 
+    //Deactivates all the displayable ui elements
     void DeactivateUI()
     {
         if (!writeInStart)
@@ -249,6 +245,7 @@ public class TextWriter : MonoBehaviour
         }
     }
 
+    //Activates all the displayable ui elements
     void ActivateUI()
     {
         if (!writeInStart)
@@ -260,6 +257,7 @@ public class TextWriter : MonoBehaviour
         }
     }
 
+    //Sets how should all the parameters of the player be when entering the DisplayText function
     void EnterText()
     {
         if (!mobileText)
@@ -271,6 +269,7 @@ public class TextWriter : MonoBehaviour
         UIManagerScript.canPause = false;
     }
 
+    //Sets how should all the parameters of the player be when exiting the DisplayText function
     void ExitText()
     {
         this.gameObject.SetActive(false);

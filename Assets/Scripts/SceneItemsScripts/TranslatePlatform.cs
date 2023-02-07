@@ -13,14 +13,11 @@ public class TranslatePlatform : MonoBehaviour
 
     private void Start()
     {
+        //stores the start pos of the gameobject and the target in 2 Vector3 variables
         if (target != null)
         {
             startPos = transform.position;
             targetStartPos = target.position;
-        }
-        else
-        {
-            print("target has not been assigned");
         }
     }
 
@@ -28,6 +25,8 @@ public class TranslatePlatform : MonoBehaviour
     {
         if(target != null)
         {
+            //When the gameobejcts rounded magnitud position is equal to the target rounded magnitud position
+            //the target positin toggles bettween the start pos of the gameobject or the start pos f it self
             if (Mathf.Round(transform.position.magnitude) == Mathf.Round(target.position.magnitude))
             {
                 if (target.position == targetStartPos)
@@ -40,6 +39,7 @@ public class TranslatePlatform : MonoBehaviour
                 }
             }
 
+            //Lerps the position of the this transform to a target position
             transform.position = Vector3.Lerp(transform.position, target.position, speed * Time.deltaTime);
         }
     }
