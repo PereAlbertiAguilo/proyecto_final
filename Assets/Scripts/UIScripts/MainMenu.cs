@@ -349,18 +349,15 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    //Sets a active a panel and changes a text by a given string if a Playerpref key exists
+    //Sets a active a panel and changes a text by a given string
     public void ConfirmMessage(string s)
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
 
-        if (PlayerPrefs.HasKey("currentScene"))
-        {
-            confirmMesage.text = s;
+        confirmMesage.text = s;
 
-            confirmPanel.SetActive(true);
-            CurrentButton(confirmFirstButton);
-        }
+        confirmPanel.SetActive(true);
+        CurrentButton(confirmFirstButton);
     }
 
     //Depending on a give bool sets a gameobject true or false
@@ -380,15 +377,6 @@ public class MainMenu : MonoBehaviour
 
     //Main menu ui functions
     #region MainMenuButtons
-
-    //If a Playerpref key doesn't exist loads a given scene
-    public void NewGame()
-    {
-        if (!PlayerPrefs.HasKey("currentScene"))
-        {
-            StartCoroutine(LoadScene(tutorial));
-        }
-    }
 
     //Loads a given scene
     public void YesNewGame()
