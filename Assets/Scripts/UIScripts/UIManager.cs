@@ -118,16 +118,23 @@ public class UIManager : MonoBehaviour
         postProcessingVolume = GameObject.Find("PostProcesing").GetComponent<Volume>();
         sfxAudioSource = GameObject.Find("SFX").GetComponent<AudioSource>();
 
+        StartCoroutine(MuteAS());
+
         PostPorcessingParameters();
 
-        sfxAudioSource.mute = true;
         UpdateUI();
         UpdateScene();
-        sfxAudioSource.mute = false;
         
         canPause = true;
 
         Resume();
+    }
+
+    IEnumerator MuteAS()
+    {
+        sfxAudioSource.mute = true;
+        yield return new WaitForSeconds(.5f);
+        sfxAudioSource.mute = false;
     }
 
     public void CurrentButton(GameObject g)

@@ -46,7 +46,7 @@ public class DoorOpener : MonoBehaviour
         }
     }
 
-    //Start a coroutine that deactivate a gameobject
+    //Start a coroutine that deactivate a gameobject with a small animation
     IEnumerator OpenDoor()
     {
         isDoorOpened = true;
@@ -80,6 +80,15 @@ public class DoorOpener : MonoBehaviour
         if(nextDoorOpener != null)
         {
             nextDoorOpener.SetActive(true);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //If the player triggers this gameobject collider starts a coroutine
+        if (other.tag.Equals("Player"))
+        {
+            StartCoroutine(OpenDoor());
         }
     }
 }
