@@ -419,11 +419,6 @@ public class MainMenu : MonoBehaviour
     {
         PlayerSFX(sfxs[0], 1, 1.5f);
 
-        if (Application.isEditor)
-        {
-            UnityEditor.EditorApplication.isPlaying = false;
-        }
-
         Application.Quit();
     }
     #endregion

@@ -15,7 +15,7 @@ public class GrapplingController : MonoBehaviour
 
     [SerializeField] private LayerMask whatIsGrappleable;
 
-    public new Transform camera;
+    public Transform cam;
     public Transform gunTip, player;
 
     [HideInInspector] public bool isGrappled;

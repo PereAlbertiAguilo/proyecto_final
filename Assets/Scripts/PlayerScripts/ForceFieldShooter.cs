@@ -36,6 +36,7 @@ public class ForceFieldShooter : MonoBehaviour
     private SphereCollider _sphereCollider;
 
     private PlayerController playerControllerScript;
+    private GrapplingController grapplingControllerScript;
 
     [Header("Others\n")]
     [SerializeField] private LayerMask whatIsReloadTerminal;
@@ -61,6 +62,7 @@ public class ForceFieldShooter : MonoBehaviour
     private void Start()
     {
         //Get scripts from scene and store them in variables
+        grapplingControllerScript = FindObjectOfType<GrapplingController>();
         playerControllerScript = FindObjectOfType<PlayerController>();
 
         mode = 0;
@@ -150,6 +152,8 @@ public class ForceFieldShooter : MonoBehaviour
     {
         if (instance[1] != null && isTimerOn)
         {
+            StartCoroutine(GrappleAvalible());
+
             if (Input.GetKeyDown(KeyCode.R))
             {
                 isTimerOn = false;
@@ -198,6 +202,8 @@ public class ForceFieldShooter : MonoBehaviour
             }
             else if(mode == 1 && !isGrappleInstatiated)
             {
+                grapplingControllerScript.isGrappleAvalible = false;
+
                 instance[mode] = Instantiate(forceField, shootPoint.position, cam.transform.rotation);
 
                 isTimerOn = true;
@@ -282,6 +288,7 @@ public class ForceFieldShooter : MonoBehaviour
             //Resets all the paramters
             canShoot = true;
             isGrappleInstatiated = false;
+            grapplingControllerScript.isGrappleAvalible = true;
             isTimerOn = false;
             playerControllerScript.canSecondJump = false;
             canReload = true;
@@ -299,5 +306,12 @@ public class ForceFieldShooter : MonoBehaviour
         {
             canShoot = true;
         }
+    }
+
+    //When called gives a small delay before being able to cast the grapple 
+    IEnumerator GrappleAvalible()
+    {
+        yield return new WaitForSeconds(.35f);
+        grapplingControllerScript.isGrappleAvalible = true;
     }
 }
