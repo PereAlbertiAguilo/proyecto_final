@@ -82,16 +82,29 @@ public class MainMenu : MonoBehaviour
     private bool fsIsOn;
     private bool ppIsOn;
 
+    private float oneUnit = 1f;
+    private float dobleUnit = 2f;
+    private float halfUnit = .5f;
+    private float audioMixerVolumeMulti = 20f;
+    private float allXboxButtons = 33f;
+
+    private float defaultGammaValue = 1f;
+    private float defaultFovValue = 65f;
+    private float defaultSens = 1.5f;
+    private float defaultVolume = .2f;
+
+    private bool changeScene;
+
     private void Awake()
     {
         //Sets all the ui values to the saved playerpref key or its default value
-        lggValue = CheckFloatKey("gamma", lggSlider.value);
-        fovValue = CheckFloatKey("fov", fovSlider.value);
-        aaValue = CheckFloatKey("aaValue", aaSlider.value);
-        sensX = CheckFloatKey("sensX", sXSlider.value);
-        sensY = CheckFloatKey("sensY", sYSlider.value);
-        mVolume = CheckFloatKey("mVolume", GetAudioMixerValue(musicAudioMixer, "MusicVolume", mVolume));
-        sfxVolume = CheckFloatKey("sfxVolume", GetAudioMixerValue(SFXAudioMixer, "SFXVolume", sfxVolume));
+        lggValue = CheckFloatKey("gamma", defaultGammaValue);
+        fovValue = CheckFloatKey("fov", defaultFovValue);
+        aaValue = CheckFloatKey("aaValue", 0);
+        sensX = CheckFloatKey("sensX", defaultSens);
+        sensY = CheckFloatKey("sensY", defaultSens);
+        mVolume = CheckFloatKey("mVolume", defaultVolume);
+        sfxVolume = CheckFloatKey("sfxVolume", defaultVolume);
 
         qLevel = CheckIntKey("qLevel", 0);
 
@@ -140,16 +153,12 @@ public class MainMenu : MonoBehaviour
         
         for (int i = 0; i < names.Length; i++)
         {
-            if (names[i].Length == 33)
+            if (names[i].Length == allXboxButtons)
             {
-                print(names[i].Length);
-
                 XboxOneController = 1;
             }
             else
             {
-                print(names[i].Length);
-
                 XboxOneController = 0;
             }
         }
@@ -211,7 +220,26 @@ public class MainMenu : MonoBehaviour
             target.position = targetStartPos;
         }
 
-        alpha02.transform.position = Vector3.Lerp(alpha02.transform.position, target.position, 2 * Time.deltaTime);
+        alpha02.transform.position = Vector3.Lerp(alpha02.transform.position, target.position, dobleUnit * Time.deltaTime);
+
+        //Lowers the volume of the music and sfx to 0 smoothly
+        if (changeScene)
+        {
+            float mf;
+            float sf;
+
+            musicAudioMixer.GetFloat("MusicVolume", out mf);
+            SFXAudioMixer.GetFloat("SFXVolume", out sf);
+
+            musicAudioMixer.SetFloat("MusicVolume", Mathf.Lerp(mf, -80f, Time.deltaTime * (halfUnit + defaultVolume)));
+            SFXAudioMixer.SetFloat("SFXVolume", Mathf.Lerp(sf, -80f, Time.deltaTime * (halfUnit + defaultVolume)));
+        }
+    }
+
+    //Plays a sound effect
+    public void ButtonSFX()
+    {
+        PlayerSFX(sfxs[0], oneUnit, oneUnit + halfUnit);
     }
 
     //Gets the current volume of an AudioMixer
@@ -219,7 +247,7 @@ public class MainMenu : MonoBehaviour
     {
         am.GetFloat(s, out f);
 
-        return Mathf.Log10(f) * 20;
+        return Mathf.Log10(f) * audioMixerVolumeMulti;
     }
 
     //Plays an audioclip with a random picth bettween 2 values
@@ -352,8 +380,6 @@ public class MainMenu : MonoBehaviour
     //Sets a active a panel and changes a text by a given string
     public void ConfirmMessage(string s)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         confirmMesage.text = s;
 
         confirmPanel.SetActive(true);
@@ -393,11 +419,11 @@ public class MainMenu : MonoBehaviour
     //Coroutine that starts a aniation of a panel that fades to black and then loads a scene
     IEnumerator LoadScene(string s)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
+        changeScene = true;
 
         blackPanelAnimator.SetBool("ToBlack", true);
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(dobleUnit + oneUnit);
 
         SceneManager.LoadScene(s);
     }
@@ -405,8 +431,6 @@ public class MainMenu : MonoBehaviour
     //Opens the option panel
     public void Options()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         mainMenuPanel.SetActive(false);
         optionsPanel.SetActive(true);
         CurrentButton(optionsFirstButton);
@@ -417,8 +441,6 @@ public class MainMenu : MonoBehaviour
     //Exits the game
     public void Quit()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         Application.Quit();
     }
     #endregion
@@ -435,8 +457,6 @@ public class MainMenu : MonoBehaviour
     //Activates and deactivates the postprocesing and saves a boolean (int) playerpref 
     public void PostProcesingToggle(bool b)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         vignette.active = b;
         bloom.active = b;
 
@@ -453,8 +473,6 @@ public class MainMenu : MonoBehaviour
     //Activates and deactivates the fullscreen and saves a boolean (int) playerpref 
     public void FullScreenToggle(bool b)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         if (b)
         {
             Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
@@ -472,8 +490,6 @@ public class MainMenu : MonoBehaviour
     //Changes the quality settings of the project settings and saves the value with Playerprefs
     public void Quality(int i)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         qLevel = i;
 
         QualitySettings.SetQualityLevel(qLevel);
@@ -484,8 +500,6 @@ public class MainMenu : MonoBehaviour
     //Changes the antialising of a render texture (camera output canvas) and saves the value with Playerprefs
     public void AntiAliasing(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         aaValue = f;
 
         if (aaValue == 0)
@@ -511,8 +525,6 @@ public class MainMenu : MonoBehaviour
     //Changes the gamma (brightness) parameter of a post procesing volume and saves the value with Playerprefs
     public void GammaGain(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         lggValue = f;
 
         liftGammaGain.gamma.Override(new Vector4(1f, 1f, 1f, lggValue));
@@ -523,8 +535,6 @@ public class MainMenu : MonoBehaviour
     //Changes the field of view value of the player and saves the value with Playerprefs
     public void FieldOfView(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         fovValue = f;
 
         PlayerPrefs.SetFloat("fov", fovValue);
@@ -533,11 +543,9 @@ public class MainMenu : MonoBehaviour
     //Changes the volume of an audio mixer and saves the value with Playerprefs
     public void SetMusicVolume(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         mVolume = f;
 
-        musicAudioMixer.SetFloat("MusicVolume", Mathf.Log10(mVolume) * 20);
+        musicAudioMixer.SetFloat("MusicVolume", Mathf.Log10(mVolume) * audioMixerVolumeMulti);
 
         PlayerPrefs.SetFloat("mVolume", mVolume);
     }
@@ -545,11 +553,9 @@ public class MainMenu : MonoBehaviour
     //Changes the volume of an audio mixer and saves the value with Playerprefs
     public void SetSFXVolume(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         sfxVolume = f;
 
-        SFXAudioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
+        SFXAudioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * audioMixerVolumeMulti);
 
         PlayerPrefs.SetFloat("sfxVolume", sfxVolume);
     }
@@ -557,8 +563,6 @@ public class MainMenu : MonoBehaviour
     //Changes the X sensibilitie of the camera rotation and saves the value with Playerprefs
     public void SensX(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         sensX = f;
 
         PlayerPrefs.SetFloat("sensX", sensX);
@@ -567,8 +571,6 @@ public class MainMenu : MonoBehaviour
     //Changes teh Y sensibilitie of the camera rotation and saves the value with Playerprefs
     public void SensY(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         sensY = f;
 
         PlayerPrefs.SetFloat("sensY", sensY);
@@ -577,8 +579,6 @@ public class MainMenu : MonoBehaviour
     //sets the Y sensibilitie to be the same as the X and saves the values with Playerprefs
     public void IgualateSens()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         sensY = sensX;
 
         sXSlider.value = sensX;
@@ -601,8 +601,6 @@ public class MainMenu : MonoBehaviour
     //Activates the mainMenu panel and deactivates the rest
     public void GoBack()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         optionsPanel.SetActive(false);
         confirmPanel.SetActive(false);
         mainMenuPanel.SetActive(true);

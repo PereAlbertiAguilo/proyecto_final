@@ -90,15 +90,27 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject nextLevelFirstButton;
     [SerializeField] private GameObject confirmFirstButton;
 
+    private float oneUnit = 1f;
+    private float halfUnit = .5f;
+    private float audioMixerVolumeMulti = 20f;
+    private float allXboxButtons = 33f;
+
+    private float defaultGammaValue = 1f;
+    private float defaultFovValue = 65f;
+    private float defaultSens = 1.5f;
+    private float defaultVolume = .2f;
+
+    private bool changeScene;
+
     private void Awake()
     {
-        lggValue = CheckFloatKey("gamma", lggSlider.value);
-        fovValue = CheckFloatKey("fov", fovSlider.value);
-        aaValue = CheckFloatKey("aaValue", aaSlider.value);
-        sensX = CheckFloatKey("sensX", sensX);
-        sensY = CheckFloatKey("sensY", sensY);
-        mVolume = CheckFloatKey("mVolume", SetAudioMixerValue(musicAudioMixer, "MusicVolume", mVolume));
-        sfxVolume = CheckFloatKey("sfxVolume", SetAudioMixerValue(SFXAudioMixer, "SFXVolume", sfxVolume));
+        lggValue = CheckFloatKey("gamma", defaultGammaValue);
+        fovValue = CheckFloatKey("fov", defaultFovValue);
+        aaValue = CheckFloatKey("aaValue", 0);
+        sensX = CheckFloatKey("sensX", defaultSens);
+        sensY = CheckFloatKey("sensY", defaultSens);
+        mVolume = CheckFloatKey("mVolume", defaultVolume);
+        sfxVolume = CheckFloatKey("sfxVolume", defaultVolume);
 
         qLevel = CheckIntKey("qLevel", 0);
 
@@ -133,7 +145,7 @@ public class UIManager : MonoBehaviour
     IEnumerator MuteAS()
     {
         sfxAudioSource.mute = true;
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(halfUnit);
         sfxAudioSource.mute = false;
     }
 
@@ -249,12 +261,11 @@ public class UIManager : MonoBehaviour
         SensY(sensY);
     }
 
-    float SetAudioMixerValue(AudioMixer am, string s, float f)
+    float GetAudioMixerValue(AudioMixer am, string s, float f)
     {
         am.GetFloat(s, out f);
 
-        return Mathf.Log10(f) * 20;
-
+        return Mathf.Log10(f) * audioMixerVolumeMulti;
     }
 
     public void CanMove(bool b)
@@ -285,7 +296,7 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < names.Length; i++)
         {
-            if (names[i].Length == 33)
+            if (names[i].Length == allXboxButtons)
             {
                 XboxOneController = 1;
             }
@@ -359,13 +370,29 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
+
+        if (changeScene)
+        {
+            float mf;
+            float sf;
+
+            musicAudioMixer.GetFloat("MusicVolume", out mf);
+            SFXAudioMixer.GetFloat("SFXVolume", out sf);
+
+            musicAudioMixer.SetFloat("MusicVolume", Mathf.Lerp(mf, -80f, Time.deltaTime * (halfUnit + defaultVolume)));
+            SFXAudioMixer.SetFloat("SFXVolume", Mathf.Lerp(sf, -80f, Time.deltaTime * (halfUnit + defaultVolume)));
+        }
+    }
+
+    //Plays a sound effect
+    public void ButtonSFX()
+    {
+        PlayerSFX(sfxs[0], oneUnit, oneUnit + halfUnit);
     }
 
     #region PauseMenuButtons
     public void Pause()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         CanMove(false);
 
         Cursor.lockState = CursorLockMode.None;
@@ -378,8 +405,6 @@ public class UIManager : MonoBehaviour
 
     public void Resume()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         CanMove(true);
 
         isPaused = false;
@@ -391,8 +416,6 @@ public class UIManager : MonoBehaviour
 
     public void Options()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         pausePanel.SetActive(false);
         optionsPanel.SetActive(true);
         CurrentButton(optionsFirstButton);
@@ -400,8 +423,6 @@ public class UIManager : MonoBehaviour
 
     public void FinishLevel()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         canPause = false;
@@ -420,8 +441,6 @@ public class UIManager : MonoBehaviour
 
     public void CheckPointRestart()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         Resume();
         resetLevelScript.CheckPointRestart();
     }
@@ -444,8 +463,6 @@ public class UIManager : MonoBehaviour
 
     public void ConfirmMessage(string s)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         confirmMesage.text = s;
 
         pausePanel.SetActive(false);
@@ -474,7 +491,7 @@ public class UIManager : MonoBehaviour
 
     IEnumerator LoadScene(string loadScene, string saveScene)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
+        changeScene = true;
 
         blackPanelAnimator.SetBool("ToBlack", true);
 
@@ -496,8 +513,6 @@ public class UIManager : MonoBehaviour
 
     public void PostProcesingToggle(bool b)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         vignette.active = b;
         bloom.active = b;
 
@@ -513,8 +528,6 @@ public class UIManager : MonoBehaviour
 
     public void FullScreenToggle(bool b)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         if (b)
         {
             Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
@@ -531,8 +544,6 @@ public class UIManager : MonoBehaviour
 
     public void Quality(int i)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         qLevel = i;
 
         QualitySettings.SetQualityLevel(qLevel);
@@ -542,8 +553,6 @@ public class UIManager : MonoBehaviour
 
     public void AntiAliasing(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         aaValue = f;
 
         if (aaValue == 0)
@@ -568,8 +577,6 @@ public class UIManager : MonoBehaviour
 
     public void GammaGain(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         lggValue = f;
 
         liftGammaGain.gamma.Override(new Vector4(1f, 1f, 1f, lggValue));
@@ -579,8 +586,6 @@ public class UIManager : MonoBehaviour
 
     public void FieldOfView(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         fovValue = f;
 
         playerControllerScript.cvCam.m_Lens.FieldOfView = fovValue;
@@ -591,29 +596,23 @@ public class UIManager : MonoBehaviour
 
     public void SetMusicVolume(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         mVolume = f;
 
-        musicAudioMixer.SetFloat("MusicVolume", Mathf.Log10(mVolume) * 20);
+        musicAudioMixer.SetFloat("MusicVolume", Mathf.Log10(mVolume) * audioMixerVolumeMulti);
 
         PlayerPrefs.SetFloat("mVolume", mVolume);
     }
 
     public void SetSFXVolume(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         sfxVolume = f;
 
-        SFXAudioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
+        SFXAudioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * audioMixerVolumeMulti);
 
         PlayerPrefs.SetFloat("sfxVolume", sfxVolume);
     }
     public void SensX(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         sensX = f;
 
         playerControllerScript.cPOV.m_HorizontalAxis.m_MaxSpeed = sensX;
@@ -623,8 +622,6 @@ public class UIManager : MonoBehaviour
 
     public void SensY(float f)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         sensY = f;
 
         playerControllerScript.cPOV.m_VerticalAxis.m_MaxSpeed = sensY;
@@ -634,8 +631,6 @@ public class UIManager : MonoBehaviour
 
     public void IgualateSens()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         SensY(sensX);
 
         sensY = sensX;
@@ -649,8 +644,6 @@ public class UIManager : MonoBehaviour
 
     void SetAntialiasing(int i)
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         renderTexture.Release();
 
         renderTexture.antiAliasing = i;
@@ -660,10 +653,6 @@ public class UIManager : MonoBehaviour
 
     public void GoBack()
     {
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
-        PlayerSFX(sfxs[0], 1, 1.5f);
-
         optionsPanel.SetActive(false);
         confirmPanel.SetActive(false);
         pausePanel.SetActive(true);

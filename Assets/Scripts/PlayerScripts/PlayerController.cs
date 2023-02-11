@@ -69,6 +69,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioSource _sfxAudioSource;
     private AudioSource _playerAudioSource;
 
+    private float oneUnit = 1f;
+    private float halfUnit = .5f;
+    private float dobleUnit = 2f;
+    private float tenthOfUnit = .1f;
+    private float normalForceMulti = 10f;
+    private float runningForceMulti = 14f;
+    private float runningFov = 6f;
+    private float wallJumpMulti = .8f;
+
     void Start()
     {
         //Get player components and store them in variables
@@ -127,7 +136,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                _playerRigidbody.drag = 1f;
+                _playerRigidbody.drag = oneUnit;
             }
 
             //Gravity changes depending on if the player is attatched to a wall
@@ -156,7 +165,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //Raycast that checks if the player is touching the ground
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHight * 0.5f + 0.1f, whatIsGorund);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHight * halfUnit + tenthOfUnit, whatIsGorund);
 
         //Raycast that checks if the player can interact with certain objects
         foreach (DoorOpener door in doorOpenerScript)
@@ -221,7 +230,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //Player running state
-        if(UIManagerScript.XboxOneController == 1)
+        if(UIManagerScript.XboxOneController == oneUnit)
         {
             if (leftTrigger > 0)
             {
@@ -252,7 +261,7 @@ public class PlayerController : MonoBehaviour
                 canJump = false;
                 isSliding = true;
                 canSlide = false;
-                GetComponent<CapsuleCollider>().height = 1f;
+                GetComponent<CapsuleCollider>().height = halfUnit;
                 _playerRigidbody.AddForce(Vector3.down * force, ForceMode.Impulse);
             }
         }
@@ -260,7 +269,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!permaCrouch)
             {
-                GetComponent<CapsuleCollider>().height = 2f;
+                GetComponent<CapsuleCollider>().height = dobleUnit;
                 canSlide = true;
                 isSliding = false;
                 canJump = true;
@@ -273,23 +282,23 @@ public class PlayerController : MonoBehaviour
     {
         if (Mathf.Abs(verticalInput) != 0 || Mathf.Abs(horizontalInput) != 0)
         {
-            _playerAudioSource.volume = Mathf.Lerp(_playerAudioSource.volume, defaultVolume, 0.05f);
+            _playerAudioSource.volume = Mathf.Lerp(_playerAudioSource.volume, defaultVolume, Time.deltaTime * dobleUnit);
         }
         else if (!_playerAudioSource.mute)
         {
             if (_playerAudioSource.volume >= 0.01f)
             {
-                _playerAudioSource.volume = Mathf.Lerp(_playerAudioSource.volume, 0f, Time.deltaTime * 2);
+                _playerAudioSource.volume = Mathf.Lerp(_playerAudioSource.volume, 0f, Time.deltaTime * dobleUnit);
             }
         }
 
         if (isRunning)
         {
-            _playerAudioSource.pitch = Mathf.Lerp(_playerAudioSource.pitch, defaultPitch, Time.deltaTime * 2);
+            _playerAudioSource.pitch = Mathf.Lerp(_playerAudioSource.pitch, defaultPitch, Time.deltaTime * dobleUnit);
         }
         else
         {
-            _playerAudioSource.pitch = Mathf.Lerp(_playerAudioSource.pitch, 1f, 0.05f);
+            _playerAudioSource.pitch = Mathf.Lerp(_playerAudioSource.pitch, oneUnit, Time.deltaTime * dobleUnit);
         }
     }
 
@@ -312,28 +321,28 @@ public class PlayerController : MonoBehaviour
         {
             if (isSliding)
             {
-                _playerRigidbody.AddForce(moveDirection.normalized * force * 2f, ForceMode.Force);
+                _playerRigidbody.AddForce(moveDirection.normalized * force * dobleUnit, ForceMode.Force);
             }
             else if (isRunning)
             {
-                _playerRigidbody.AddForce(moveDirection.normalized * force * 14f, ForceMode.Force);
+                _playerRigidbody.AddForce(moveDirection.normalized * force * runningForceMulti, ForceMode.Force);
             }
             else
             {
-                _playerRigidbody.AddForce(moveDirection.normalized * force * 10f, ForceMode.Force);
+                _playerRigidbody.AddForce(moveDirection.normalized * force * normalForceMulti, ForceMode.Force);
             }
         }
         else if (isAttatched)
         {
-            _playerRigidbody.AddForce(moveDirection.normalized * force * 2f, ForceMode.Force);
+            _playerRigidbody.AddForce(moveDirection.normalized * force * dobleUnit, ForceMode.Force);
         }
         else if (grapplingControllerScript.isGrappled)
         {
-            _playerRigidbody.AddForce(moveDirection.normalized * force * 10f * airMultiplyer, ForceMode.Force);
+            _playerRigidbody.AddForce(moveDirection.normalized * force * normalForceMulti * airMultiplyer, ForceMode.Force);
         }
         else
         {
-            _playerRigidbody.AddForce(moveDirection.normalized * force * 8f * airMultiplyer, ForceMode.Force);
+            _playerRigidbody.AddForce(moveDirection.normalized * force * (normalForceMulti - dobleUnit) * airMultiplyer, ForceMode.Force);
         }   
     }
 
@@ -345,11 +354,11 @@ public class PlayerController : MonoBehaviour
 
         if (b)
         {
-            fov = Mathf.Lerp(fov, fieldOfView + 6, 0.05f);
+            fov = Mathf.Lerp(fov, fieldOfView + runningFov, Time.deltaTime * dobleUnit);
         }
         else if(isGrounded)
         {
-            fov = Mathf.Lerp(fov, fieldOfView, 0.05f);
+            fov = Mathf.Lerp(fov, fieldOfView, Time.deltaTime * dobleUnit);
         }
 
         cvCam.m_Lens.FieldOfView = fov;
@@ -361,7 +370,7 @@ public class PlayerController : MonoBehaviour
         if (activateSpeedControl)
         {
             Vector3 flatVel = new Vector3(_playerRigidbody.velocity.x, 0, _playerRigidbody.velocity.z);
-            float newForce = force / 2f;
+            float newForce = force / dobleUnit;
 
             if (flatVel.magnitude > newForce && !isRunning)
             {
@@ -378,7 +387,7 @@ public class PlayerController : MonoBehaviour
 
         _playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-        PlayerSFX(sfxs[0], 1, 1.5f);
+        PlayerSFX(sfxs[0], oneUnit, oneUnit + halfUnit);
     }
 
     //When called this function adds an upwards force to the player and a force in the opposite directon of the wall that is collideing
@@ -386,10 +395,10 @@ public class PlayerController : MonoBehaviour
     {
         _playerRigidbody.velocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
 
-        _playerRigidbody.AddForce(wallJumpDir * jumpForce * 0.8f, ForceMode.Impulse);
-        _playerRigidbody.AddForce(Vector3.up * jumpForce * 0.8f, ForceMode.Impulse);
+        _playerRigidbody.AddForce(wallJumpDir * jumpForce * wallJumpMulti, ForceMode.Impulse);
+        _playerRigidbody.AddForce(Vector3.up * jumpForce * wallJumpMulti, ForceMode.Impulse);
 
-        PlayerSFX(sfxs[0], 1, 1.5f);
+        PlayerSFX(sfxs[0], oneUnit, oneUnit + halfUnit);
     }
 
     //When called set the ability to jump to true
@@ -401,11 +410,11 @@ public class PlayerController : MonoBehaviour
     //Adds a delay to exit the permacrouch state
     IEnumerator ResetPermaCrouch()
     {
-        yield return new WaitForSeconds(.7f);
+        yield return new WaitForSeconds(halfUnit + tenthOfUnit + tenthOfUnit);
 
         if (!isSliding)
         {
-            GetComponent<CapsuleCollider>().height = 2f;
+            GetComponent<CapsuleCollider>().height = dobleUnit;
         }
     }
 
@@ -416,7 +425,7 @@ public class PlayerController : MonoBehaviour
         if (other.tag.Equals("SecondJump"))
         {
             canSecondJump = true;
-            Destroy(other.gameObject, 0.45f);
+            Destroy(other.gameObject, halfUnit);
             forceFieldShooterScript._animator.Play("arm_reload");
             other.GetComponent<Animator>().Play("forcefield_destroy");
         }
@@ -430,7 +439,7 @@ public class PlayerController : MonoBehaviour
         //Enters the permacrouch state
         if (other.tag.Equals("Crouch"))
         {
-            GetComponent<CapsuleCollider>().height = 1f;
+            GetComponent<CapsuleCollider>().height = halfUnit;
             _playerRigidbody.AddForce(Vector3.down * force, ForceMode.Impulse);
         }
     }
@@ -444,7 +453,7 @@ public class PlayerController : MonoBehaviour
             canSlide = false;
             canJump = false;
             isSliding = true;
-            GetComponent<CapsuleCollider>().height = 1f;
+            GetComponent<CapsuleCollider>().height = halfUnit;
         }
     }
 

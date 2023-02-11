@@ -12,6 +12,9 @@ public class Jumper : MonoBehaviour
 
     private bool canJump = true;
 
+    private float oneUnit = 1f;
+    private float halfUnit = .5f;
+
     private void Start()
     {
         playerControllerScript = FindObjectOfType<PlayerController>();
@@ -26,7 +29,7 @@ public class Jumper : MonoBehaviour
 
             playerControllerScript.activateSpeedControl = false;
 
-            playerControllerScript.PlayerSFX(playerControllerScript.sfxs[0], 1, 1.5f);
+            playerControllerScript.PlayerSFX(playerControllerScript.sfxs[0], oneUnit, oneUnit + halfUnit);
             rb.AddForce(transform.up * force, ForceMode.Impulse);
             StartCoroutine(Delay());
         }

@@ -58,6 +58,10 @@ public class ForceFieldShooter : MonoBehaviour
     [SerializeField] private Material purpleMat;
     [SerializeField] private Material blueMat;
 
+    private float oneUnit = 1f;
+    private float halfUnit = .5f;
+    private float normalForceMulti = 10f;
+    private float grappleResetTime = .35f;
 
     private void Start()
     {
@@ -160,7 +164,7 @@ public class ForceFieldShooter : MonoBehaviour
 
                 instance[1].GetComponent<Animator>().Play("forcefield_destroy");
 
-                Destroy(instance[1], 0.5f);
+                Destroy(instance[1], halfUnit);
 
                 currentLife = t;
             }
@@ -173,7 +177,7 @@ public class ForceFieldShooter : MonoBehaviour
 
                 instance[1].GetComponent<Animator>().Play("forcefield_destroy");
 
-                Destroy(instance[1], 0.5f);
+                Destroy(instance[1], halfUnit);
             }
         }
         else
@@ -187,7 +191,7 @@ public class ForceFieldShooter : MonoBehaviour
     {
         if (canShoot && currentInstance < maxInstances)
         {
-            playerControllerScript.PlayerSFX(playerControllerScript.sfxs[2], 1, 1.5f);
+            playerControllerScript.PlayerSFX(playerControllerScript.sfxs[2], oneUnit, oneUnit + halfUnit);
 
             _animator.Play("arm_shoot");
 
@@ -221,7 +225,7 @@ public class ForceFieldShooter : MonoBehaviour
             _sphereCollider.enabled = false;
 
             //If is in the shooting state adds a forward force the the rigidbody of the last forcefield instantiated
-            _rigidbody.AddForce(instance[mode].transform.forward * speed * 10, ForceMode.Force);
+            _rigidbody.AddForce(instance[mode].transform.forward * speed * normalForceMulti, ForceMode.Force);
 
             //Adds the last forcefield instantiated to a list
             forceFields.Add(instance[mode]);
@@ -267,14 +271,14 @@ public class ForceFieldShooter : MonoBehaviour
                 {
                     g.GetComponent<Animator>().Play("forcefield_destroy");
 
-                    Destroy(g, 0.50f);
+                    Destroy(g, halfUnit);
                 }
             }
 
             //Destroys all the instatiated forcefields on the scene with a delay so that an animation of the forcefields can be played
             foreach (GameObject g in instance)
             {
-                Destroy(g, 0.50f);
+                Destroy(g, halfUnit);
             }
 
             //Clears the list of forcefields
@@ -311,7 +315,7 @@ public class ForceFieldShooter : MonoBehaviour
     //When called gives a small delay before being able to cast the grapple 
     IEnumerator GrappleAvalible()
     {
-        yield return new WaitForSeconds(.35f);
+        yield return new WaitForSeconds(grappleResetTime);
         grapplingControllerScript.isGrappleAvalible = true;
     }
 }

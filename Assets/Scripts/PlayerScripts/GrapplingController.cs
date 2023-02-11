@@ -44,6 +44,10 @@ public class GrapplingController : MonoBehaviour
     [Header("\n")]
     [SerializeField] private GameObject[] grappables;
 
+    private float oneUnit = 1f;
+    private float halfUnit = .5f;
+    private float lerpSpeed = 8f;
+
     void Awake()
     {
         //Get the gameobject components and stores them in variables
@@ -143,7 +147,7 @@ public class GrapplingController : MonoBehaviour
 
         transform.parent.GetComponent<Animator>().Play("arm_exit");
 
-        playerControllerScript.PlayerSFX(playerControllerScript.sfxs[1], 1, 1.5f);
+        playerControllerScript.PlayerSFX(playerControllerScript.sfxs[1], oneUnit, oneUnit + halfUnit);
 
         isGrappled = true;
 
@@ -168,7 +172,7 @@ public class GrapplingController : MonoBehaviour
             {
                 return;
             }
-            currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, target.transform.position, Time.deltaTime * 8f);
+            currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, target.transform.position, Time.deltaTime * lerpSpeed);
 
             lr.SetPosition(0, gunTip.position);
             lr.SetPosition(1, currentGrapplePosition);

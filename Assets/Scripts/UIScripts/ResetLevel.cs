@@ -17,6 +17,7 @@ public class ResetLevel : MonoBehaviour
 
     [HideInInspector] public Transform checkPoint;
 
+    private float resetTimer = .2f;
 
     private void Start()
     {
@@ -80,7 +81,7 @@ public class ResetLevel : MonoBehaviour
 
             player.transform.position = checkPoint.position;
         }
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(resetTimer);
     }
 
     //When the player triggers this gameobjects collider Starts the CheckPointRestart function

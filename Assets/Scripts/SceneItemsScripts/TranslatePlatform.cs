@@ -6,7 +6,7 @@ public class TranslatePlatform : MonoBehaviour
 {
     [SerializeField] private Transform target;
 
-    [SerializeField] private float speed;
+    [SerializeField] private float lerpSpeed;
 
     private Vector3 startPos;
     private Vector3 targetStartPos;
@@ -40,7 +40,7 @@ public class TranslatePlatform : MonoBehaviour
             }
 
             //Lerps the position of the this transform to a target position
-            transform.position = Vector3.Lerp(transform.position, target.position, speed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, target.position, lerpSpeed * Time.deltaTime);
         }
     }
 }

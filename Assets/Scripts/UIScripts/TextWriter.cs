@@ -43,6 +43,7 @@ public class TextWriter : MonoBehaviour
     public string[] textToDisplay;
     private string currentText = "";
 
+    private float dobleUnit = 2f;
 
     private void Start()
     {
@@ -105,7 +106,7 @@ public class TextWriter : MonoBehaviour
                     {
                         if (isEnd)
                         {
-                            Invoke(nameof(ExitText), textExitTime /= 2);
+                            Invoke(nameof(ExitText), textExitTime /= dobleUnit);
 
                             Invoke(nameof(NextLevel), textExitTime);
                         }
@@ -121,7 +122,7 @@ public class TextWriter : MonoBehaviour
                     }
                     else if (isEnd)
                     {
-                        Invoke(nameof(ExitText), textExitTime /= 2);
+                        Invoke(nameof(ExitText), textExitTime /= dobleUnit);
 
                         Invoke(nameof(NextLevel), textExitTime);
                     }
