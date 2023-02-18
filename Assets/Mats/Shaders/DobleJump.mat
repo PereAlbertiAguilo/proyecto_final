@@ -54,11 +54,12 @@ Material:
     m_Floats:
     - _Grid_Scale: 2
     - _Noise_Scale: 10
+    - _NormalStrenght: 0.05
     - _Offset: 0.05
     - _Power: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Speed: 0.05
     m_Colors:
-    - _Emision: {r: 0, g: 0.047058824, b: 0.7490196, a: 0}
+    - _Emision: {r: 0, g: 0.023529412, b: 0.3745098, a: 0}
   m_BuildTextureStacks: []
