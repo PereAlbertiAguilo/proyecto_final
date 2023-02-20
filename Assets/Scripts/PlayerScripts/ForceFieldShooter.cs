@@ -158,7 +158,7 @@ public class ForceFieldShooter : MonoBehaviour
         {
             StartCoroutine(GrappleAvalible());
 
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyUp(KeyCode.JoystickButton3))
             {
                 isTimerOn = false;
 

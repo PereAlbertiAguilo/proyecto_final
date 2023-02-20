@@ -1258,7 +1258,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh61458
+  m_Name: pb_Mesh28016
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -11607,7 +11607,7 @@ PrefabInstance:
     - target: {fileID: 6265221974826109514, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
       propertyPath: m_Lens.FieldOfView
-      value: 67.88779
+      value: 69.47109
       objectReference: {fileID: 0}
     - target: {fileID: 6265221974826109515, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
@@ -11797,7 +11797,7 @@ PrefabInstance:
     - target: {fileID: 6265221976789415844, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
       propertyPath: field of view
-      value: 67.88779
+      value: 69.47109
       objectReference: {fileID: 0}
     - target: {fileID: 6265221976789415847, guid: d6db6d70ae6643347b7c8a20edd278b1,
         type: 3}
@@ -34132,9 +34132,9 @@ MonoBehaviour:
   currentTextIndex: 0
   textToDisplay:
   - 'You will find two different surfaces to interact with '
-  - The <color=yellow>Repulsor</color> that throws you into the air, and the <color=red>anti-gravity
-    wall</color> that lets you walk attatched to it  if you hold the "Space Bar"
-    and jump from it when you let go the "space bar"
+  - 'The <color=yellow>Repulsor</color> that throws you into the air, and the <color=red>anti-gravity
+    wall</color> that lets you walk attatched to it  if you hold the "Space Bar /
+    A" and jump from it when you let go the "space bar / A" '
   - 'You can also find the <color=blue>point-zero sphere</color> that lets you attatch
     your self to it and swing araund using the "right mouse / LB button" '
 --- !u!114 &2026814398

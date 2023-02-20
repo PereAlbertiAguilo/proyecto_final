@@ -36,7 +36,7 @@ public class ResetLevel : MonoBehaviour
     private void Update()
     {
         //When the player inputs a certain key Starts the CheckPointRestart function
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton6))
         {
             StartCoroutine(CheckPointRestart());
         }
