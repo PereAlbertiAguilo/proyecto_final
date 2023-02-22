@@ -223,6 +223,9 @@ public class ForceFieldShooter : MonoBehaviour
             _sphereCollider = instance[mode].GetComponentInChildren<SphereCollider>();
 
             _sphereCollider.enabled = false;
+            _sphereCollider.isTrigger = false;
+
+            StartCoroutine(ActivateCollider(_sphereCollider));
 
             //If is in the shooting state adds a forward force the the rigidbody of the last forcefield instantiated
             _rigidbody.AddForce(instance[mode].transform.forward * speed * normalForceMulti, ForceMode.Force);
@@ -250,6 +253,7 @@ public class ForceFieldShooter : MonoBehaviour
 
             _rigidbody.velocity = Vector3.zero;
             _sphereCollider.enabled = true;
+            _sphereCollider.isTrigger = true;
         }
     }
 
@@ -260,6 +264,7 @@ public class ForceFieldShooter : MonoBehaviour
         if (forceFields.Count > 0 && canReload)
         {
             _animator.Play("arm_shoot");
+            playerControllerScript.PlayerSFX(playerControllerScript.sfxs[3], oneUnit, oneUnit + halfUnit);
 
             canShoot = false;
             canReload = false;
@@ -310,6 +315,14 @@ public class ForceFieldShooter : MonoBehaviour
         {
             canShoot = true;
         }
+    }
+
+    //Activates a collider
+    IEnumerator ActivateCollider(SphereCollider sc)
+    {
+        yield return new WaitForSeconds(0.15f);
+
+        sc.enabled = true;
     }
 
     //When called gives a small delay before being able to cast the grapple 

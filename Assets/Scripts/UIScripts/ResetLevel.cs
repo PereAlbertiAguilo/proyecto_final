@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 
-[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(BoxCollider), (typeof(AudioSource)))]
 public class ResetLevel : MonoBehaviour
 {
     private ForceFieldShooter forceFieldShooterScript;
     private DisableForceFields disableForceFieldsScript;
     private GrapplingController grapplingControllerScript;
+
+    private AudioSource _audioSource;
 
     private Transform levelStart;
     private GameObject player;
@@ -18,6 +20,11 @@ public class ResetLevel : MonoBehaviour
     [HideInInspector] public Transform checkPoint;
 
     private float resetTimer = .2f;
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
 
     private void Start()
     {
@@ -46,6 +53,8 @@ public class ResetLevel : MonoBehaviour
     //Resets the player position, camera rotation, forcefields current instance, and grapple
     public IEnumerator CheckPointRestart()
     {
+        _audioSource.Play();
+
         //Creates and saves variables
         PlayerController playerControllerScript = player.GetComponent<PlayerController>();
         CinemachineVirtualCamera vCam = playerControllerScript.virtualCam.GetComponent<CinemachineVirtualCamera>();

@@ -3,13 +3,13 @@ fetchPreview = true
 defaultFlags = 0
 keepOpen = false
 queryFolder = "Assets"
-onBoardingDoNotAskAgain = false
+onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
-	"last_search.DA949528" = ""
+	"last_search.DA949528" = "p: "
 	"OpenInspectorPreview.DA949528" = "0"
-	"currentGroup.DA949528" = "all"
+	"currentGroup.DA949528" = "scene"
 }
 providers = {
 	adb = {
@@ -56,6 +56,13 @@ providers = {
 objectSelectors = {
 }
 recentSearches = [
+	"p: "
+	"alias{}"
+	"h: "
+	"p: alias{"
+	"p: alias{alias{alias{alias{}}}}"
+	"p: alias"
+	"p: alias{}"
 ]
 searchItemFavorites = [
 ]

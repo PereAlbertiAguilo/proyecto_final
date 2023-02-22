@@ -356,6 +356,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fd1e47d273d5a6344a10a7edc34a4064, type: 3}
   - {fileID: 8300000, guid: 57c574d509a8afc44ab29604fc2c8c8d, type: 3}
   - {fileID: 8300000, guid: 3593fc6a7012aac4dad6dd10eb0d4bfe, type: 3}
+  - {fileID: 8300000, guid: aeb577cec4060c647b5ac5addb94b3e6, type: 3}
   _sfxAudioSource: {fileID: 3333924914014770197}
 --- !u!54 &9112014735967255901
 Rigidbody:

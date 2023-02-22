@@ -145,7 +145,7 @@ public class GrapplingController : MonoBehaviour
         lr.positionCount = 2;
         currentGrapplePosition = gunTip.position;
 
-        transform.parent.GetComponent<Animator>().Play("arm_exit");
+        transform.parent.GetComponent<Animator>().Play("arm_shoot");
 
         playerControllerScript.PlayerSFX(playerControllerScript.sfxs[1], oneUnit, oneUnit + halfUnit);
 
@@ -157,6 +157,8 @@ public class GrapplingController : MonoBehaviour
     //Stops the grapple and destroys the joint
     public void StopGrapple()
     {
+        transform.parent.GetComponent<Animator>().Play("arm_reload");
+
         lr.positionCount = 0;
         Destroy(joint);
 
